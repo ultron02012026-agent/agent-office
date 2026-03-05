@@ -12,12 +12,25 @@ var lobby_player: AudioStreamPlayer
 var office_player: AudioStreamPlayer
 var hallway_player: AudioStreamPlayer
 var active_player: AudioStreamPlayer
+var music_player: AudioStreamPlayer
 
 func _ready():
 	lobby_player = _create_player("LobbyAmbiance")
 	office_player = _create_player("OfficeAmbiance")
 	hallway_player = _create_player("HallwayAmbiance")
 	active_player = lobby_player
+	
+	# Background music (loops)
+	music_player = AudioStreamPlayer.new()
+	music_player.name = "BackgroundMusic"
+	music_player.volume_db = -14.0
+	music_player.bus = "Master"
+	add_child(music_player)
+	var bg_music = load("res://assets/audio/bg_music.mp3")
+	if bg_music:
+		music_player.stream = bg_music
+		music_player.finished.connect(func(): music_player.play())  # loop
+		music_player.play()
 	# Load ambient audio files
 	var office_stream = load("res://assets/audio/ambient_office.wav")
 	var hallway_stream = load("res://assets/audio/ambient_hallway.wav")
