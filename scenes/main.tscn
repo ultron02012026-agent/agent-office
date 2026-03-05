@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://main001"]
+[gd_scene load_steps=40 format=3 uid="uid://main001"]
 
 [ext_resource type="PackedScene" uid="uid://player001" path="res://scenes/player.tscn" id="1"]
 [ext_resource type="Script" path="res://scripts/room_area.gd" id="2"]
@@ -11,6 +11,9 @@
 [ext_resource type="Script" path="res://scripts/minimap.gd" id="9"]
 [ext_resource type="Script" path="res://scripts/agent_status.gd" id="10"]
 [ext_resource type="Script" path="res://scripts/proximity_prompt.gd" id="11"]
+[ext_resource type="Script" path="res://scripts/day_cycle.gd" id="12"]
+[ext_resource type="Script" path="res://scripts/notification_manager.gd" id="13"]
+[ext_resource type="Script" path="res://scripts/door_anim.gd" id="14"]
 
 [sub_resource type="StandardMaterial3D" id="floor_mat"]
 albedo_color = Color(0.3, 0.3, 0.35, 1)
@@ -61,13 +64,92 @@ albedo_color = Color(0.4, 1, 0.4, 1)
 [sub_resource type="StandardMaterial3D" id="avatar_mat_architect"]
 albedo_color = Color(1, 0.8, 0.2, 1)
 
+; === Room-themed materials ===
+[sub_resource type="StandardMaterial3D" id="door_frame_mat"]
+albedo_color = Color(0.35, 0.35, 0.4, 1)
+
+[sub_resource type="StandardMaterial3D" id="door_mat_ultron"]
+albedo_color = Color(0.2, 0.6, 0.8, 0.8)
+
+[sub_resource type="StandardMaterial3D" id="door_mat_spin"]
+albedo_color = Color(0.8, 0.3, 0.5, 0.8)
+
+[sub_resource type="StandardMaterial3D" id="door_mat_dexer"]
+albedo_color = Color(0.3, 0.7, 0.3, 0.8)
+
+[sub_resource type="StandardMaterial3D" id="door_mat_architect"]
+albedo_color = Color(0.7, 0.6, 0.2, 0.8)
+
+[sub_resource type="StandardMaterial3D" id="server_rack_mat"]
+albedo_color = Color(0.15, 0.15, 0.2, 1)
+emission_enabled = true
+emission = Color(0.1, 0.3, 0.6, 1)
+emission_energy_multiplier = 0.2
+
+[sub_resource type="StandardMaterial3D" id="recording_light_mat"]
+albedo_color = Color(1, 0.1, 0.1, 1)
+emission_enabled = true
+emission = Color(1, 0, 0, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="StandardMaterial3D" id="vinyl_mat"]
+albedo_color = Color(0.1, 0.1, 0.1, 1)
+
+[sub_resource type="StandardMaterial3D" id="filing_mat"]
+albedo_color = Color(0.4, 0.45, 0.4, 1)
+
+[sub_resource type="StandardMaterial3D" id="blueprint_mat"]
+albedo_color = Color(0.15, 0.2, 0.5, 1)
+emission_enabled = true
+emission = Color(0.1, 0.15, 0.3, 1)
+emission_energy_multiplier = 0.2
+
+[sub_resource type="StandardMaterial3D" id="skylight_mat"]
+albedo_color = Color(0.7, 0.85, 1, 1)
+emission_enabled = true
+emission = Color(0.6, 0.8, 1, 1)
+emission_energy_multiplier = 0.4
+
+[sub_resource type="StandardMaterial3D" id="door_strip_ultron"]
+albedo_color = Color(0.2, 0.8, 1, 1)
+emission_enabled = true
+emission = Color(0.2, 0.8, 1, 1)
+emission_energy_multiplier = 0.5
+
+[sub_resource type="StandardMaterial3D" id="door_strip_spin"]
+albedo_color = Color(1, 0.4, 0.7, 1)
+emission_enabled = true
+emission = Color(1, 0.4, 0.7, 1)
+emission_energy_multiplier = 0.5
+
+[sub_resource type="StandardMaterial3D" id="door_strip_dexer"]
+albedo_color = Color(0.4, 1, 0.4, 1)
+emission_enabled = true
+emission = Color(0.4, 1, 0.4, 1)
+emission_energy_multiplier = 0.5
+
+[sub_resource type="StandardMaterial3D" id="door_strip_architect"]
+albedo_color = Color(1, 0.8, 0.2, 1)
+emission_enabled = true
+emission = Color(1, 0.8, 0.2, 1)
+emission_energy_multiplier = 0.5
+
+[sub_resource type="SphereMesh" id="sphere_mesh"]
+radius = 0.15
+height = 0.3
+
+[sub_resource type="CylinderMesh" id="vinyl_mesh"]
+top_radius = 0.4
+bottom_radius = 0.4
+height = 0.02
+
 [node name="Main" type="Node3D"]
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.866, -0.25, 0.433, 0, 0.866, 0.5, -0.5, -0.433, 0.75, 0, 10, 0)
 shadow_enabled = true
 
-; ===== AMBIENT LIGHT (prevents pitch black rooms) =====
+; ===== AMBIENT LIGHT =====
 [node name="AmbientLight" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -4)
 light_color = Color(0.8, 0.8, 0.85, 1)
@@ -100,8 +182,13 @@ use_collision = true
 size = Vector3(30, 0.2, 30)
 material = SubResource("ceiling_mat")
 
-; ===== HALLWAY WALLS (split for doorways) =====
-; Left hallway wall - 3 segments with 2m gaps at z=-8 and z=0
+; ===== SKYLIGHT (window effect on ceiling in hallway) =====
+[node name="Skylight" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.05, -7)
+size = Vector3(3, 0.05, 8)
+material = SubResource("skylight_mat")
+
+; ===== HALLWAY WALLS =====
 [node name="HallWallLeft_N" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.5, -12)
 use_collision = true
@@ -120,7 +207,6 @@ use_collision = true
 size = Vector3(0.2, 3, 14)
 material = SubResource("wall_mat")
 
-; Right hallway wall - 3 segments with 2m gaps at z=-8 and z=0
 [node name="HallWallRight_N" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.5, -12)
 use_collision = true
@@ -139,14 +225,13 @@ use_collision = true
 size = Vector3(0.2, 3, 14)
 material = SubResource("wall_mat")
 
-; Hallway end wall (north)
 [node name="HallWallEnd_N" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -15)
 use_collision = true
 size = Vector3(4, 3, 0.2)
 material = SubResource("wall_mat")
 
-; ===== LOBBY (south end z=8+) =====
+; ===== LOBBY =====
 [node name="Lobby_Sign" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 14.9)
 text = "Agent Office"
@@ -177,7 +262,7 @@ light_color = Color(1, 0.95, 0.9, 1)
 light_energy = 0.6
 omni_range = 8
 
-; ===== ROOM 1: Ultron (left side, z=-8) =====
+; ===== ROOM 1: Ultron (left, z=-8) — BLUE THEME =====
 [node name="Room1_BackWall" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, -11)
 use_collision = true
@@ -217,8 +302,8 @@ material = SubResource("chair_mat")
 [node name="Room1_Screen" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1.2, -9.4)
 size = Vector3(1.5, 1, 0.05)
+material = SubResource("screen_mat")
 
-; Whiteboard on back wall
 [node name="Room1_Whiteboard" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.6, -10.85)
 size = Vector3(2, 1.2, 0.05)
@@ -230,7 +315,6 @@ text = "Whiteboard"
 font_size = 24
 modulate = Color(0.4, 0.4, 0.4, 1)
 
-; TV Screens
 [node name="Room1_TV_Main" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.85, 1.6, -8)
 size = Vector3(0.05, 1.2, 2)
@@ -240,6 +324,18 @@ material = SubResource("screen_mat")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.6, -5.15)
 size = Vector3(1.2, 0.8, 0.05)
 material = SubResource("screen_mat")
+
+; Ultron decorations: extra monitor, server rack
+[node name="Room1_ExtraMonitor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5, 1.2, -9.4)
+size = Vector3(1.0, 0.7, 0.05)
+material = SubResource("screen_mat")
+
+[node name="Room1_ServerRack" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 1.2, -6)
+use_collision = true
+size = Vector3(0.6, 2.4, 0.8)
+material = SubResource("server_rack_mat")
 
 [node name="Room1_Label" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.8, -5.05)
@@ -261,7 +357,7 @@ room_name = "Ultron"
 [node name="Room1_AreaShape" type="CollisionShape3D" parent="Room1_Area"]
 shape = SubResource("room_shape")
 
-; ===== ROOM 2: Spinfluencer (left side, z=0) =====
+; ===== ROOM 2: Spinfluencer (left, z=0) — PINK THEME =====
 [node name="Room2_BackWall" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, -3)
 use_collision = true
@@ -298,7 +394,6 @@ use_collision = true
 size = Vector3(0.6, 0.5, 0.6)
 material = SubResource("chair_mat")
 
-; Whiteboard on back wall
 [node name="Room2_Whiteboard" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.6, -2.85)
 size = Vector3(2, 1.2, 0.05)
@@ -310,7 +405,6 @@ text = "Whiteboard"
 font_size = 24
 modulate = Color(0.4, 0.4, 0.4, 1)
 
-; TV Screens
 [node name="Room2_TV_Main" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.85, 1.6, 0)
 size = Vector3(0.05, 1.2, 2)
@@ -320,6 +414,23 @@ material = SubResource("screen_mat")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.6, 2.85)
 size = Vector3(1.2, 0.8, 0.05)
 material = SubResource("screen_mat")
+
+; Spinfluencer decorations: recording light (red sphere), vinyl record
+[node name="Room2_RecordingLight" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.7, 2.5, 2)
+mesh = SubResource("sphere_mesh")
+surface_material_override/0 = SubResource("recording_light_mat")
+
+[node name="Room2_RecordingLightGlow" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.7, 2.5, 2)
+light_color = Color(1, 0, 0, 1)
+light_energy = 0.3
+omni_range = 2
+
+[node name="Room2_VinylRecord" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.82, -1)
+mesh = SubResource("vinyl_mesh")
+surface_material_override/0 = SubResource("vinyl_mat")
 
 [node name="Room2_Label" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.8, 2.95)
@@ -341,7 +452,7 @@ room_name = "Spinfluencer"
 [node name="Room2_AreaShape" type="CollisionShape3D" parent="Room2_Area"]
 shape = SubResource("room_shape")
 
-; ===== ROOM 3: Dexer (right side, z=-8) =====
+; ===== ROOM 3: Dexer (right, z=-8) — GREEN THEME =====
 [node name="Room3_BackWall" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, -11)
 use_collision = true
@@ -378,7 +489,6 @@ use_collision = true
 size = Vector3(0.6, 0.5, 0.6)
 material = SubResource("chair_mat")
 
-; Whiteboard on back wall
 [node name="Room3_Whiteboard" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.6, -10.85)
 size = Vector3(2, 1.2, 0.05)
@@ -390,7 +500,6 @@ text = "Whiteboard"
 font_size = 24
 modulate = Color(0.4, 0.4, 0.4, 1)
 
-; TV Screens
 [node name="Room3_TV_Main" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.85, 1.6, -8)
 size = Vector3(0.05, 1.2, 2)
@@ -400,6 +509,38 @@ material = SubResource("screen_mat")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.6, -5.15)
 size = Vector3(1.2, 0.8, 0.05)
 material = SubResource("screen_mat")
+
+; Dexer decorations: filing cabinet (stacked boxes), label samples (small colored boxes)
+[node name="Room3_FilingCabinet1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.3, 0.3, -6)
+use_collision = true
+size = Vector3(0.8, 0.6, 0.5)
+material = SubResource("filing_mat")
+
+[node name="Room3_FilingCabinet2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.3, 0.9, -6)
+use_collision = true
+size = Vector3(0.8, 0.6, 0.5)
+material = SubResource("filing_mat")
+
+[node name="Room3_FilingCabinet3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.3, 1.5, -6)
+use_collision = true
+size = Vector3(0.8, 0.6, 0.5)
+material = SubResource("filing_mat")
+
+; Small colored label sample boxes on desk
+[node name="Room3_LabelRed" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.3, 0.9, -9)
+size = Vector3(0.15, 0.15, 0.15)
+
+[node name="Room3_LabelGreen" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.55, 0.9, -9)
+size = Vector3(0.15, 0.15, 0.15)
+
+[node name="Room3_LabelBlue" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.8, 0.9, -9)
+size = Vector3(0.15, 0.15, 0.15)
 
 [node name="Room3_Label" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.8, -5.05)
@@ -421,7 +562,7 @@ room_name = "Dexer"
 [node name="Room3_AreaShape" type="CollisionShape3D" parent="Room3_Area"]
 shape = SubResource("room_shape")
 
-; ===== ROOM 4: Architect (right side, z=0) =====
+; ===== ROOM 4: Architect (right, z=0) — WARM/GOLD THEME =====
 [node name="Room4_BackWall" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, -3)
 use_collision = true
@@ -458,7 +599,6 @@ use_collision = true
 size = Vector3(0.6, 0.5, 0.6)
 material = SubResource("chair_mat")
 
-; Whiteboard on back wall
 [node name="Room4_Whiteboard" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.6, -2.85)
 size = Vector3(2, 1.2, 0.05)
@@ -470,7 +610,6 @@ text = "Whiteboard"
 font_size = 24
 modulate = Color(0.4, 0.4, 0.4, 1)
 
-; TV Screens
 [node name="Room4_TV_Main" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.85, 1.6, 0)
 size = Vector3(0.05, 1.2, 2)
@@ -480,6 +619,23 @@ material = SubResource("screen_mat")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.6, 2.85)
 size = Vector3(1.2, 0.8, 0.05)
 material = SubResource("screen_mat")
+
+; Architect decorations: blueprints on desk, drafting table (angled)
+[node name="Room4_Blueprint" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 0.82, -1)
+size = Vector3(1.2, 0.02, 0.8)
+material = SubResource("blueprint_mat")
+
+[node name="Room4_DraftingTable" type="CSGBox3D" parent="."]
+transform = Transform3D(0.97, 0.26, 0, -0.26, 0.97, 0, 0, 0, 1, 9.2, 0.6, -1)
+use_collision = true
+size = Vector3(1.5, 0.05, 1.0)
+material = SubResource("desk_mat")
+
+[node name="Room4_DraftingBlueprint" type="CSGBox3D" parent="."]
+transform = Transform3D(0.97, 0.26, 0, -0.26, 0.97, 0, 0, 0, 1, 9.2, 0.65, -1)
+size = Vector3(1.2, 0.02, 0.8)
+material = SubResource("blueprint_mat")
 
 [node name="Room4_Label" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.8, 2.95)
@@ -501,7 +657,108 @@ room_name = "Architect"
 [node name="Room4_AreaShape" type="CollisionShape3D" parent="Room4_Area"]
 shape = SubResource("room_shape")
 
-; ===== PLAYER (spawns in lobby) =====
+; ===== DOOR FRAMES WITH ANIMATED DOORS =====
+; Room 1 (Ultron) door frame — left hallway wall gap at z=-8
+[node name="Door1_FrameL" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.05, 1.5, -7.3)
+use_collision = true
+size = Vector3(0.1, 3, 0.15)
+material = SubResource("door_frame_mat")
+
+[node name="Door1_FrameR" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.05, 1.5, -8.7)
+use_collision = true
+size = Vector3(0.1, 3, 0.15)
+material = SubResource("door_frame_mat")
+
+[node name="Door1_Strip" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.05, 2.95, -8)
+size = Vector3(0.12, 0.1, 1.4)
+material = SubResource("door_strip_ultron")
+
+[node name="Door1_Panel" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.05, 1.5, -8)
+size = Vector3(0.08, 2.8, 1.2)
+script = ExtResource("14")
+room_name = "Ultron"
+material = SubResource("door_mat_ultron")
+
+; Room 2 (Spinfluencer) door frame
+[node name="Door2_FrameL" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.05, 1.5, 0.7)
+use_collision = true
+size = Vector3(0.1, 3, 0.15)
+material = SubResource("door_frame_mat")
+
+[node name="Door2_FrameR" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.05, 1.5, -0.7)
+use_collision = true
+size = Vector3(0.1, 3, 0.15)
+material = SubResource("door_frame_mat")
+
+[node name="Door2_Strip" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.05, 2.95, 0)
+size = Vector3(0.12, 0.1, 1.4)
+material = SubResource("door_strip_spin")
+
+[node name="Door2_Panel" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.05, 1.5, 0)
+size = Vector3(0.08, 2.8, 1.2)
+script = ExtResource("14")
+room_name = "Spinfluencer"
+material = SubResource("door_mat_spin")
+
+; Room 3 (Dexer) door frame
+[node name="Door3_FrameL" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.05, 1.5, -7.3)
+use_collision = true
+size = Vector3(0.1, 3, 0.15)
+material = SubResource("door_frame_mat")
+
+[node name="Door3_FrameR" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.05, 1.5, -8.7)
+use_collision = true
+size = Vector3(0.1, 3, 0.15)
+material = SubResource("door_frame_mat")
+
+[node name="Door3_Strip" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.05, 2.95, -8)
+size = Vector3(0.12, 0.1, 1.4)
+material = SubResource("door_strip_dexer")
+
+[node name="Door3_Panel" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.05, 1.5, -8)
+size = Vector3(0.08, 2.8, 1.2)
+script = ExtResource("14")
+room_name = "Dexer"
+material = SubResource("door_mat_dexer")
+
+; Room 4 (Architect) door frame
+[node name="Door4_FrameL" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.05, 1.5, 0.7)
+use_collision = true
+size = Vector3(0.1, 3, 0.15)
+material = SubResource("door_frame_mat")
+
+[node name="Door4_FrameR" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.05, 1.5, -0.7)
+use_collision = true
+size = Vector3(0.1, 3, 0.15)
+material = SubResource("door_frame_mat")
+
+[node name="Door4_Strip" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.05, 2.95, 0)
+size = Vector3(0.12, 0.1, 1.4)
+material = SubResource("door_strip_architect")
+
+[node name="Door4_Panel" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.05, 1.5, 0)
+size = Vector3(0.08, 2.8, 1.2)
+script = ExtResource("14")
+room_name = "Architect"
+material = SubResource("door_mat_architect")
+
+; ===== PLAYER =====
 [node name="Player" parent="." instance=ExtResource("1")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 10)
 
@@ -559,9 +816,13 @@ placeholder_text = "Type a message..."
 layout_mode = 2
 text = "Send"
 
+[node name="ClearButton" type="Button" parent="ChatUI/Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Clear"
+
 [node name="HTTPRequest" type="HTTPRequest" parent="ChatUI"]
 
-; ===== AGENT AVATARS (seated at desks) =====
+; ===== AGENT AVATARS =====
 [node name="Ultron_Avatar" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0.7, -10.2)
 mesh = SubResource("avatar_mesh")
@@ -615,7 +876,36 @@ text = "Architect"
 font_size = 32
 modulate = Color(1, 0.8, 0.2, 1)
 
-; ===== TTS AUDIO PLAYERS (spatial, at agent desk positions) =====
+; ===== NOTIFICATION BADGES (above door labels) =====
+[node name="Ultron_NotifBadge" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 2.8, -8)
+visible = false
+text = "❗"
+font_size = 36
+modulate = Color(1, 0.3, 0.3, 1)
+
+[node name="Spinfluencer_NotifBadge" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 2.8, 0)
+visible = false
+text = "❗"
+font_size = 36
+modulate = Color(1, 0.3, 0.3, 1)
+
+[node name="Dexer_NotifBadge" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7, 2.8, -8)
+visible = false
+text = "❗"
+font_size = 36
+modulate = Color(1, 0.3, 0.3, 1)
+
+[node name="Architect_NotifBadge" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7, 2.8, 0)
+visible = false
+text = "❗"
+font_size = 36
+modulate = Color(1, 0.3, 0.3, 1)
+
+; ===== TTS AUDIO PLAYERS =====
 [node name="Ultron_TTSPlayer" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1.2, -10.2)
 max_distance = 15.0
@@ -632,9 +922,24 @@ max_distance = 15.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 1.2, -2.2)
 max_distance = 15.0
 
+; ===== FOOTSTEP AUDIO STUBS =====
+[node name="FootstepHallway" type="AudioStreamPlayer" parent="."]
+[node name="FootstepRoom" type="AudioStreamPlayer" parent="."]
+
+; ===== NOTIFICATION SOUND STUB =====
+[node name="NotificationSound" type="AudioStreamPlayer" parent="."]
+
 ; ===== VOICE CHAT =====
 [node name="VoiceChat" type="Node" parent="."]
 script = ExtResource("4")
+
+; ===== DAY/NIGHT CYCLE =====
+[node name="DayCycle" type="Node" parent="."]
+script = ExtResource("12")
+
+; ===== NOTIFICATION MANAGER =====
+[node name="NotificationManager" type="Node" parent="."]
+script = ExtResource("13")
 
 ; ===== SETTINGS MENU =====
 [node name="SettingsMenu" type="CanvasLayer" parent="."]
@@ -702,7 +1007,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1, 2.9, 0)
 script = ExtResource("10")
 agent_name = "Architect"
 
-; ===== PROXIMITY ZONES (larger than room areas, for door prompts) =====
+; ===== PROXIMITY ZONES =====
 [node name="Room1_Proximity" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.5, -8)
 script = ExtResource("11")
@@ -735,7 +1040,7 @@ room_name = "Architect"
 [node name="Room4_ProximityShape" type="CollisionShape3D" parent="Room4_Proximity"]
 shape = SubResource("proximity_shape")
 
-; ===== ROOM AUDIO STUBS (for enter/exit sound cues) =====
+; ===== ROOM AUDIO STUBS =====
 [node name="RoomEnterSound" type="AudioStreamPlayer" parent="."]
 [node name="RoomExitSound" type="AudioStreamPlayer" parent="."]
 

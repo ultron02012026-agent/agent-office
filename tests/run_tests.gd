@@ -20,6 +20,10 @@ func _init():
 		["AgentAvatar", "res://tests/test_agent_avatar.gd"],
 		["MinimapExtended", "res://tests/test_minimap_extended.gd"],
 		["ProximityPrompt", "res://tests/test_proximity_prompt.gd"],
+		["DayCycle", "res://tests/test_day_cycle.gd"],
+		["Notification", "res://tests/test_notification.gd"],
+		["DoorAnim", "res://tests/test_door_anim.gd"],
+		["Immersion", "res://tests/test_immersion.gd"],
 	]
 	
 	for entry in test_files:

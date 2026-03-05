@@ -4,6 +4,28 @@ All notable changes to Agent Office.
 
 ---
 
+## v0.6.0 — 2026-03-05
+*Game Feel & Immersion*
+
+### New
+- **Agent idle animations** — gentle floating bob (sine wave), subtle rotation, avatars face the player when they enter the room
+- **Footstep sound system** — timed footstep audio cues synced to movement speed, different AudioStreamPlayer stubs for hallway vs room surfaces, stops when player stops
+- **Day/night cycle** — DirectionalLight color temperature shifts over time (warm dawn → neutral noon → warm evening → dim night), skylight mesh on ceiling brightens/dims
+- **Chat history persistence** — leaving a room and returning restores your previous conversation; Clear button to reset a room's history
+- **Notification system** — simulated notification badges (❗) appear above agent doors every 60s, notification sound stub, entering room clears notification
+- **Office decorations per agent:**
+  - Ultron: extra monitor, server rack (tall CSGBox with blue emission glow)
+  - Spinfluencer: recording light (red glowing sphere + OmniLight), vinyl record (CSGCylinder on desk)
+  - Dexer: filing cabinet (3 stacked CSGBoxes), colored label sample boxes on desk
+  - Architect: blueprint (flat blue CSGBox on desk), drafting table (angled CSGBox with blueprint)
+- **Door animations** — door frame pillars + colored strip at top per room theme; thin door panel slides up when player approaches (lerp animation via `door_anim.gd`)
+- **New scripts:** `day_cycle.gd`, `notification_manager.gd`, `door_anim.gd`
+
+### Tests
+- **239 total tests** (up from 178): day/night cycle (18), notifications (16), door animations (9), immersion features (18 — avatar bob, face-player, footstep timing, chat persistence)
+
+---
+
 ## v0.5.0 — 2026-03-05
 *Polish & Gameplay Feel*
 

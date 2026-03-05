@@ -1,5 +1,6 @@
 ## First-person player controller.
 ## Handles WASD movement, mouse look, camera bob, room enter/exit, voice/settings input.
+## Footstep system: timed audio cues synced to movement, different for hallway vs room.
 ## Key methods: enter_room(), exit_room(), _update_hud()
 ## Depends on: SettingsManager (autoload), ChatUI, VoiceChat, SettingsMenu, HUD (all via /root/Main/)
 extends CharacterBody3D
@@ -10,6 +11,11 @@ const BOB_AMPLITUDE = 0.03
 
 var current_room: String = ""
 var bob_timer: float = 0.0
+
+# Footstep system
+var footstep_timer: float = 0.0
+var footstep_interval: float = 0.45  # seconds between footsteps at full speed
+var is_moving: bool = false
 
 @onready var camera_pivot = $CameraPivot
 @onready var camera = $CameraPivot/Camera3D
@@ -93,15 +99,42 @@ func _physics_process(delta):
 	move_and_slide()
 	
 	# Camera bob while moving
-	var is_moving = direction.length() > 0.1 and is_on_floor()
+	var was_moving = is_moving
+	is_moving = direction.length() > 0.1 and is_on_floor()
 	if is_moving:
 		bob_timer += delta * BOB_FREQUENCY
 		camera.position.y = sin(bob_timer) * BOB_AMPLITUDE
+		
+		# Footstep timing
+		footstep_timer += delta
+		if footstep_timer >= footstep_interval:
+			footstep_timer = 0.0
+			_play_footstep()
 	else:
 		bob_timer = 0.0
+		footstep_timer = 0.0
 		camera.position.y = lerp(camera.position.y, 0.0, delta * 10.0)
 	
 	_update_hud()
+
+func _play_footstep():
+	# Determine surface type based on location
+	var surface = get_surface_type()
+	
+	if surface == "room":
+		var player_node = get_node_or_null("/root/Main/FootstepRoom")
+		if player_node and player_node.stream:
+			player_node.play()
+	else:
+		var player_node = get_node_or_null("/root/Main/FootstepHallway")
+		if player_node and player_node.stream:
+			player_node.play()
+
+func get_surface_type() -> String:
+	if current_room.is_empty():
+		return "hallway"
+	else:
+		return "room"
 
 func _update_hud():
 	var hud_label = get_node_or_null("/root/Main/HUD/RoomHUD")
@@ -151,6 +184,11 @@ func enter_room(room_name: String):
 	if voice_chat:
 		var tts_player = get_node_or_null("/root/Main/" + room_name + "_TTSPlayer")
 		voice_chat.set_room(room_name, tts_player)
+	
+	# Clear notification for this room
+	var notif_mgr = get_node_or_null("/root/Main/NotificationManager")
+	if notif_mgr:
+		notif_mgr.clear_notification(room_name)
 
 func exit_room(room_name: String):
 	if current_room == room_name:
