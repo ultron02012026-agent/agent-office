@@ -1,6 +1,8 @@
+## Voice chat: push-to-talk mic capture → WAV → STT → TTS → spatial audio playback.
+## Key methods: start/stop_recording(), request_tts(), toggle_voice_mode(), set_room(), clear_room()
+## Signals: transcription_received(text), tts_started(), tts_finished()
+## Depends on: SettingsManager (autoload), room's AudioStreamPlayer3D for spatial TTS
 extends Node
-
-# Voice chat system: push-to-talk recording, STT, TTS playback
 
 signal transcription_received(text: String)
 signal tts_started()

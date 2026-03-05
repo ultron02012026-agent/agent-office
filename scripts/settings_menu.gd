@@ -1,3 +1,7 @@
+## Tabbed settings menu (Esc to open). Built programmatically, no scene file needed.
+## Key methods: open_menu(), close_menu(). Pauses game tree when open (process_mode=ALWAYS).
+## Tabs: Audio, Connection, Controls, Display, Agents
+## Depends on: SettingsManager (autoload)
 extends CanvasLayer
 
 var is_open: bool = false

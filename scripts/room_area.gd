@@ -1,3 +1,6 @@
+## Room detection trigger — calls enter_room()/exit_room() on the player.
+## @export room_name: set per-instance in main.tscn
+## Depends on: player.gd (expects enter_room/exit_room methods on CharacterBody3D)
 extends Area3D
 
 @export var room_name: String = "Unknown"

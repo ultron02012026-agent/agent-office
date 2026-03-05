@@ -1,6 +1,7 @@
+## Agent avatar — capsule mesh that pulses emission glow when the agent is speaking.
+## @export room_name: must match VoiceChat.current_room to trigger pulse.
+## Depends on: VoiceChat (/root/Main/VoiceChat) — reads is_speaking and current_room
 extends MeshInstance3D
-
-# Pulses/glows when the agent is speaking (TTS playing)
 
 var base_color: Color = Color.WHITE
 var pulse_time: float = 0.0

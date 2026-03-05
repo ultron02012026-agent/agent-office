@@ -1,6 +1,7 @@
+## Autoload singleton — persistent settings (audio, connection, controls, display, agents).
+## Access as SettingsManager.property from any script. Call save_settings() to persist.
+## Persists to user://settings.cfg via ConfigFile.
 extends Node
-
-# Autoload singleton for settings persistence
 
 var config := ConfigFile.new()
 var settings_path := "user://settings.cfg"

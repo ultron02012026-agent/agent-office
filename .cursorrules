@@ -1,0 +1,12 @@
+## Agent Office — Cursor Rules
+
+- Godot 4.2, GDScript, Forward Plus renderer
+- SettingsManager is an autoload singleton — access directly, never instantiate
+- All API calls go through OpenClaw gateway (OpenAI-compatible endpoints)
+- Scenes use CSGBox3D for geometry (prototyping stage, not final meshes)
+- Settings menu is built in code (no .tscn), uses _add_slider helper
+- Tests are headless: `godot --headless --script tests/run_tests.gd`
+- Each room needs: walls, Area3D trigger, avatar, TTSPlayer, door label, agent_configs entry
+- Chat uses BBCode in RichTextLabel (cyan=user, yellow=agent, gray=system, red=error)
+- Voice flow: AudioEffectCapture → WAV → STT → chat → TTS → AudioStreamPlayer3D
+- Read AGENTS.md for full architecture and file map

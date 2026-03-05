@@ -1,3 +1,7 @@
+## Chat panel UI — sends messages to OpenClaw chat completions API.
+## Key methods: show_chat(room), hide_chat(), _send_to_openclaw()
+## Signals: connects to VoiceChat.transcription_received
+## Depends on: SettingsManager (autoload), VoiceChat (/root/Main/VoiceChat), HTTPRequest child
 extends CanvasLayer
 
 var current_room: String = ""

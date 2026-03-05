@@ -1,3 +1,7 @@
+## First-person player controller.
+## Handles WASD movement, mouse look, camera bob, room enter/exit, voice/settings input.
+## Key methods: enter_room(), exit_room(), _update_hud()
+## Depends on: SettingsManager (autoload), ChatUI, VoiceChat, SettingsMenu, HUD (all via /root/Main/)
 extends CharacterBody3D
 
 const SPEED = 7.0
