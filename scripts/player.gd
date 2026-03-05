@@ -1,5 +1,6 @@
 ## First-person player controller.
-## Handles WASD movement, mouse look, camera bob, room enter/exit, voice/settings input.
+## Handles WASD movement, mouse look, camera bob, room enter/exit, voice input.
+## Voice-only interaction: no text chat, voice auto-activates on room entry.
 ## Footstep system: timed audio cues synced to movement, different for hallway vs room.
 ## Key methods: enter_room(), exit_room(), _update_hud()
 ## Depends on: SettingsManager (autoload), ChatUI, VoiceChat, SettingsMenu, HUD (all via /root/Main/)
@@ -50,11 +51,14 @@ func _unhandled_input(event):
 		# If settings is open, close it
 		if settings_menu and settings_menu.is_open:
 			settings_menu.close_menu()
-		# If in a room with chat open, close chat and re-capture mouse
+		# If in a room, exit the room (voice-only: no text input to close)
 		elif not current_room.is_empty():
 			var chat_ui = get_node_or_null("/root/Main/ChatUI")
 			if chat_ui:
 				chat_ui.hide_chat()
+			var voice_chat = get_node_or_null("/root/Main/VoiceChat")
+			if voice_chat:
+				voice_chat.clear_room()
 			current_room = ""
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 			_update_hud()
@@ -63,23 +67,24 @@ func _unhandled_input(event):
 			if settings_menu and not settings_menu.is_open:
 				settings_menu.open_menu()
 	
-	# Voice mode toggle (Tab)
-	if event.is_action_pressed("toggle_voice"):
-		var voice_chat = get_node_or_null("/root/Main/VoiceChat")
-		if voice_chat:
-			voice_chat.toggle_voice_mode()
-			_update_hud()
-	
-	# Push-to-talk (V key)
+	# Push-to-talk (V key) — always available when in a room
 	if event.is_action_pressed("push_to_talk"):
 		var voice_chat = get_node_or_null("/root/Main/VoiceChat")
-		if voice_chat and voice_chat.voice_mode and not current_room.is_empty():
+		if voice_chat and not current_room.is_empty():
 			voice_chat.start_recording()
+			# Update transcript indicator
+			var chat_ui = get_node_or_null("/root/Main/ChatUI")
+			if chat_ui:
+				chat_ui.set_voice_status("recording")
 	
 	if event.is_action_released("push_to_talk"):
 		var voice_chat = get_node_or_null("/root/Main/VoiceChat")
 		if voice_chat and voice_chat.is_recording:
 			voice_chat.stop_recording()
+			# Update transcript indicator
+			var chat_ui = get_node_or_null("/root/Main/ChatUI")
+			if chat_ui:
+				chat_ui.set_voice_status("processing")
 
 func _physics_process(delta):
 	var welcome = get_node_or_null("/root/Main/WelcomeOverlay")
@@ -127,15 +132,9 @@ func _physics_process(delta):
 	_update_hud()
 
 func _play_footstep():
-	var surface = get_surface_type()
-	if surface == "room":
-		var player_node = get_node_or_null("/root/Main/FootstepRoom")
-		if player_node and player_node.stream:
-			player_node.play()
-	else:
-		var player_node = get_node_or_null("/root/Main/FootstepHallway")
-		if player_node and player_node.stream:
-			player_node.play()
+	# Disabled — synthesized footsteps sound bad. 
+	# TODO: Add real recorded footstep samples
+	pass
 
 func get_surface_type() -> String:
 	if current_room.is_empty():
@@ -155,16 +154,15 @@ func _update_hud():
 		else:
 			location = "📍 " + current_room + "'s Office"
 		
-		# Voice mode indicator
+		# Voice indicator in HUD
 		var voice_chat = get_node_or_null("/root/Main/VoiceChat")
-		if voice_chat:
-			if voice_chat.voice_mode:
-				if voice_chat.is_recording:
-					location += "  🎙️ [Recording...]"
-				else:
-					location += "  🎙️ Voice Mode (hold V)"
+		if voice_chat and not current_room.is_empty():
+			if voice_chat.is_recording:
+				location += "  🔴 Recording"
+			elif voice_chat.is_speaking:
+				location += "  🔊 Speaking"
 			else:
-				location += "  ⌨️ Text Mode"
+				location += "  🎙️ Voice Ready"
 		
 		hud_label.text = location
 	
@@ -186,7 +184,7 @@ func enter_room(room_name: String):
 	if chat_ui:
 		chat_ui.show_chat(room_name)
 	
-	# Set up voice chat for this room
+	# Set up voice chat for this room (auto-activate, no toggle needed)
 	var voice_chat = get_node_or_null("/root/Main/VoiceChat")
 	if voice_chat:
 		var tts_player = get_node_or_null("/root/Main/" + room_name + "_TTSPlayer")
