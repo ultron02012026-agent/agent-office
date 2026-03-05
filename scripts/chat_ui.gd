@@ -2,6 +2,7 @@ extends CanvasLayer
 
 var current_room: String = ""
 var chat_history: Array = []
+var is_thinking: bool = false
 
 @onready var panel = $Panel
 @onready var chat_log = $Panel/VBoxContainer/ChatLog
@@ -19,9 +20,11 @@ func _ready():
 func show_chat(room_name: String):
 	current_room = room_name
 	chat_history.clear()
+	is_thinking = false
 	room_label.text = "📍 " + room_name + "'s Office"
 	chat_log.text = "[color=gray]You entered " + room_name + "'s office. Say hello![/color]\n"
 	panel.visible = true
+	_set_input_enabled(true)
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	input_field.grab_focus()
 
@@ -29,12 +32,15 @@ func hide_chat():
 	panel.visible = false
 	current_room = ""
 	chat_history.clear()
+	is_thinking = false
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
-func _on_text_submitted(text: String):
+func _on_text_submitted(_text: String):
 	_on_send()
 
 func _on_send():
+	if is_thinking:
+		return
 	var text = input_field.text.strip_edges()
 	if text.is_empty():
 		return
@@ -43,7 +49,22 @@ func _on_send():
 	chat_log.text += "\n[color=cyan]You:[/color] " + text + "\n"
 	
 	chat_history.append({"role": "user", "content": text})
+	_set_thinking(true)
 	_send_to_openclaw(text)
+
+func _set_thinking(thinking: bool):
+	is_thinking = thinking
+	_set_input_enabled(!thinking)
+	if thinking:
+		chat_log.text += "[color=gray][i]" + current_room + " is thinking...[/i][/color]\n"
+
+func _set_input_enabled(enabled: bool):
+	input_field.editable = enabled
+	send_button.disabled = !enabled
+	if enabled:
+		input_field.placeholder_text = "Type a message..."
+	else:
+		input_field.placeholder_text = "Waiting for response..."
 
 func _send_to_openclaw(_user_msg: String):
 	var messages = [
@@ -64,8 +85,11 @@ func _send_to_openclaw(_user_msg: String):
 	var err = http_request.request("http://localhost:3007/v1/chat/completions", headers, HTTPClient.METHOD_POST, body)
 	if err != OK:
 		chat_log.text += "[color=red]Error connecting to OpenClaw[/color]\n"
+		_set_thinking(false)
 
 func _on_request_completed(result, response_code, _headers, body_bytes):
+	_set_thinking(false)
+	
 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
 		chat_log.text += "[color=red]Error: " + str(response_code) + "[/color]\n"
 		return
@@ -74,6 +98,7 @@ func _on_request_completed(result, response_code, _headers, body_bytes):
 	if json and json.has("choices") and json["choices"].size() > 0:
 		var reply = json["choices"][0]["message"]["content"]
 		chat_history.append({"role": "assistant", "content": reply})
+		# Remove the "thinking..." line by not doing anything special — it stays as history
 		chat_log.text += "[color=yellow]" + current_room + ":[/color] " + reply + "\n"
 	else:
 		chat_log.text += "[color=red]No response from agent[/color]\n"

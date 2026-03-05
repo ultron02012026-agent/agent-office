@@ -2,8 +2,11 @@ extends CharacterBody3D
 
 const SPEED = 7.0
 const MOUSE_SENSITIVITY = 0.003
+const BOB_FREQUENCY = 14.0
+const BOB_AMPLITUDE = 0.03
 
 var current_room: String = ""
+var bob_timer: float = 0.0
 
 @onready var camera_pivot = $CameraPivot
 @onready var camera = $CameraPivot/Camera3D
@@ -41,6 +44,30 @@ func _physics_process(delta):
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 	
 	move_and_slide()
+	
+	# Camera bob while moving
+	var is_moving = direction.length() > 0.1 and is_on_floor()
+	if is_moving:
+		bob_timer += delta * BOB_FREQUENCY
+		camera.position.y = sin(bob_timer) * BOB_AMPLITUDE
+	else:
+		bob_timer = 0.0
+		camera.position.y = lerp(camera.position.y, 0.0, delta * 10.0)
+	
+	# Update HUD
+	_update_hud()
+
+func _update_hud():
+	var hud_label = get_node_or_null("/root/Main/HUD/RoomHUD")
+	if hud_label:
+		if current_room.is_empty():
+			# Check if in lobby area
+			if global_position.z > 7:
+				hud_label.text = "📍 Lobby"
+			else:
+				hud_label.text = "📍 Hallway"
+		else:
+			hud_label.text = "📍 " + current_room + "'s Office"
 
 func enter_room(room_name: String):
 	current_room = room_name

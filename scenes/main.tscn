@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://main001"]
+[gd_scene load_steps=12 format=3 uid="uid://main001"]
 
 [ext_resource type="PackedScene" uid="uid://player001" path="res://scenes/player.tscn" id="1"]
 [ext_resource type="Script" path="res://scripts/room_area.gd" id="2"]
@@ -13,10 +13,20 @@ albedo_color = Color(0.6, 0.6, 0.55, 1)
 [sub_resource type="StandardMaterial3D" id="desk_mat"]
 albedo_color = Color(0.45, 0.3, 0.15, 1)
 
+[sub_resource type="StandardMaterial3D" id="whiteboard_mat"]
+albedo_color = Color(0.95, 0.95, 0.95, 1)
+
+[sub_resource type="StandardMaterial3D" id="screen_mat"]
+albedo_color = Color(0.15, 0.15, 0.18, 1)
+
+[sub_resource type="StandardMaterial3D" id="chair_mat"]
+albedo_color = Color(0.25, 0.25, 0.35, 1)
+
+[sub_resource type="StandardMaterial3D" id="ceiling_mat"]
+albedo_color = Color(0.7, 0.7, 0.72, 1)
+
 [sub_resource type="BoxShape3D" id="room_shape"]
 size = Vector3(6, 4, 6)
-
-[sub_resource type="Theme" id="chat_theme"]
 
 [node name="Main" type="Node3D"]
 
@@ -27,50 +37,169 @@ shadow_enabled = true
 ; ===== FLOOR =====
 [node name="Floor" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+use_collision = true
 size = Vector3(30, 0.2, 30)
 material = SubResource("floor_mat")
 
-; ===== HALLWAY WALLS (long corridor along Z axis) =====
-[node name="HallWallLeft" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.5, 0)
-size = Vector3(0.2, 3, 30)
+; ===== CEILING =====
+[node name="Ceiling" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.1, 0)
+use_collision = true
+size = Vector3(30, 0.2, 30)
+material = SubResource("ceiling_mat")
+
+; ===== HALLWAY WALLS (split for doorways) =====
+; Left hallway wall - 3 segments with 2m gaps at z=-8 and z=0
+[node name="HallWallLeft_N" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.5, -12)
+use_collision = true
+size = Vector3(0.2, 3, 6)
 material = SubResource("wall_mat")
 
-[node name="HallWallRight" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.5, 0)
-size = Vector3(0.2, 3, 30)
+[node name="HallWallLeft_M" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.5, -4)
+use_collision = true
+size = Vector3(0.2, 3, 6)
 material = SubResource("wall_mat")
+
+[node name="HallWallLeft_S" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.5, 8)
+use_collision = true
+size = Vector3(0.2, 3, 14)
+material = SubResource("wall_mat")
+
+; Right hallway wall - 3 segments with 2m gaps at z=-8 and z=0
+[node name="HallWallRight_N" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.5, -12)
+use_collision = true
+size = Vector3(0.2, 3, 6)
+material = SubResource("wall_mat")
+
+[node name="HallWallRight_M" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.5, -4)
+use_collision = true
+size = Vector3(0.2, 3, 6)
+material = SubResource("wall_mat")
+
+[node name="HallWallRight_S" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.5, 8)
+use_collision = true
+size = Vector3(0.2, 3, 14)
+material = SubResource("wall_mat")
+
+; Hallway end wall (north)
+[node name="HallWallEnd_N" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -15)
+use_collision = true
+size = Vector3(4, 3, 0.2)
+material = SubResource("wall_mat")
+
+; ===== LOBBY (south end z=8+) =====
+[node name="Lobby_Sign" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 14.9)
+text = "Agent Office"
+font_size = 72
+modulate = Color(0.2, 0.6, 1, 1)
+
+[node name="Lobby_BackWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 15)
+use_collision = true
+size = Vector3(10, 3, 0.2)
+material = SubResource("wall_mat")
+
+[node name="Lobby_LeftWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, 11)
+use_collision = true
+size = Vector3(0.2, 3, 8)
+material = SubResource("wall_mat")
+
+[node name="Lobby_RightWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.5, 11)
+use_collision = true
+size = Vector3(0.2, 3, 8)
+material = SubResource("wall_mat")
+
+[node name="Lobby_Light" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8, 10)
+light_color = Color(1, 0.95, 0.9, 1)
+light_energy = 0.6
+omni_range = 8
 
 ; ===== ROOM 1: Ultron (left side, z=-8) =====
 [node name="Room1_BackWall" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, -11)
+use_collision = true
 size = Vector3(8, 3, 0.2)
 material = SubResource("wall_mat")
 
 [node name="Room1_FrontWall" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, -5)
+use_collision = true
 size = Vector3(8, 3, 0.2)
 material = SubResource("wall_mat")
 
 [node name="Room1_SideWall" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.5, -8)
+use_collision = true
 size = Vector3(0.2, 3, 6)
 material = SubResource("wall_mat")
 
 [node name="Room1_Desk" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0.4, -9)
+use_collision = true
 size = Vector3(2, 0.8, 1)
 material = SubResource("desk_mat")
+
+[node name="Room1_Chair1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0.25, -10.2)
+use_collision = true
+size = Vector3(0.6, 0.5, 0.6)
+material = SubResource("chair_mat")
+
+[node name="Room1_Chair2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0.25, -7.8)
+use_collision = true
+size = Vector3(0.6, 0.5, 0.6)
+material = SubResource("chair_mat")
 
 [node name="Room1_Screen" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1.2, -9.4)
 size = Vector3(1.5, 1, 0.05)
+
+; Whiteboard on back wall
+[node name="Room1_Whiteboard" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.6, -10.85)
+size = Vector3(2, 1.2, 0.05)
+material = SubResource("whiteboard_mat")
+
+[node name="Room1_WhiteboardLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.35, -10.84)
+text = "Whiteboard"
+font_size = 24
+modulate = Color(0.4, 0.4, 0.4, 1)
+
+; TV Screens
+[node name="Room1_TV_Main" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.85, 1.6, -8)
+size = Vector3(0.05, 1.2, 2)
+material = SubResource("screen_mat")
+
+[node name="Room1_TV_Secondary" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.6, -5.15)
+size = Vector3(1.2, 0.8, 0.05)
+material = SubResource("screen_mat")
 
 [node name="Room1_Label" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.8, -5.05)
 text = "Ultron"
 font_size = 48
 modulate = Color(0.2, 0.8, 1, 1)
+
+[node name="Room1_Light" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.8, -8)
+light_color = Color(0.8, 0.85, 1, 1)
+light_energy = 0.5
+omni_range = 6
 
 [node name="Room1_Area" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, -8)
@@ -83,29 +212,74 @@ shape = SubResource("room_shape")
 ; ===== ROOM 2: Spinfluencer (left side, z=0) =====
 [node name="Room2_BackWall" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, -3)
+use_collision = true
 size = Vector3(8, 3, 0.2)
 material = SubResource("wall_mat")
 
 [node name="Room2_FrontWall" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, 3)
+use_collision = true
 size = Vector3(8, 3, 0.2)
 material = SubResource("wall_mat")
 
 [node name="Room2_SideWall" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.5, 0)
+use_collision = true
 size = Vector3(0.2, 3, 6)
 material = SubResource("wall_mat")
 
 [node name="Room2_Desk" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0.4, -1)
+use_collision = true
 size = Vector3(2, 0.8, 1)
 material = SubResource("desk_mat")
+
+[node name="Room2_Chair1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0.25, -2.2)
+use_collision = true
+size = Vector3(0.6, 0.5, 0.6)
+material = SubResource("chair_mat")
+
+[node name="Room2_Chair2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0.25, 0.2)
+use_collision = true
+size = Vector3(0.6, 0.5, 0.6)
+material = SubResource("chair_mat")
+
+; Whiteboard on back wall
+[node name="Room2_Whiteboard" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.6, -2.85)
+size = Vector3(2, 1.2, 0.05)
+material = SubResource("whiteboard_mat")
+
+[node name="Room2_WhiteboardLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.35, -2.84)
+text = "Whiteboard"
+font_size = 24
+modulate = Color(0.4, 0.4, 0.4, 1)
+
+; TV Screens
+[node name="Room2_TV_Main" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.85, 1.6, 0)
+size = Vector3(0.05, 1.2, 2)
+material = SubResource("screen_mat")
+
+[node name="Room2_TV_Secondary" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.6, 2.85)
+size = Vector3(1.2, 0.8, 0.05)
+material = SubResource("screen_mat")
 
 [node name="Room2_Label" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.8, 2.95)
 text = "Spinfluencer"
 font_size = 48
 modulate = Color(1, 0.4, 0.7, 1)
+
+[node name="Room2_Light" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.8, 0)
+light_color = Color(1, 0.85, 0.9, 1)
+light_energy = 0.5
+omni_range = 6
 
 [node name="Room2_Area" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, 0)
@@ -118,29 +292,74 @@ shape = SubResource("room_shape")
 ; ===== ROOM 3: Dexer (right side, z=-8) =====
 [node name="Room3_BackWall" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, -11)
+use_collision = true
 size = Vector3(8, 3, 0.2)
 material = SubResource("wall_mat")
 
 [node name="Room3_FrontWall" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, -5)
+use_collision = true
 size = Vector3(8, 3, 0.2)
 material = SubResource("wall_mat")
 
 [node name="Room3_SideWall" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.5, -8)
+use_collision = true
 size = Vector3(0.2, 3, 6)
 material = SubResource("wall_mat")
 
 [node name="Room3_Desk" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0.4, -9)
+use_collision = true
 size = Vector3(2, 0.8, 1)
 material = SubResource("desk_mat")
+
+[node name="Room3_Chair1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0.25, -10.2)
+use_collision = true
+size = Vector3(0.6, 0.5, 0.6)
+material = SubResource("chair_mat")
+
+[node name="Room3_Chair2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0.25, -7.8)
+use_collision = true
+size = Vector3(0.6, 0.5, 0.6)
+material = SubResource("chair_mat")
+
+; Whiteboard on back wall
+[node name="Room3_Whiteboard" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.6, -10.85)
+size = Vector3(2, 1.2, 0.05)
+material = SubResource("whiteboard_mat")
+
+[node name="Room3_WhiteboardLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.35, -10.84)
+text = "Whiteboard"
+font_size = 24
+modulate = Color(0.4, 0.4, 0.4, 1)
+
+; TV Screens
+[node name="Room3_TV_Main" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.85, 1.6, -8)
+size = Vector3(0.05, 1.2, 2)
+material = SubResource("screen_mat")
+
+[node name="Room3_TV_Secondary" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.6, -5.15)
+size = Vector3(1.2, 0.8, 0.05)
+material = SubResource("screen_mat")
 
 [node name="Room3_Label" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.8, -5.05)
 text = "Dexer"
 font_size = 48
 modulate = Color(0.4, 1, 0.4, 1)
+
+[node name="Room3_Light" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.8, -8)
+light_color = Color(0.85, 1, 0.85, 1)
+light_energy = 0.5
+omni_range = 6
 
 [node name="Room3_Area" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, -8)
@@ -153,29 +372,74 @@ shape = SubResource("room_shape")
 ; ===== ROOM 4: Architect (right side, z=0) =====
 [node name="Room4_BackWall" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, -3)
+use_collision = true
 size = Vector3(8, 3, 0.2)
 material = SubResource("wall_mat")
 
 [node name="Room4_FrontWall" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, 3)
+use_collision = true
 size = Vector3(8, 3, 0.2)
 material = SubResource("wall_mat")
 
 [node name="Room4_SideWall" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.5, 0)
+use_collision = true
 size = Vector3(0.2, 3, 6)
 material = SubResource("wall_mat")
 
 [node name="Room4_Desk" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0.4, -1)
+use_collision = true
 size = Vector3(2, 0.8, 1)
 material = SubResource("desk_mat")
+
+[node name="Room4_Chair1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0.25, -2.2)
+use_collision = true
+size = Vector3(0.6, 0.5, 0.6)
+material = SubResource("chair_mat")
+
+[node name="Room4_Chair2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0.25, 0.2)
+use_collision = true
+size = Vector3(0.6, 0.5, 0.6)
+material = SubResource("chair_mat")
+
+; Whiteboard on back wall
+[node name="Room4_Whiteboard" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.6, -2.85)
+size = Vector3(2, 1.2, 0.05)
+material = SubResource("whiteboard_mat")
+
+[node name="Room4_WhiteboardLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.35, -2.84)
+text = "Whiteboard"
+font_size = 24
+modulate = Color(0.4, 0.4, 0.4, 1)
+
+; TV Screens
+[node name="Room4_TV_Main" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.85, 1.6, 0)
+size = Vector3(0.05, 1.2, 2)
+material = SubResource("screen_mat")
+
+[node name="Room4_TV_Secondary" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.6, 2.85)
+size = Vector3(1.2, 0.8, 0.05)
+material = SubResource("screen_mat")
 
 [node name="Room4_Label" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.8, 2.95)
 text = "Architect"
 font_size = 48
 modulate = Color(1, 0.8, 0.2, 1)
+
+[node name="Room4_Light" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.8, 0)
+light_color = Color(1, 0.95, 0.8, 1)
+light_energy = 0.5
+omni_range = 6
 
 [node name="Room4_Area" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, 0)
@@ -185,9 +449,20 @@ room_name = "Architect"
 [node name="Room4_AreaShape" type="CollisionShape3D" parent="Room4_Area"]
 shape = SubResource("room_shape")
 
-; ===== PLAYER =====
+; ===== PLAYER (spawns in lobby) =====
 [node name="Player" parent="." instance=ExtResource("1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 10)
+
+; ===== HUD =====
+[node name="HUD" type="CanvasLayer" parent="."]
+layer = 10
+
+[node name="RoomHUD" type="Label" parent="HUD"]
+offset_left = 16
+offset_top = 16
+offset_right = 300
+offset_bottom = 48
+text = "Lobby"
 
 ; ===== CHAT UI =====
 [node name="ChatUI" type="CanvasLayer" parent="."]
