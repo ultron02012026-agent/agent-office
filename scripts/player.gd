@@ -15,11 +15,19 @@ var bob_timer: float = 0.0
 @onready var camera = $CameraPivot/Camera3D
 
 func _ready():
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	# Welcome overlay handles initial mouse mode
+	var welcome = get_node_or_null("/root/Main/WelcomeOverlay")
+	if not welcome or not welcome.is_showing:
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	# Apply FOV from settings
 	camera.fov = SettingsManager.fov
 
 func _unhandled_input(event):
+	# Welcome overlay blocks all input
+	var welcome = get_node_or_null("/root/Main/WelcomeOverlay")
+	if welcome and welcome.is_showing:
+		return
+	
 	# Settings menu takes priority
 	var settings_menu = get_node_or_null("/root/Main/SettingsMenu")
 	if settings_menu and settings_menu.is_open:
@@ -59,6 +67,9 @@ func _unhandled_input(event):
 			voice_chat.stop_recording()
 
 func _physics_process(delta):
+	var welcome = get_node_or_null("/root/Main/WelcomeOverlay")
+	if welcome and welcome.is_showing:
+		return
 	var settings_menu = get_node_or_null("/root/Main/SettingsMenu")
 	if settings_menu and settings_menu.is_open:
 		return
@@ -125,6 +136,12 @@ func _update_hud():
 
 func enter_room(room_name: String):
 	current_room = room_name
+	
+	# Show title card
+	var title_card = get_node_or_null("/root/Main/RoomTitleCard")
+	if title_card:
+		title_card.show_room(room_name)
+	
 	var chat_ui = get_node("/root/Main/ChatUI")
 	if chat_ui:
 		chat_ui.show_chat(room_name)
@@ -138,6 +155,11 @@ func enter_room(room_name: String):
 func exit_room(room_name: String):
 	if current_room == room_name:
 		current_room = ""
+		
+		var title_card = get_node_or_null("/root/Main/RoomTitleCard")
+		if title_card:
+			title_card.show_exit()
+		
 		var chat_ui = get_node("/root/Main/ChatUI")
 		if chat_ui:
 			chat_ui.hide_chat()

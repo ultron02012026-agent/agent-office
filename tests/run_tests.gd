@@ -13,6 +13,8 @@ func _init():
 		["RoomArea", "res://tests/test_room_area.gd"],
 		["Player", "res://tests/test_player.gd"],
 		["Settings", "res://tests/test_settings.gd"],
+		["WelcomeOverlay", "res://tests/test_welcome_overlay.gd"],
+		["Polish", "res://tests/test_polish.gd"],
 	]
 	
 	for entry in test_files:

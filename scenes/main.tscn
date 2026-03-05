@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://main001"]
+[gd_scene load_steps=24 format=3 uid="uid://main001"]
 
 [ext_resource type="PackedScene" uid="uid://player001" path="res://scenes/player.tscn" id="1"]
 [ext_resource type="Script" path="res://scripts/room_area.gd" id="2"]
@@ -6,6 +6,11 @@
 [ext_resource type="Script" path="res://scripts/voice_chat.gd" id="4"]
 [ext_resource type="Script" path="res://scripts/settings_menu.gd" id="5"]
 [ext_resource type="Script" path="res://scripts/agent_avatar.gd" id="6"]
+[ext_resource type="Script" path="res://scripts/welcome_overlay.gd" id="7"]
+[ext_resource type="Script" path="res://scripts/room_title_card.gd" id="8"]
+[ext_resource type="Script" path="res://scripts/minimap.gd" id="9"]
+[ext_resource type="Script" path="res://scripts/agent_status.gd" id="10"]
+[ext_resource type="Script" path="res://scripts/proximity_prompt.gd" id="11"]
 
 [sub_resource type="StandardMaterial3D" id="floor_mat"]
 albedo_color = Color(0.3, 0.3, 0.35, 1)
@@ -18,9 +23,15 @@ albedo_color = Color(0.45, 0.3, 0.15, 1)
 
 [sub_resource type="StandardMaterial3D" id="whiteboard_mat"]
 albedo_color = Color(0.95, 0.95, 0.95, 1)
+emission_enabled = true
+emission = Color(0.9, 0.9, 0.95, 1)
+emission_energy_multiplier = 0.3
 
 [sub_resource type="StandardMaterial3D" id="screen_mat"]
 albedo_color = Color(0.15, 0.15, 0.18, 1)
+emission_enabled = true
+emission = Color(0.1, 0.15, 0.25, 1)
+emission_energy_multiplier = 0.5
 
 [sub_resource type="StandardMaterial3D" id="chair_mat"]
 albedo_color = Color(0.25, 0.25, 0.35, 1)
@@ -30,6 +41,9 @@ albedo_color = Color(0.7, 0.7, 0.72, 1)
 
 [sub_resource type="BoxShape3D" id="room_shape"]
 size = Vector3(6, 4, 6)
+
+[sub_resource type="BoxShape3D" id="proximity_shape"]
+size = Vector3(3, 4, 3)
 
 [sub_resource type="CapsuleMesh" id="avatar_mesh"]
 radius = 0.3
@@ -52,6 +66,25 @@ albedo_color = Color(1, 0.8, 0.2, 1)
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.866, -0.25, 0.433, 0, 0.866, 0.5, -0.5, -0.433, 0.75, 0, 10, 0)
 shadow_enabled = true
+
+; ===== AMBIENT LIGHT (prevents pitch black rooms) =====
+[node name="AmbientLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -4)
+light_color = Color(0.8, 0.8, 0.85, 1)
+light_energy = 0.15
+omni_range = 25
+
+[node name="HallwayLight1" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8, -4)
+light_color = Color(0.9, 0.9, 0.85, 1)
+light_energy = 0.4
+omni_range = 8
+
+[node name="HallwayLight2" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8, -10)
+light_color = Color(0.9, 0.9, 0.85, 1)
+light_energy = 0.4
+omni_range = 8
 
 ; ===== FLOOR =====
 [node name="Floor" type="CSGBox3D" parent="."]
@@ -609,6 +642,25 @@ layer = 20
 process_mode = 3
 script = ExtResource("5")
 
+; ===== PROXIMITY PROMPT =====
+[node name="ProximityPrompt" type="Label" parent="HUD"]
+visible = false
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -200
+offset_top = -60
+offset_right = 200
+offset_bottom = -30
+horizontal_alignment = 1
+theme_override_colors/font_color = Color(0.8, 0.9, 1, 1)
+
+; ===== MINIMAP =====
+[node name="Minimap" type="Control" parent="HUD"]
+script = ExtResource("9")
+
 ; ===== MIC INDICATOR =====
 [node name="MicIndicator" type="Label" parent="HUD"]
 visible = false
@@ -619,6 +671,74 @@ offset_bottom = 80
 text = "🎙️ Recording..."
 theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
 
+; ===== WELCOME OVERLAY =====
+[node name="WelcomeOverlay" type="CanvasLayer" parent="."]
+layer = 30
+script = ExtResource("7")
+
+; ===== ROOM TITLE CARD =====
+[node name="RoomTitleCard" type="CanvasLayer" parent="."]
+layer = 15
+script = ExtResource("8")
+
+; ===== AGENT STATUS INDICATORS =====
+[node name="Room1_StatusDot" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1, 2.9, -8)
+script = ExtResource("10")
+agent_name = "Ultron"
+
+[node name="Room2_StatusDot" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1, 2.9, 0)
+script = ExtResource("10")
+agent_name = "Spinfluencer"
+
+[node name="Room3_StatusDot" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1, 2.9, -8)
+script = ExtResource("10")
+agent_name = "Dexer"
+
+[node name="Room4_StatusDot" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1, 2.9, 0)
+script = ExtResource("10")
+agent_name = "Architect"
+
+; ===== PROXIMITY ZONES (larger than room areas, for door prompts) =====
+[node name="Room1_Proximity" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.5, -8)
+script = ExtResource("11")
+room_name = "Ultron"
+
+[node name="Room1_ProximityShape" type="CollisionShape3D" parent="Room1_Proximity"]
+shape = SubResource("proximity_shape")
+
+[node name="Room2_Proximity" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.5, 0)
+script = ExtResource("11")
+room_name = "Spinfluencer"
+
+[node name="Room2_ProximityShape" type="CollisionShape3D" parent="Room2_Proximity"]
+shape = SubResource("proximity_shape")
+
+[node name="Room3_Proximity" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.5, -8)
+script = ExtResource("11")
+room_name = "Dexer"
+
+[node name="Room3_ProximityShape" type="CollisionShape3D" parent="Room3_Proximity"]
+shape = SubResource("proximity_shape")
+
+[node name="Room4_Proximity" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.5, 0)
+script = ExtResource("11")
+room_name = "Architect"
+
+[node name="Room4_ProximityShape" type="CollisionShape3D" parent="Room4_Proximity"]
+shape = SubResource("proximity_shape")
+
+; ===== ROOM AUDIO STUBS (for enter/exit sound cues) =====
+[node name="RoomEnterSound" type="AudioStreamPlayer" parent="."]
+[node name="RoomExitSound" type="AudioStreamPlayer" parent="."]
+
 [connection signal="body_entered" from="Room1_Area" to="Room1_Area" method="_on_body_entered"]
 [connection signal="body_exited" from="Room1_Area" to="Room1_Area" method="_on_body_exited"]
 [connection signal="body_entered" from="Room2_Area" to="Room2_Area" method="_on_body_entered"]
@@ -627,3 +747,11 @@ theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
 [connection signal="body_exited" from="Room3_Area" to="Room3_Area" method="_on_body_exited"]
 [connection signal="body_entered" from="Room4_Area" to="Room4_Area" method="_on_body_entered"]
 [connection signal="body_exited" from="Room4_Area" to="Room4_Area" method="_on_body_exited"]
+[connection signal="body_entered" from="Room1_Proximity" to="Room1_Proximity" method="_on_body_entered"]
+[connection signal="body_exited" from="Room1_Proximity" to="Room1_Proximity" method="_on_body_exited"]
+[connection signal="body_entered" from="Room2_Proximity" to="Room2_Proximity" method="_on_body_entered"]
+[connection signal="body_exited" from="Room2_Proximity" to="Room2_Proximity" method="_on_body_exited"]
+[connection signal="body_entered" from="Room3_Proximity" to="Room3_Proximity" method="_on_body_entered"]
+[connection signal="body_exited" from="Room3_Proximity" to="Room3_Proximity" method="_on_body_exited"]
+[connection signal="body_entered" from="Room4_Proximity" to="Room4_Proximity" method="_on_body_entered"]
+[connection signal="body_exited" from="Room4_Proximity" to="Room4_Proximity" method="_on_body_exited"]

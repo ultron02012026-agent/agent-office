@@ -4,6 +4,24 @@ All notable changes to Agent Office.
 
 ---
 
+## v0.5.0 — 2026-03-05
+*Polish & Gameplay Feel*
+
+### New
+- **Welcome overlay** — shows controls on game start, dismisses on any keypress, then captures mouse
+- **Room title cards** — agent name + role shown center-screen on room entry, fades after 2 seconds
+- **Minimap** — bottom-right HUD showing floor plan with colored room rectangles, player dot, and room labels
+- **Agent status indicators** — colored dots above each door (green=ready, yellow=thinking, red=disconnected)
+- **Interaction prompts** — "Enter [Room]'s Office →" shown when near a doorway but not yet inside
+- **Better lighting** — ambient light prevents pitch-black areas; hallway lights added; emissive glow on whiteboards and TV screens
+- **Audio cue stubs** — AudioStreamPlayer nodes wired up for room enter/exit sounds (drop in .wav/.ogg files later)
+- **Proximity zones** — larger Area3D around each doorway for interaction prompts
+
+### Tests
+- 52 total tests (up from 35): welcome overlay state, title card fade, agent status states, minimap coordinate mapping, proximity prompts
+
+---
+
 ## v0.3.0 — In Progress
 *Voice, Settings, Tests*
 
