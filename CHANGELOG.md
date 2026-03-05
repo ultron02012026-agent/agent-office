@@ -22,19 +22,31 @@ All notable changes to Agent Office.
 
 ---
 
-## v0.3.0 — In Progress
-*Voice, Settings, Tests*
+## v0.5.0 — 2026-03-05
+*Polish, UX, Coverage*
 
-- [ ] Push-to-talk voice chat (V key) with spatial audio from agent position
-- [ ] TTS responses played back as 3D audio
-- [ ] Text chat as fallback (Tab to toggle)
-- [ ] Settings menu (Esc key): audio, connection, controls, display, agent config
-- [ ] Settings persist to disk
-- [ ] Agent avatar capsules sitting in chairs (colored per agent)
-- [ ] Avatar pulses when agent is speaking
-- [ ] Room name labels on door frames
-- [ ] Test suite: chat_ui, room_area, player, settings
-- [ ] Headless test runner: `godot --headless --script tests/run_tests.gd`
+### New
+- **Welcome overlay** — title + controls guide on launch, press any key to start
+- **Room title cards** — agent name fades in center-screen on room entry
+- **Minimap** — bottom-right floor plan with player dot and room labels
+- **Agent status indicators** — green/yellow/red dots above doors (ready/thinking/disconnected)
+- **Interaction prompts** — "Enter [Room]'s Office →" when near doorways
+- **Better lighting** — ambient light, hallway lights, emissive whiteboards + TV screens
+- **Tailscale support** — default gateway URL points to Mac mini over Tailscale, auth token in settings
+- **Agent-friendly codebase** — AGENTS.md, per-directory READMEs, .claude/commands/, .cursorrules, inline doc headers
+- **178 tests passing** (up from 35) — voice chat, settings menu, avatars, minimap, proximity prompts all covered
+
+## v0.3.0 — 2026-03-05
+*Voice, Settings, Avatars*
+
+- Push-to-talk voice chat (V key) with spatial audio from agent position
+- TTS responses played back via AudioStreamPlayer3D
+- Text chat as fallback (Tab to toggle)
+- Settings menu (Esc key): audio, connection, controls, display, agent config
+- Settings persist to `user://settings.cfg`
+- Colored agent avatar capsules sitting at desks (pulse when speaking)
+- Room name labels on door frames
+- Headless test runner: `godot --headless --script tests/run_tests.gd`
 
 ## v0.2.0 — 2026-03-05
 *Collision, Furniture, Polish*
