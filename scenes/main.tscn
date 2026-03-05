@@ -1,0 +1,244 @@
+[gd_scene load_steps=8 format=3 uid="uid://main001"]
+
+[ext_resource type="PackedScene" uid="uid://player001" path="res://scenes/player.tscn" id="1"]
+[ext_resource type="Script" path="res://scripts/room_area.gd" id="2"]
+[ext_resource type="Script" path="res://scripts/chat_ui.gd" id="3"]
+
+[sub_resource type="StandardMaterial3D" id="floor_mat"]
+albedo_color = Color(0.3, 0.3, 0.35, 1)
+
+[sub_resource type="StandardMaterial3D" id="wall_mat"]
+albedo_color = Color(0.6, 0.6, 0.55, 1)
+
+[sub_resource type="StandardMaterial3D" id="desk_mat"]
+albedo_color = Color(0.45, 0.3, 0.15, 1)
+
+[sub_resource type="BoxShape3D" id="room_shape"]
+size = Vector3(6, 4, 6)
+
+[sub_resource type="Theme" id="chat_theme"]
+
+[node name="Main" type="Node3D"]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.866, -0.25, 0.433, 0, 0.866, 0.5, -0.5, -0.433, 0.75, 0, 10, 0)
+shadow_enabled = true
+
+; ===== FLOOR =====
+[node name="Floor" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+size = Vector3(30, 0.2, 30)
+material = SubResource("floor_mat")
+
+; ===== HALLWAY WALLS (long corridor along Z axis) =====
+[node name="HallWallLeft" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 1.5, 0)
+size = Vector3(0.2, 3, 30)
+material = SubResource("wall_mat")
+
+[node name="HallWallRight" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.5, 0)
+size = Vector3(0.2, 3, 30)
+material = SubResource("wall_mat")
+
+; ===== ROOM 1: Ultron (left side, z=-8) =====
+[node name="Room1_BackWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, -11)
+size = Vector3(8, 3, 0.2)
+material = SubResource("wall_mat")
+
+[node name="Room1_FrontWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, -5)
+size = Vector3(8, 3, 0.2)
+material = SubResource("wall_mat")
+
+[node name="Room1_SideWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.5, -8)
+size = Vector3(0.2, 3, 6)
+material = SubResource("wall_mat")
+
+[node name="Room1_Desk" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0.4, -9)
+size = Vector3(2, 0.8, 1)
+material = SubResource("desk_mat")
+
+[node name="Room1_Screen" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1.2, -9.4)
+size = Vector3(1.5, 1, 0.05)
+
+[node name="Room1_Label" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.8, -5.05)
+text = "Ultron"
+font_size = 48
+modulate = Color(0.2, 0.8, 1, 1)
+
+[node name="Room1_Area" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, -8)
+script = ExtResource("2")
+room_name = "Ultron"
+
+[node name="Room1_AreaShape" type="CollisionShape3D" parent="Room1_Area"]
+shape = SubResource("room_shape")
+
+; ===== ROOM 2: Spinfluencer (left side, z=0) =====
+[node name="Room2_BackWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, -3)
+size = Vector3(8, 3, 0.2)
+material = SubResource("wall_mat")
+
+[node name="Room2_FrontWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, 3)
+size = Vector3(8, 3, 0.2)
+material = SubResource("wall_mat")
+
+[node name="Room2_SideWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.5, 0)
+size = Vector3(0.2, 3, 6)
+material = SubResource("wall_mat")
+
+[node name="Room2_Desk" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0.4, -1)
+size = Vector3(2, 0.8, 1)
+material = SubResource("desk_mat")
+
+[node name="Room2_Label" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 2.8, 2.95)
+text = "Spinfluencer"
+font_size = 48
+modulate = Color(1, 0.4, 0.7, 1)
+
+[node name="Room2_Area" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6, 1.5, 0)
+script = ExtResource("2")
+room_name = "Spinfluencer"
+
+[node name="Room2_AreaShape" type="CollisionShape3D" parent="Room2_Area"]
+shape = SubResource("room_shape")
+
+; ===== ROOM 3: Dexer (right side, z=-8) =====
+[node name="Room3_BackWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, -11)
+size = Vector3(8, 3, 0.2)
+material = SubResource("wall_mat")
+
+[node name="Room3_FrontWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, -5)
+size = Vector3(8, 3, 0.2)
+material = SubResource("wall_mat")
+
+[node name="Room3_SideWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.5, -8)
+size = Vector3(0.2, 3, 6)
+material = SubResource("wall_mat")
+
+[node name="Room3_Desk" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0.4, -9)
+size = Vector3(2, 0.8, 1)
+material = SubResource("desk_mat")
+
+[node name="Room3_Label" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.8, -5.05)
+text = "Dexer"
+font_size = 48
+modulate = Color(0.4, 1, 0.4, 1)
+
+[node name="Room3_Area" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, -8)
+script = ExtResource("2")
+room_name = "Dexer"
+
+[node name="Room3_AreaShape" type="CollisionShape3D" parent="Room3_Area"]
+shape = SubResource("room_shape")
+
+; ===== ROOM 4: Architect (right side, z=0) =====
+[node name="Room4_BackWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, -3)
+size = Vector3(8, 3, 0.2)
+material = SubResource("wall_mat")
+
+[node name="Room4_FrontWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, 3)
+size = Vector3(8, 3, 0.2)
+material = SubResource("wall_mat")
+
+[node name="Room4_SideWall" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.5, 0)
+size = Vector3(0.2, 3, 6)
+material = SubResource("wall_mat")
+
+[node name="Room4_Desk" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0.4, -1)
+size = Vector3(2, 0.8, 1)
+material = SubResource("desk_mat")
+
+[node name="Room4_Label" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.8, 2.95)
+text = "Architect"
+font_size = 48
+modulate = Color(1, 0.8, 0.2, 1)
+
+[node name="Room4_Area" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 1.5, 0)
+script = ExtResource("2")
+room_name = "Architect"
+
+[node name="Room4_AreaShape" type="CollisionShape3D" parent="Room4_Area"]
+shape = SubResource("room_shape")
+
+; ===== PLAYER =====
+[node name="Player" parent="." instance=ExtResource("1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 5)
+
+; ===== CHAT UI =====
+[node name="ChatUI" type="CanvasLayer" parent="."]
+script = ExtResource("3")
+
+[node name="Panel" type="PanelContainer" parent="ChatUI"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -400
+offset_right = 0
+offset_top = 0
+offset_bottom = 0
+grow_horizontal = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ChatUI/Panel"]
+layout_mode = 2
+
+[node name="RoomLabel" type="Label" parent="ChatUI/Panel/VBoxContainer"]
+layout_mode = 2
+text = "Room"
+horizontal_alignment = 1
+
+[node name="ChatLog" type="RichTextLabel" parent="ChatUI/Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+bbcode_enabled = true
+text = ""
+scroll_following = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ChatUI/Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="ChatUI/Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Type a message..."
+
+[node name="SendButton" type="Button" parent="ChatUI/Panel/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Send"
+
+[node name="HTTPRequest" type="HTTPRequest" parent="ChatUI"]
+
+[connection signal="body_entered" from="Room1_Area" to="Room1_Area" method="_on_body_entered"]
+[connection signal="body_exited" from="Room1_Area" to="Room1_Area" method="_on_body_exited"]
+[connection signal="body_entered" from="Room2_Area" to="Room2_Area" method="_on_body_entered"]
+[connection signal="body_exited" from="Room2_Area" to="Room2_Area" method="_on_body_exited"]
+[connection signal="body_entered" from="Room3_Area" to="Room3_Area" method="_on_body_entered"]
+[connection signal="body_exited" from="Room3_Area" to="Room3_Area" method="_on_body_exited"]
+[connection signal="body_entered" from="Room4_Area" to="Room4_Area" method="_on_body_entered"]
+[connection signal="body_exited" from="Room4_Area" to="Room4_Area" method="_on_body_exited"]
