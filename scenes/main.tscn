@@ -793,16 +793,17 @@ text = "Lobby"
 script = ExtResource("3")
 
 [node name="Panel" type="PanelContainer" parent="ChatUI"]
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 0.0
-anchor_right = 1.0
+anchors_preset = 2
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 0.0
 anchor_bottom = 1.0
-offset_left = -400
-offset_right = 0
-offset_top = 0
-offset_bottom = 0
-grow_horizontal = 0
+offset_left = 16
+offset_top = -280
+offset_right = 420
+offset_bottom = -16
+grow_vertical = 0
+modulate = Color(1, 1, 1, 0.75)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ChatUI/Panel"]
 layout_mode = 2
@@ -819,21 +820,10 @@ bbcode_enabled = true
 text = ""
 scroll_following = true
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ChatUI/Panel/VBoxContainer"]
+[node name="VoiceIndicator" type="Label" parent="ChatUI/Panel/VBoxContainer"]
 layout_mode = 2
-
-[node name="LineEdit" type="LineEdit" parent="ChatUI/Panel/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-placeholder_text = "Type a message..."
-
-[node name="SendButton" type="Button" parent="ChatUI/Panel/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "Send"
-
-[node name="ClearButton" type="Button" parent="ChatUI/Panel/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-text = "Clear"
+text = "🎙️ Listening... (hold V to talk)"
+horizontal_alignment = 1
 
 [node name="HTTPRequest" type="HTTPRequest" parent="ChatUI"]
 

@@ -1,5 +1,6 @@
 ## Voice chat: push-to-talk mic capture → WAV → STT → TTS → spatial audio playback.
-## Key methods: start/stop_recording(), request_tts(), toggle_voice_mode(), set_room(), clear_room()
+## Always active when in a room (no toggle needed). Voice-only interaction mode.
+## Key methods: start/stop_recording(), request_tts(), set_room(), clear_room()
 ## Signals: transcription_received(text), tts_started(), tts_finished()
 ## Depends on: SettingsManager (autoload), room's AudioStreamPlayer3D for spatial TTS
 extends Node
@@ -9,7 +10,6 @@ signal tts_started()
 signal tts_finished()
 
 var is_recording: bool = false
-var voice_mode: bool = false  # false = text mode, true = voice mode
 var audio_effect: AudioEffectCapture
 var record_bus_idx: int = -1
 var recorded_frames: PackedVector2Array = PackedVector2Array()
@@ -66,9 +66,6 @@ func clear_room():
 	current_room = ""
 	tts_player = null
 	stop_recording()
-
-func toggle_voice_mode():
-	voice_mode = !voice_mode
 
 func start_recording():
 	if is_recording or not SettingsManager.mic_enabled:

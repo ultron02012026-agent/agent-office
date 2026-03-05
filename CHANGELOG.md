@@ -4,6 +4,31 @@ All notable changes to Agent Office.
 
 ---
 
+## v0.8.0 — 2026-03-05
+*Voice-Only Interaction*
+
+### Changed
+- **Voice-only mode** — removed text chat input entirely. Players interact with agents exclusively via push-to-talk voice (V key). The chat panel is now a **transcript panel** (display only)
+- **Transcript panel redesign** — moved from right side to bottom-left (subtitle style), semi-transparent (75% opacity), narrower and shorter. Shows voice status indicator at bottom
+- **Auto-activate voice** — voice mode activates automatically on room entry, no Tab toggle needed
+- **Voice status indicators** — bottom of transcript shows: 🎙️ Listening, 🔴 Recording, ⏳ Processing, 💭 Thinking, 🔊 Speaking
+- **Thinking indicator** — shows "..." in transcript while waiting for agent response, removed when response arrives
+- **Escape exits room** — since there's no text input to close, Escape now exits the room directly
+- **Always TTS** — agent responses always trigger TTS playback (not conditional on voice_mode toggle)
+
+### Removed
+- Text input field (LineEdit) and Send button from chat panel
+- `chat_send` input action (Enter key to send)
+- `toggle_voice` input action (Tab key to toggle voice/text)
+- `voice_mode` toggle from VoiceChat (always voice when in room)
+- Clear button from chat panel
+
+### Tests
+- Updated test_chat_ui.gd for transcript-only behavior (voice status states, no text input validation)
+- Updated test_voice_chat.gd (removed toggle tests, added always-voice-mode test)
+
+---
+
 ## v0.7.0 — 2026-03-05
 *Multiplayer Foundation & Advanced Features*
 
