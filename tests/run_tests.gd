@@ -24,6 +24,13 @@ func _init():
 		["Notification", "res://tests/test_notification.gd"],
 		["DoorAnim", "res://tests/test_door_anim.gd"],
 		["Immersion", "res://tests/test_immersion.gd"],
+		["AgentSocial", "res://tests/test_agent_social.gd"],
+		["CommandPalette", "res://tests/test_command_palette.gd"],
+		["BulletinBoard", "res://tests/test_bulletin_board.gd"],
+		["SprintTimer", "res://tests/test_sprint_timer.gd"],
+		["Ambiance", "res://tests/test_ambiance.gd"],
+		["Screenshot", "res://tests/test_screenshot.gd"],
+		["DebugOverlay", "res://tests/test_debug_overlay.gd"],
 	]
 	
 	for entry in test_files:

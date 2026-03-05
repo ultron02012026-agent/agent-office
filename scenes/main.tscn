@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://main001"]
+[gd_scene load_steps=47 format=3 uid="uid://main001"]
 
 [ext_resource type="PackedScene" uid="uid://player001" path="res://scenes/player.tscn" id="1"]
 [ext_resource type="Script" path="res://scripts/room_area.gd" id="2"]
@@ -14,6 +14,13 @@
 [ext_resource type="Script" path="res://scripts/day_cycle.gd" id="12"]
 [ext_resource type="Script" path="res://scripts/notification_manager.gd" id="13"]
 [ext_resource type="Script" path="res://scripts/door_anim.gd" id="14"]
+[ext_resource type="Script" path="res://scripts/agent_social.gd" id="15"]
+[ext_resource type="Script" path="res://scripts/command_palette.gd" id="16"]
+[ext_resource type="Script" path="res://scripts/bulletin_board.gd" id="17"]
+[ext_resource type="Script" path="res://scripts/sprint_timer.gd" id="18"]
+[ext_resource type="Script" path="res://scripts/ambiance.gd" id="19"]
+[ext_resource type="Script" path="res://scripts/screenshot.gd" id="20"]
+[ext_resource type="Script" path="res://scripts/debug_overlay.gd" id="21"]
 
 [sub_resource type="StandardMaterial3D" id="floor_mat"]
 albedo_color = Color(0.3, 0.3, 0.35, 1)
@@ -1043,6 +1050,35 @@ shape = SubResource("proximity_shape")
 ; ===== ROOM AUDIO STUBS =====
 [node name="RoomEnterSound" type="AudioStreamPlayer" parent="."]
 [node name="RoomExitSound" type="AudioStreamPlayer" parent="."]
+
+; ===== AGENT SOCIAL (visits) =====
+[node name="AgentSocial" type="Node" parent="."]
+script = ExtResource("15")
+
+; ===== COMMAND PALETTE =====
+[node name="CommandPalette" type="CanvasLayer" parent="."]
+layer = 25
+script = ExtResource("16")
+
+; ===== BULLETIN BOARD =====
+[node name="BulletinBoard" type="Node" parent="."]
+script = ExtResource("17")
+
+; ===== SPRINT TIMER =====
+[node name="SprintTimer" type="Control" parent="HUD"]
+script = ExtResource("18")
+
+; ===== AMBIANCE =====
+[node name="Ambiance" type="Node" parent="."]
+script = ExtResource("19")
+
+; ===== SCREENSHOT =====
+[node name="Screenshot" type="Node" parent="."]
+script = ExtResource("20")
+
+; ===== DEBUG OVERLAY =====
+[node name="DebugOverlay" type="Control" parent="HUD"]
+script = ExtResource("21")
 
 [connection signal="body_entered" from="Room1_Area" to="Room1_Area" method="_on_body_entered"]
 [connection signal="body_exited" from="Room1_Area" to="Room1_Area" method="_on_body_exited"]

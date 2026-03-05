@@ -4,6 +4,23 @@ All notable changes to Agent Office.
 
 ---
 
+## v0.7.0 — 2026-03-05
+*Multiplayer Foundation & Advanced Features*
+
+### New
+- **Agent-to-Agent visits** — every ~90 seconds, a random agent avatar "visits" another room's doorway, stays 10s, then returns. Pure visual showing agents are alive and collaborating (`agent_social.gd`)
+- **Command palette** — press `/` to open VS Code-style command overlay. Commands: `/goto <room>`, `/status`, `/clear`, `/sprint <minutes>` (`command_palette.gd`)
+- **Bulletin board** — shared whiteboard in the lobby showing recent activity across all rooms. Auto-updates as you chat with agents (`bulletin_board.gd`)
+- **Sprint timer** — pomodoro-style countdown HUD. Activate via `/sprint 25`. Progress bar at top of screen, color shifts green→yellow→red, flash effect on completion (`sprint_timer.gd`)
+- **Music/ambiance system** — background ambient sound with different loops per zone (lobby hum, office quiet, hallway echo). Crossfades between zones, volume from settings (`ambiance.gd`)
+- **Screenshot mode** — F12 hides HUD, captures screenshot to `user://screenshots/` with timestamp, shows "📸 Saved!" indicator (`screenshot.gd`)
+- **Debug overlay** — F3 toggles performance display: FPS, player position, current room, gateway status, memory usage, day cycle time, active visits, sprint timer (`debug_overlay.gd`)
+
+### Tests
+- **354+ total tests** (up from 239): agent social visits (17), command palette (22), bulletin board (15), sprint timer (18), ambiance (13), screenshot (14), debug overlay (16)
+
+---
+
 ## v0.6.0 — 2026-03-05
 *Game Feel & Immersion*
 
