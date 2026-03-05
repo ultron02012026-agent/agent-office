@@ -1,7 +1,6 @@
 extends CharacterBody3D
 
 const SPEED = 7.0
-const MOUSE_SENSITIVITY = 0.003
 const BOB_FREQUENCY = 14.0
 const BOB_AMPLITUDE = 0.03
 
@@ -13,20 +12,53 @@ var bob_timer: float = 0.0
 
 func _ready():
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	# Apply FOV from settings
+	camera.fov = SettingsManager.fov
 
 func _unhandled_input(event):
+	# Settings menu takes priority
+	var settings_menu = get_node_or_null("/root/Main/SettingsMenu")
+	if settings_menu and settings_menu.is_open:
+		return
+	
 	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-		rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
-		camera_pivot.rotate_x(-event.relative.y * MOUSE_SENSITIVITY)
+		var sens = SettingsManager.mouse_sensitivity
+		rotate_y(-event.relative.x * sens)
+		var y_mult = -1.0 if SettingsManager.invert_y else 1.0
+		camera_pivot.rotate_x(y_mult * -event.relative.y * sens)
 		camera_pivot.rotation.x = clamp(camera_pivot.rotation.x, -PI/4, PI/4)
 	
 	if event.is_action_pressed("ui_cancel"):
-		if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+		if settings_menu and not settings_menu.is_open:
+			settings_menu.open_menu()
+		elif Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 		else:
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	
+	# Voice mode toggle (Tab)
+	if event.is_action_pressed("toggle_voice"):
+		var voice_chat = get_node_or_null("/root/Main/VoiceChat")
+		if voice_chat:
+			voice_chat.toggle_voice_mode()
+			_update_hud()
+	
+	# Push-to-talk (V key)
+	if event.is_action_pressed("push_to_talk"):
+		var voice_chat = get_node_or_null("/root/Main/VoiceChat")
+		if voice_chat and voice_chat.voice_mode and not current_room.is_empty():
+			voice_chat.start_recording()
+	
+	if event.is_action_released("push_to_talk"):
+		var voice_chat = get_node_or_null("/root/Main/VoiceChat")
+		if voice_chat and voice_chat.is_recording:
+			voice_chat.stop_recording()
 
 func _physics_process(delta):
+	var settings_menu = get_node_or_null("/root/Main/SettingsMenu")
+	if settings_menu and settings_menu.is_open:
+		return
+	
 	# Gravity
 	if not is_on_floor():
 		velocity.y -= 20.0 * delta
@@ -54,26 +86,50 @@ func _physics_process(delta):
 		bob_timer = 0.0
 		camera.position.y = lerp(camera.position.y, 0.0, delta * 10.0)
 	
-	# Update HUD
 	_update_hud()
 
 func _update_hud():
 	var hud_label = get_node_or_null("/root/Main/HUD/RoomHUD")
 	if hud_label:
+		var location = ""
 		if current_room.is_empty():
-			# Check if in lobby area
 			if global_position.z > 7:
-				hud_label.text = "📍 Lobby"
+				location = "📍 Lobby"
 			else:
-				hud_label.text = "📍 Hallway"
+				location = "📍 Hallway"
 		else:
-			hud_label.text = "📍 " + current_room + "'s Office"
+			location = "📍 " + current_room + "'s Office"
+		
+		# Voice mode indicator
+		var voice_chat = get_node_or_null("/root/Main/VoiceChat")
+		if voice_chat:
+			if voice_chat.voice_mode:
+				if voice_chat.is_recording:
+					location += "  🎙️ [Recording...]"
+				else:
+					location += "  🎙️ Voice Mode (hold V)"
+			else:
+				location += "  ⌨️ Text Mode"
+		
+		hud_label.text = location
+	
+	# Mic indicator
+	var mic_indicator = get_node_or_null("/root/Main/HUD/MicIndicator")
+	if mic_indicator:
+		var voice_chat = get_node_or_null("/root/Main/VoiceChat")
+		mic_indicator.visible = voice_chat != null and voice_chat.is_recording
 
 func enter_room(room_name: String):
 	current_room = room_name
 	var chat_ui = get_node("/root/Main/ChatUI")
 	if chat_ui:
 		chat_ui.show_chat(room_name)
+	
+	# Set up voice chat for this room
+	var voice_chat = get_node_or_null("/root/Main/VoiceChat")
+	if voice_chat:
+		var tts_player = get_node_or_null("/root/Main/" + room_name + "_TTSPlayer")
+		voice_chat.set_room(room_name, tts_player)
 
 func exit_room(room_name: String):
 	if current_room == room_name:
@@ -81,3 +137,7 @@ func exit_room(room_name: String):
 		var chat_ui = get_node("/root/Main/ChatUI")
 		if chat_ui:
 			chat_ui.hide_chat()
+		
+		var voice_chat = get_node_or_null("/root/Main/VoiceChat")
+		if voice_chat:
+			voice_chat.clear_room()

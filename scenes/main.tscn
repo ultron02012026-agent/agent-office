@@ -1,8 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://main001"]
+[gd_scene load_steps=21 format=3 uid="uid://main001"]
 
 [ext_resource type="PackedScene" uid="uid://player001" path="res://scenes/player.tscn" id="1"]
 [ext_resource type="Script" path="res://scripts/room_area.gd" id="2"]
 [ext_resource type="Script" path="res://scripts/chat_ui.gd" id="3"]
+[ext_resource type="Script" path="res://scripts/voice_chat.gd" id="4"]
+[ext_resource type="Script" path="res://scripts/settings_menu.gd" id="5"]
+[ext_resource type="Script" path="res://scripts/agent_avatar.gd" id="6"]
 
 [sub_resource type="StandardMaterial3D" id="floor_mat"]
 albedo_color = Color(0.3, 0.3, 0.35, 1)
@@ -27,6 +30,22 @@ albedo_color = Color(0.7, 0.7, 0.72, 1)
 
 [sub_resource type="BoxShape3D" id="room_shape"]
 size = Vector3(6, 4, 6)
+
+[sub_resource type="CapsuleMesh" id="avatar_mesh"]
+radius = 0.3
+height = 1.4
+
+[sub_resource type="StandardMaterial3D" id="avatar_mat_ultron"]
+albedo_color = Color(0.2, 0.8, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="avatar_mat_spin"]
+albedo_color = Color(1, 0.4, 0.7, 1)
+
+[sub_resource type="StandardMaterial3D" id="avatar_mat_dexer"]
+albedo_color = Color(0.4, 1, 0.4, 1)
+
+[sub_resource type="StandardMaterial3D" id="avatar_mat_architect"]
+albedo_color = Color(1, 0.8, 0.2, 1)
 
 [node name="Main" type="Node3D"]
 
@@ -508,6 +527,97 @@ layout_mode = 2
 text = "Send"
 
 [node name="HTTPRequest" type="HTTPRequest" parent="ChatUI"]
+
+; ===== AGENT AVATARS (seated at desks) =====
+[node name="Ultron_Avatar" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0.7, -10.2)
+mesh = SubResource("avatar_mesh")
+surface_material_override/0 = SubResource("avatar_mat_ultron")
+script = ExtResource("6")
+room_name = "Ultron"
+
+[node name="Spinfluencer_Avatar" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0.7, -2.2)
+mesh = SubResource("avatar_mesh")
+surface_material_override/0 = SubResource("avatar_mat_spin")
+script = ExtResource("6")
+room_name = "Spinfluencer"
+
+[node name="Dexer_Avatar" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0.7, -10.2)
+mesh = SubResource("avatar_mesh")
+surface_material_override/0 = SubResource("avatar_mat_dexer")
+script = ExtResource("6")
+room_name = "Dexer"
+
+[node name="Architect_Avatar" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0.7, -2.2)
+mesh = SubResource("avatar_mesh")
+surface_material_override/0 = SubResource("avatar_mat_architect")
+script = ExtResource("6")
+room_name = "Architect"
+
+; ===== DOOR FRAME LABELS =====
+[node name="Room1_DoorLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1, 2.6, -8)
+text = "Ultron"
+font_size = 32
+modulate = Color(0.2, 0.8, 1, 1)
+
+[node name="Room2_DoorLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.1, 2.6, 0)
+text = "Spinfluencer"
+font_size = 32
+modulate = Color(1, 0.4, 0.7, 1)
+
+[node name="Room3_DoorLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1, 2.6, -8)
+text = "Dexer"
+font_size = 32
+modulate = Color(0.4, 1, 0.4, 1)
+
+[node name="Room4_DoorLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1, 2.6, 0)
+text = "Architect"
+font_size = 32
+modulate = Color(1, 0.8, 0.2, 1)
+
+; ===== TTS AUDIO PLAYERS (spatial, at agent desk positions) =====
+[node name="Ultron_TTSPlayer" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1.2, -10.2)
+max_distance = 15.0
+
+[node name="Spinfluencer_TTSPlayer" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1.2, -2.2)
+max_distance = 15.0
+
+[node name="Dexer_TTSPlayer" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 1.2, -10.2)
+max_distance = 15.0
+
+[node name="Architect_TTSPlayer" type="AudioStreamPlayer3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 1.2, -2.2)
+max_distance = 15.0
+
+; ===== VOICE CHAT =====
+[node name="VoiceChat" type="Node" parent="."]
+script = ExtResource("4")
+
+; ===== SETTINGS MENU =====
+[node name="SettingsMenu" type="CanvasLayer" parent="."]
+layer = 20
+process_mode = 3
+script = ExtResource("5")
+
+; ===== MIC INDICATOR =====
+[node name="MicIndicator" type="Label" parent="HUD"]
+visible = false
+offset_left = 16
+offset_top = 50
+offset_right = 200
+offset_bottom = 80
+text = "🎙️ Recording..."
+theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
 
 [connection signal="body_entered" from="Room1_Area" to="Room1_Area" method="_on_body_entered"]
 [connection signal="body_exited" from="Room1_Area" to="Room1_Area" method="_on_body_exited"]
