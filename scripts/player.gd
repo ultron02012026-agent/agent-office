@@ -67,24 +67,7 @@ func _unhandled_input(event):
 			if settings_menu and not settings_menu.is_open:
 				settings_menu.open_menu()
 	
-	# Push-to-talk (V key) — always available when in a room
-	if event.is_action_pressed("push_to_talk"):
-		var voice_chat = get_node_or_null("/root/Main/VoiceChat")
-		if voice_chat and not current_room.is_empty():
-			voice_chat.start_recording()
-			# Update transcript indicator
-			var chat_ui = get_node_or_null("/root/Main/ChatUI")
-			if chat_ui:
-				chat_ui.set_voice_status("recording")
-	
-	if event.is_action_released("push_to_talk"):
-		var voice_chat = get_node_or_null("/root/Main/VoiceChat")
-		if voice_chat and voice_chat.is_recording:
-			voice_chat.stop_recording()
-			# Update transcript indicator
-			var chat_ui = get_node_or_null("/root/Main/ChatUI")
-			if chat_ui:
-				chat_ui.set_voice_status("processing")
+	# Mic is always on via VAD when in a room — no push-to-talk needed
 
 func _physics_process(delta):
 	var welcome = get_node_or_null("/root/Main/WelcomeOverlay")

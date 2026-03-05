@@ -1,8 +1,9 @@
-## Voice chat: push-to-talk mic capture → WAV → STT → TTS → spatial audio playback.
-## Always active when in a room (no toggle needed). Voice-only interaction mode.
-## Key methods: start/stop_recording(), request_tts(), set_room(), clear_room()
+## Voice chat: always-on mic with voice activity detection (VAD).
+## Mic is live whenever player is in a room. Detects speech start/stop via amplitude threshold.
+## Flow: detect speech → record → silence gap → STT → OpenClaw → TTS → spatial audio
+## Key methods: set_room(), clear_room(), request_tts()
 ## Signals: transcription_received(text), tts_started(), tts_finished()
-## Depends on: SettingsManager (autoload), room's AudioStreamPlayer3D for spatial TTS
+## Depends on: SettingsManager (autoload)
 extends Node
 
 signal transcription_received(text: String)
@@ -19,8 +20,18 @@ var tts_http: HTTPRequest
 var current_room: String = ""
 
 # Audio playback
-var tts_player: AudioStreamPlayer3D  # Set by room when entering
+var tts_player: AudioStreamPlayer3D
 var is_speaking: bool = false
+
+# VAD (Voice Activity Detection)
+var vad_enabled: bool = false
+var vad_threshold: float = 0.01  # amplitude threshold to detect speech
+var silence_timeout: float = 1.2  # seconds of silence before we consider speech done
+var silence_timer: float = 0.0
+var is_speech_active: bool = false
+var min_speech_duration: float = 0.3  # minimum seconds of speech to process (ignore short noise)
+var speech_start_time: float = 0.0
+var mic_player: AudioStreamPlayer
 
 func _ready():
 	stt_http = HTTPRequest.new()
@@ -30,22 +41,19 @@ func _ready():
 	
 	tts_http = HTTPRequest.new()
 	tts_http.name = "TTSRequest"
-	tts_http.download_file = "/tmp/agent_office_response.ogg"
 	add_child(tts_http)
 	tts_http.request_completed.connect(_on_tts_completed)
 	
 	_setup_mic_bus()
 
 func _setup_mic_bus():
-	# Create a "Record" bus with AudioEffectCapture
 	record_bus_idx = AudioServer.get_bus_index("Record")
 	if record_bus_idx < 0:
 		AudioServer.add_bus()
 		record_bus_idx = AudioServer.bus_count - 1
 		AudioServer.set_bus_name(record_bus_idx, "Record")
-		AudioServer.set_bus_mute(record_bus_idx, true)  # Don't play mic back
+		AudioServer.set_bus_mute(record_bus_idx, true)
 	
-	# Add capture effect if not present
 	var has_capture = false
 	for i in AudioServer.get_bus_effect_count(record_bus_idx):
 		if AudioServer.get_bus_effect(record_bus_idx, i) is AudioEffectCapture:
@@ -55,71 +63,134 @@ func _setup_mic_bus():
 	
 	if not has_capture:
 		audio_effect = AudioEffectCapture.new()
-		audio_effect.buffer_length = 30.0  # 30 seconds max
+		audio_effect.buffer_length = 30.0
 		AudioServer.add_bus_effect(record_bus_idx, audio_effect)
 
 func set_room(room_name: String, tts_player_node: AudioStreamPlayer3D = null):
 	current_room = room_name
 	tts_player = tts_player_node
+	_start_listening()
 
 func clear_room():
 	current_room = ""
 	tts_player = null
-	stop_recording()
+	_stop_listening()
 
-func start_recording():
-	if is_recording or not SettingsManager.mic_enabled:
+func _start_listening():
+	if vad_enabled:
 		return
-	if current_room.is_empty():
-		return
-	
-	is_recording = true
+	vad_enabled = true
+	is_speech_active = false
+	silence_timer = 0.0
 	recorded_frames.clear()
 	
-	# Clear any buffered audio
-	if audio_effect:
-		audio_effect.clear_buffer()
-	
-	# Start mic input
-	var mic_player = get_node_or_null("MicPlayer")
+	# Start mic
 	if not mic_player:
 		mic_player = AudioStreamPlayer.new()
 		mic_player.name = "MicPlayer"
 		mic_player.bus = "Record"
-		var mic_stream = AudioStreamMicrophone.new()
-		mic_player.stream = mic_stream
+		mic_player.stream = AudioStreamMicrophone.new()
 		add_child(mic_player)
+	
+	if audio_effect:
+		audio_effect.clear_buffer()
 	
 	if not mic_player.playing:
 		mic_player.play()
 
-func stop_recording():
-	if not is_recording:
-		return
+func _stop_listening():
+	vad_enabled = false
+	is_speech_active = false
 	is_recording = false
+	silence_timer = 0.0
+	recorded_frames.clear()
 	
-	var mic_player = get_node_or_null("MicPlayer")
 	if mic_player and mic_player.playing:
 		mic_player.stop()
+
+func _process(delta):
+	if not vad_enabled or not audio_effect:
+		return
 	
-	# Grab captured audio
-	if audio_effect:
-		var frames = audio_effect.get_frames_available()
-		if frames > 0:
-			recorded_frames = audio_effect.get_buffer(frames)
-			_save_and_transcribe()
-		else:
-			push_warning("VoiceChat: No audio frames captured")
+	# Don't listen while agent is speaking (avoid feedback)
+	if is_speaking:
+		if audio_effect:
+			audio_effect.clear_buffer()
+		return
+	
+	# Read available audio frames
+	var frames_available = audio_effect.get_frames_available()
+	if frames_available == 0:
+		return
+	
+	var frames = audio_effect.get_buffer(frames_available)
+	
+	# Calculate RMS amplitude
+	var rms = _calculate_rms(frames)
+	
+	if rms > vad_threshold:
+		# Speech detected
+		if not is_speech_active:
+			# Speech just started
+			is_speech_active = true
+			is_recording = true
+			speech_start_time = Time.get_ticks_msec() / 1000.0
+			recorded_frames.clear()
+			# Notify UI
+			var chat_ui = get_node_or_null("/root/Main/ChatUI")
+			if chat_ui and chat_ui.has_method("set_voice_status"):
+				chat_ui.set_voice_status("recording")
+		
+		silence_timer = 0.0
+		recorded_frames.append_array(frames)
+	else:
+		if is_speech_active:
+			# Still recording but silence detected
+			recorded_frames.append_array(frames)  # keep the tail
+			silence_timer += delta
+			
+			if silence_timer >= silence_timeout:
+				# Speech ended — process it
+				is_speech_active = false
+				is_recording = false
+				silence_timer = 0.0
+				
+				var speech_duration = (Time.get_ticks_msec() / 1000.0) - speech_start_time
+				if speech_duration >= min_speech_duration and recorded_frames.size() > 0:
+					_save_and_transcribe()
+				else:
+					recorded_frames.clear()
+					var chat_ui = get_node_or_null("/root/Main/ChatUI")
+					if chat_ui and chat_ui.has_method("set_voice_status"):
+						chat_ui.set_voice_status("listening")
+
+func _calculate_rms(frames: PackedVector2Array) -> float:
+	if frames.size() == 0:
+		return 0.0
+	var sum_sq: float = 0.0
+	for frame in frames:
+		var mono = (frame.x + frame.y) * 0.5
+		sum_sq += mono * mono
+	return sqrt(sum_sq / frames.size())
+
+# Legacy methods for compatibility (push-to-talk fallback)
+func start_recording():
+	pass  # Now handled by VAD
+
+func stop_recording():
+	pass  # Now handled by VAD
 
 func _save_and_transcribe():
 	if recorded_frames.size() == 0:
 		return
 	
-	# Save as WAV
+	var chat_ui = get_node_or_null("/root/Main/ChatUI")
+	if chat_ui and chat_ui.has_method("set_voice_status"):
+		chat_ui.set_voice_status("processing")
+	
 	var wav_path = "/tmp/agent_office_voice.wav"
 	_save_wav(wav_path, recorded_frames)
-	
-	# Send to STT
+	recorded_frames.clear()
 	_send_to_stt(wav_path)
 
 func _save_wav(path: String, frames: PackedVector2Array):
@@ -129,18 +200,17 @@ func _save_wav(path: String, frames: PackedVector2Array):
 		return
 	
 	var sample_rate = int(AudioServer.get_mix_rate())
-	var num_channels = 1  # mono
+	var num_channels = 1
 	var bits_per_sample = 16
 	var num_samples = frames.size()
 	var data_size = num_samples * num_channels * (bits_per_sample / 8)
 	
-	# WAV header
 	file.store_string("RIFF")
 	file.store_32(36 + data_size)
 	file.store_string("WAVE")
 	file.store_string("fmt ")
-	file.store_32(16)  # chunk size
-	file.store_16(1)   # PCM
+	file.store_32(16)
+	file.store_16(1)  # PCM
 	file.store_16(num_channels)
 	file.store_32(sample_rate)
 	file.store_32(sample_rate * num_channels * bits_per_sample / 8)
@@ -149,7 +219,6 @@ func _save_wav(path: String, frames: PackedVector2Array):
 	file.store_string("data")
 	file.store_32(data_size)
 	
-	# Write samples (mix to mono)
 	for frame in frames:
 		var sample = (frame.x + frame.y) * 0.5
 		sample = clamp(sample, -1.0, 1.0)
@@ -158,7 +227,6 @@ func _save_wav(path: String, frames: PackedVector2Array):
 	file.close()
 
 func _send_to_stt(wav_path: String):
-	# Multipart form upload
 	var file = FileAccess.open(wav_path, FileAccess.READ)
 	if not file:
 		push_error("VoiceChat: Cannot read WAV for STT")
@@ -170,7 +238,6 @@ func _send_to_stt(wav_path: String):
 	var boundary = "----AgentOfficeBoundary"
 	var body = PackedByteArray()
 	
-	# Build multipart body
 	var part_header = "--%s\r\nContent-Disposition: form-data; name=\"file\"; filename=\"voice.wav\"\r\nContent-Type: audio/wav\r\n\r\n" % boundary
 	body.append_array(part_header.to_utf8_buffer())
 	body.append_array(file_data)
@@ -195,7 +262,6 @@ func _send_to_stt(wav_path: String):
 func _on_stt_completed(_result, response_code, _headers, body_bytes):
 	if response_code != 200:
 		push_warning("VoiceChat: STT returned " + str(response_code))
-		# Fall back — emit empty
 		transcription_received.emit("")
 		return
 	
@@ -204,6 +270,8 @@ func _on_stt_completed(_result, response_code, _headers, body_bytes):
 		var text = json["text"].strip_edges()
 		if not text.is_empty():
 			transcription_received.emit(text)
+		else:
+			transcription_received.emit("")
 	else:
 		transcription_received.emit("")
 
@@ -233,7 +301,6 @@ func _on_tts_completed(_result, response_code, _headers, _body_bytes):
 		tts_finished.emit()
 		return
 	
-	# Load and play the audio
 	var file_path = "/tmp/agent_office_response.mp3"
 	if not FileAccess.file_exists(file_path):
 		tts_finished.emit()
@@ -258,7 +325,6 @@ func _on_tts_completed(_result, response_code, _headers, _body_bytes):
 		tts_player.play()
 		tts_player.finished.connect(_on_tts_playback_finished, CONNECT_ONE_SHOT)
 	else:
-		# Fallback: use a non-spatial player
 		var fallback = AudioStreamPlayer.new()
 		fallback.name = "TTSFallback"
 		add_child(fallback)
