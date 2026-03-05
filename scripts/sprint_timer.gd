@@ -113,8 +113,8 @@ func _sprint_complete():
 	flash_timer = flash_duration
 	time_label.text = "✅ Sprint Complete!"
 	
-	# Play notification sound stub
-	var sound = get_node_or_null("/root/Main/NotificationSound")
+	# Play sprint alarm sound
+	var sound = get_node_or_null("/root/Main/SprintAlarmSound")
 	if sound and sound.stream:
 		sound.play()
 	

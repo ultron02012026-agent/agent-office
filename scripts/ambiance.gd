@@ -18,6 +18,17 @@ func _ready():
 	office_player = _create_player("OfficeAmbiance")
 	hallway_player = _create_player("HallwayAmbiance")
 	active_player = lobby_player
+	# Load ambient audio files
+	var office_stream = load("res://assets/audio/ambient_office.wav")
+	var hallway_stream = load("res://assets/audio/ambient_hallway.wav")
+	if office_stream:
+		lobby_player.stream = office_stream  # lobby uses office hum too
+		office_player.stream = office_stream
+	if hallway_stream:
+		hallway_player.stream = hallway_stream
+	# Start playing the initial zone
+	if active_player.stream:
+		active_player.play()
 
 func _create_player(pname: String) -> AudioStreamPlayer:
 	var player = AudioStreamPlayer.new()

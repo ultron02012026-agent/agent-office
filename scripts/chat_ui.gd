@@ -112,6 +112,10 @@ func _on_send():
 	
 	chat_history.append({"role": "user", "content": text})
 	_set_thinking(true)
+	# Play send sound
+	var send_sound = get_node_or_null("/root/Main/ChatSendSound")
+	if send_sound and send_sound.stream:
+		send_sound.play()
 	_send_to_openclaw(text)
 
 func _set_thinking(thinking: bool):
@@ -169,6 +173,10 @@ func _on_request_completed(result, response_code, _headers, body_bytes):
 		var reply = json["choices"][0]["message"]["content"]
 		chat_history.append({"role": "assistant", "content": reply})
 		chat_log.text += "[color=yellow]" + current_room + ":[/color] " + reply + "\n"
+		# Play receive sound
+		var recv_sound = get_node_or_null("/root/Main/ChatReceiveSound")
+		if recv_sound and recv_sound.stream:
+			recv_sound.play()
 		
 		# If voice mode, request TTS for the response
 		var voice_chat = get_node_or_null("/root/Main/VoiceChat")

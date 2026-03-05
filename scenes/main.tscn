@@ -1,4 +1,4 @@
-[gd_scene load_steps=47 format=3 uid="uid://main001"]
+[gd_scene load_steps=55 format=3 uid="uid://main001"]
 
 [ext_resource type="PackedScene" uid="uid://player001" path="res://scenes/player.tscn" id="1"]
 [ext_resource type="Script" path="res://scripts/room_area.gd" id="2"]
@@ -21,6 +21,14 @@
 [ext_resource type="Script" path="res://scripts/ambiance.gd" id="19"]
 [ext_resource type="Script" path="res://scripts/screenshot.gd" id="20"]
 [ext_resource type="Script" path="res://scripts/debug_overlay.gd" id="21"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_hard.wav" id="audio_footstep_hard"]
+[ext_resource type="AudioStream" path="res://assets/audio/footstep_soft.wav" id="audio_footstep_soft"]
+[ext_resource type="AudioStream" path="res://assets/audio/door_slide.wav" id="audio_door_slide"]
+[ext_resource type="AudioStream" path="res://assets/audio/room_chime.wav" id="audio_room_chime"]
+[ext_resource type="AudioStream" path="res://assets/audio/notification_ping.wav" id="audio_notification"]
+[ext_resource type="AudioStream" path="res://assets/audio/chat_send.wav" id="audio_chat_send"]
+[ext_resource type="AudioStream" path="res://assets/audio/chat_receive.wav" id="audio_chat_receive"]
+[ext_resource type="AudioStream" path="res://assets/audio/sprint_alarm.wav" id="audio_sprint_alarm"]
 
 [sub_resource type="StandardMaterial3D" id="floor_mat"]
 albedo_color = Color(0.3, 0.3, 0.35, 1)
@@ -931,10 +939,13 @@ max_distance = 15.0
 
 ; ===== FOOTSTEP AUDIO STUBS =====
 [node name="FootstepHallway" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("audio_footstep_hard")
 [node name="FootstepRoom" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("audio_footstep_soft")
 
 ; ===== NOTIFICATION SOUND STUB =====
 [node name="NotificationSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("audio_notification")
 
 ; ===== VOICE CHAT =====
 [node name="VoiceChat" type="Node" parent="."]
@@ -1049,7 +1060,18 @@ shape = SubResource("proximity_shape")
 
 ; ===== ROOM AUDIO STUBS =====
 [node name="RoomEnterSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("audio_room_chime")
 [node name="RoomExitSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("audio_door_slide")
+
+[node name="ChatSendSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("audio_chat_send")
+
+[node name="ChatReceiveSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("audio_chat_receive")
+
+[node name="SprintAlarmSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("audio_sprint_alarm")
 
 ; ===== AGENT SOCIAL (visits) =====
 [node name="AgentSocial" type="Node" parent="."]
