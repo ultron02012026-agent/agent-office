@@ -1,4 +1,4 @@
-## Chat panel UI — sends messages to OpenClaw chat completions API.
+## Transcript panel UI — displays voice conversation with agents (voice-only, no text input).
 ## Chat history persists per room — leaving and returning restores previous conversation.
 ## Key methods: show_chat(room), hide_chat(), _send_to_openclaw()
 ## Signals: connects to VoiceChat.transcription_received
@@ -13,23 +13,18 @@ var is_thinking: bool = false
 var room_histories: Dictionary = {}  # room_name -> Array of {role, content}
 var room_logs: Dictionary = {}  # room_name -> String (BBCode chat log text)
 
+# Voice status indicator
+var voice_status: String = "listening"  # listening, recording, processing
+
 @onready var panel = $Panel
 @onready var chat_log = $Panel/VBoxContainer/ChatLog
-@onready var input_field = $Panel/VBoxContainer/HBoxContainer/LineEdit
-@onready var send_button = $Panel/VBoxContainer/HBoxContainer/SendButton
-@onready var clear_button = $Panel/VBoxContainer/HBoxContainer/ClearButton
 @onready var room_label = $Panel/VBoxContainer/RoomLabel
+@onready var voice_indicator = $Panel/VBoxContainer/VoiceIndicator
 @onready var http_request = $HTTPRequest
 
 func _ready():
 	panel.visible = false
-	send_button.pressed.connect(_on_send)
-	input_field.text_submitted.connect(_on_text_submitted)
 	http_request.request_completed.connect(_on_request_completed)
-	
-	# Clear button
-	if clear_button:
-		clear_button.pressed.connect(_on_clear)
 	
 	# Connect voice chat signals
 	_connect_voice_chat.call_deferred()
@@ -38,6 +33,8 @@ func _connect_voice_chat():
 	var voice_chat = get_node_or_null("/root/Main/VoiceChat")
 	if voice_chat:
 		voice_chat.transcription_received.connect(_on_transcription)
+		voice_chat.tts_started.connect(_on_tts_started)
+		voice_chat.tts_finished.connect(_on_tts_finished)
 
 func show_chat(room_name: String):
 	current_room = room_name
@@ -48,22 +45,12 @@ func show_chat(room_name: String):
 	if room_histories.has(room_name) and room_histories[room_name].size() > 0:
 		chat_history = room_histories[room_name].duplicate(true)
 		chat_log.text = room_logs.get(room_name, "")
-		chat_log.text += "[color=gray][i]Welcome back![/i][/color]\n"
 	else:
 		chat_history = []
-		chat_log.text = "[color=gray]You entered " + room_name + "'s office. Say hello![/color]\n"
-	
-	# Show voice mode hint
-	var voice_chat = get_node_or_null("/root/Main/VoiceChat")
-	if voice_chat and voice_chat.voice_mode:
-		chat_log.text += "[color=gray][i]🎙️ Voice mode active — hold V to talk, Tab to switch to text[/i][/color]\n"
-	else:
-		chat_log.text += "[color=gray][i]⌨️ Text mode — Tab to switch to voice[/i][/color]\n"
+		chat_log.text = "[color=gray]You entered " + room_name + "'s office.[/color]\n"
 	
 	panel.visible = true
-	_set_input_enabled(true)
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-	input_field.grab_focus()
+	set_voice_status("listening")
 
 func hide_chat():
 	# Save chat history before hiding
@@ -75,62 +62,50 @@ func hide_chat():
 	current_room = ""
 	chat_history = []
 	is_thinking = false
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
-func _on_clear():
-	if current_room.is_empty():
+func set_voice_status(status: String):
+	voice_status = status
+	if not voice_indicator:
 		return
-	# Clear history for current room
-	chat_history.clear()
-	room_histories.erase(current_room)
-	room_logs.erase(current_room)
-	chat_log.text = "[color=gray]Chat cleared. Say hello![/color]\n"
+	match status:
+		"listening":
+			voice_indicator.text = "🎙️ Listening... (hold V to talk)"
+			voice_indicator.modulate = Color(0.6, 0.8, 0.6, 0.8)
+		"recording":
+			voice_indicator.text = "🔴 Recording..."
+			voice_indicator.modulate = Color(1, 0.3, 0.3, 1)
+		"processing":
+			voice_indicator.text = "⏳ Processing..."
+			voice_indicator.modulate = Color(0.8, 0.8, 0.3, 0.9)
+		"thinking":
+			voice_indicator.text = "💭 " + current_room + " is thinking..."
+			voice_indicator.modulate = Color(0.6, 0.6, 0.8, 0.9)
+		"speaking":
+			voice_indicator.text = "🔊 " + current_room + " is speaking..."
+			voice_indicator.modulate = Color(0.8, 0.7, 0.3, 0.9)
 
 func _on_transcription(text: String):
 	if text.is_empty():
 		chat_log.text += "[color=red]Could not understand audio[/color]\n"
+		set_voice_status("listening")
 		return
 	
-	# Process transcribed text like a typed message
-	chat_log.text += "\n[color=cyan]You (🎙️):[/color] " + text + "\n"
-	chat_history.append({"role": "user", "content": text})
-	_set_thinking(true)
-	_send_to_openclaw(text)
-
-func _on_text_submitted(_text: String):
-	_on_send()
-
-func _on_send():
-	if is_thinking:
-		return
-	var text = input_field.text.strip_edges()
-	if text.is_empty():
-		return
-	
-	input_field.text = ""
+	# Add user text to transcript
 	chat_log.text += "\n[color=cyan]You:[/color] " + text + "\n"
-	
 	chat_history.append({"role": "user", "content": text})
-	_set_thinking(true)
-	# Play send sound
-	var send_sound = get_node_or_null("/root/Main/ChatSendSound")
-	if send_sound and send_sound.stream:
-		send_sound.play()
+	
+	# Show thinking indicator
+	is_thinking = true
+	set_voice_status("thinking")
+	chat_log.text += "[color=gray][i]...[/i][/color]\n"
 	_send_to_openclaw(text)
 
-func _set_thinking(thinking: bool):
-	is_thinking = thinking
-	_set_input_enabled(!thinking)
-	if thinking:
-		chat_log.text += "[color=gray][i]" + current_room + " is thinking...[/i][/color]\n"
+func _on_tts_started():
+	set_voice_status("speaking")
 
-func _set_input_enabled(enabled: bool):
-	input_field.editable = enabled
-	send_button.disabled = !enabled
-	if enabled:
-		input_field.placeholder_text = "Type a message..."
-	else:
-		input_field.placeholder_text = "Waiting for response..."
+func _on_tts_finished():
+	if panel.visible:
+		set_voice_status("listening")
 
 func _send_to_openclaw(_user_msg: String):
 	# Use agent config for system prompt
@@ -159,28 +134,40 @@ func _send_to_openclaw(_user_msg: String):
 	var err = http_request.request(url, headers, HTTPClient.METHOD_POST, body)
 	if err != OK:
 		chat_log.text += "[color=red]Error connecting to OpenClaw[/color]\n"
-		_set_thinking(false)
+		is_thinking = false
+		set_voice_status("listening")
 
 func _on_request_completed(result, response_code, _headers, body_bytes):
-	_set_thinking(false)
+	is_thinking = false
 	
 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
 		chat_log.text += "[color=red]Error: " + str(response_code) + "[/color]\n"
+		set_voice_status("listening")
 		return
 	
 	var json = JSON.parse_string(body_bytes.get_string_from_utf8())
 	if json and json.has("choices") and json["choices"].size() > 0:
 		var reply = json["choices"][0]["message"]["content"]
 		chat_history.append({"role": "assistant", "content": reply})
+		
+		# Remove the "..." thinking indicator (last line)
+		var lines = chat_log.text.split("\n")
+		var cleaned_lines = []
+		for i in range(lines.size()):
+			if not ("[i]...[/i]" in lines[i]):
+				cleaned_lines.append(lines[i])
+		chat_log.text = "\n".join(cleaned_lines)
+		
 		chat_log.text += "[color=yellow]" + current_room + ":[/color] " + reply + "\n"
 		# Play receive sound
 		var recv_sound = get_node_or_null("/root/Main/ChatReceiveSound")
 		if recv_sound and recv_sound.stream:
 			recv_sound.play()
 		
-		# If voice mode, request TTS for the response
+		# Request TTS for the response
 		var voice_chat = get_node_or_null("/root/Main/VoiceChat")
-		if voice_chat and voice_chat.voice_mode:
+		if voice_chat:
 			voice_chat.request_tts(reply)
 	else:
 		chat_log.text += "[color=red]No response from agent[/color]\n"
+		set_voice_status("listening")
