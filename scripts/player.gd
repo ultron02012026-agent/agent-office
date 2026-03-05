@@ -47,12 +47,21 @@ func _unhandled_input(event):
 		camera_pivot.rotation.x = clamp(camera_pivot.rotation.x, -PI/4, PI/4)
 	
 	if event.is_action_pressed("ui_cancel"):
-		if settings_menu and not settings_menu.is_open:
-			settings_menu.open_menu()
-		elif Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
-			Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-		else:
+		# If settings is open, close it
+		if settings_menu and settings_menu.is_open:
+			settings_menu.close_menu()
+		# If in a room with chat open, close chat and re-capture mouse
+		elif not current_room.is_empty():
+			var chat_ui = get_node_or_null("/root/Main/ChatUI")
+			if chat_ui:
+				chat_ui.hide_chat()
+			current_room = ""
 			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+			_update_hud()
+		# Otherwise open settings
+		else:
+			if settings_menu and not settings_menu.is_open:
+				settings_menu.open_menu()
 	
 	# Voice mode toggle (Tab)
 	if event.is_action_pressed("toggle_voice"):
