@@ -114,6 +114,8 @@ func _send_to_openclaw(_user_msg: String):
 	})
 	
 	var headers = ["Content-Type: application/json"]
+	if SettingsManager.gateway_token != "":
+		headers.append("Authorization: Bearer " + SettingsManager.gateway_token)
 	var url = SettingsManager.gateway_url + "/v1/chat/completions"
 	var err = http_request.request(url, headers, HTTPClient.METHOD_POST, body)
 	if err != OK:

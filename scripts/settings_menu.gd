@@ -103,6 +103,18 @@ func _build_connection_tab():
 	url_input.text_changed.connect(func(t): SettingsManager.gateway_url = t)
 	vbox.add_child(url_input)
 	
+	var token_label = Label.new()
+	token_label.text = "Auth Token:"
+	vbox.add_child(token_label)
+	
+	var token_input = LineEdit.new()
+	token_input.name = "GatewayToken"
+	token_input.text = SettingsManager.gateway_token
+	token_input.secret = true
+	token_input.placeholder_text = "Leave blank if no auth"
+	token_input.text_changed.connect(func(t): SettingsManager.gateway_token = t)
+	vbox.add_child(token_input)
+	
 	var status_label = Label.new()
 	status_label.name = "ConnectionStatus"
 	status_label.text = "Status: Unknown"
@@ -124,7 +136,10 @@ func _build_connection_tab():
 				status_label.modulate = Color(1, 0.3, 0.3)
 			http.queue_free()
 		)
-		http.request(SettingsManager.gateway_url + "/v1/models")
+		var test_headers = PackedStringArray()
+		if SettingsManager.gateway_token != "":
+			test_headers.append("Authorization: Bearer " + SettingsManager.gateway_token)
+		http.request(SettingsManager.gateway_url + "/v1/models", test_headers)
 	)
 	vbox.add_child(test_btn)
 

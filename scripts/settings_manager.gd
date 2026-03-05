@@ -12,7 +12,8 @@ var mic_enabled: bool = true
 var tts_voice: String = "alloy"
 
 # Connection
-var gateway_url: String = "http://localhost:3007"
+var gateway_url: String = "http://100.125.54.7:18789"
+var gateway_token: String = ""
 
 # Controls
 var mouse_sensitivity: float = 0.003
@@ -46,7 +47,8 @@ func load_settings():
 	mic_enabled = config.get_value("audio", "mic_enabled", true)
 	tts_voice = config.get_value("audio", "tts_voice", "alloy")
 	
-	gateway_url = config.get_value("connection", "gateway_url", "http://localhost:3007")
+	gateway_url = config.get_value("connection", "gateway_url", "http://100.125.54.7:18789")
+	gateway_token = config.get_value("connection", "gateway_token", "")
 	
 	mouse_sensitivity = config.get_value("controls", "mouse_sensitivity", 0.003)
 	invert_y = config.get_value("controls", "invert_y", false)
@@ -69,6 +71,7 @@ func save_settings():
 	config.set_value("audio", "tts_voice", tts_voice)
 	
 	config.set_value("connection", "gateway_url", gateway_url)
+	config.set_value("connection", "gateway_token", gateway_token)
 	
 	config.set_value("controls", "mouse_sensitivity", mouse_sensitivity)
 	config.set_value("controls", "invert_y", invert_y)

@@ -185,6 +185,8 @@ func _send_to_stt(wav_path: String):
 	var headers = [
 		"Content-Type: multipart/form-data; boundary=%s" % boundary
 	]
+	if SettingsManager.gateway_token != "":
+		headers.append("Authorization: Bearer " + SettingsManager.gateway_token)
 	
 	var url = SettingsManager.gateway_url + "/v1/audio/transcriptions"
 	var err = stt_http.request_raw(url, headers, HTTPClient.METHOD_POST, body)
@@ -218,6 +220,8 @@ func request_tts(text: String):
 	})
 	
 	var headers = ["Content-Type: application/json"]
+	if SettingsManager.gateway_token != "":
+		headers.append("Authorization: Bearer " + SettingsManager.gateway_token)
 	var url = SettingsManager.gateway_url + "/v1/audio/speech"
 	tts_http.download_file = "/tmp/agent_office_response.mp3"
 	var err = tts_http.request(url, headers, HTTPClient.METHOD_POST, body)
