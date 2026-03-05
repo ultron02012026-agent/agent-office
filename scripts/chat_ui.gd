@@ -110,7 +110,7 @@ func _on_tts_finished():
 func _send_to_openclaw(_user_msg: String):
 	# Use agent config for system prompt
 	var agent_name = current_room
-	var system_prompt = "You are " + current_room + ", an AI agent. The user has walked into your office in Agent Office. Keep responses concise (2-3 sentences). Be conversational and in-character."
+	var system_prompt = "You are " + current_room + ", an AI agent in a virtual office. Keep responses concise (2-3 sentences). Be conversational.\nYou can control the office music. If the user asks to change music volume, turn music on/off, etc., include one of these tags in your response (they'll be stripped before display):\n[MUSIC_UP] — increase volume\n[MUSIC_DOWN] — decrease volume\n[MUSIC_OFF] — mute music\n[MUSIC_ON] — unmute music"
 	
 	if SettingsManager.agent_configs.has(current_room):
 		var cfg = SettingsManager.agent_configs[current_room]
@@ -158,16 +158,40 @@ func _on_request_completed(result, response_code, _headers, body_bytes):
 				cleaned_lines.append(lines[i])
 		chat_log.text = "\n".join(cleaned_lines)
 		
-		chat_log.text += "[color=yellow]" + current_room + ":[/color] " + reply + "\n"
+		# Handle music control tags
+		_handle_music_commands(reply)
+		# Strip tags before display
+		var display_reply = reply
+		for tag in ["[MUSIC_UP]", "[MUSIC_DOWN]", "[MUSIC_OFF]", "[MUSIC_ON]"]:
+			display_reply = display_reply.replace(tag, "")
+		display_reply = display_reply.strip_edges()
+		
+		chat_log.text += "[color=yellow]" + current_room + ":[/color] " + display_reply + "\n"
 		# Play receive sound
 		var recv_sound = get_node_or_null("/root/Main/ChatReceiveSound")
 		if recv_sound and recv_sound.stream:
 			recv_sound.play()
 		
-		# Request TTS for the response
+		# Request TTS for the response (without tags)
 		var voice_chat = get_node_or_null("/root/Main/VoiceChat")
 		if voice_chat:
-			voice_chat.request_tts(reply)
+			voice_chat.request_tts(display_reply)
 	else:
 		chat_log.text += "[color=red]No response from agent[/color]\n"
 		set_voice_status("listening")
+
+func _handle_music_commands(text: String):
+	var ambiance = get_node_or_null("/root/Main/Ambiance")
+	if not ambiance or not ambiance.has_node("BackgroundMusic"):
+		return
+	var music = ambiance.get_node("BackgroundMusic")
+	if "[MUSIC_UP]" in text:
+		music.volume_db = min(music.volume_db + 3.0, 0.0)
+	if "[MUSIC_DOWN]" in text:
+		music.volume_db = max(music.volume_db - 3.0, -40.0)
+	if "[MUSIC_OFF]" in text:
+		music.stream_paused = true
+	if "[MUSIC_ON]" in text:
+		music.stream_paused = false
+		if not music.playing:
+			music.play()
