@@ -69,11 +69,11 @@ func set_voice_status(status: String):
 		return
 	match status:
 		"listening":
-			voice_indicator.text = "🎙️ Listening... (hold V to talk)"
+			voice_indicator.text = "🎙️ Listening..."
 			voice_indicator.modulate = Color(0.6, 0.8, 0.6, 0.8)
 		"recording":
-			voice_indicator.text = "🔴 Recording..."
-			voice_indicator.modulate = Color(1, 0.3, 0.3, 1)
+			voice_indicator.text = "🔴 LIVE"
+			voice_indicator.modulate = Color(1, 0.2, 0.2, 1)
 		"processing":
 			voice_indicator.text = "⏳ Processing..."
 			voice_indicator.modulate = Color(0.8, 0.8, 0.3, 0.9)
