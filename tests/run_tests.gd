@@ -15,6 +15,11 @@ func _init():
 		["Settings", "res://tests/test_settings.gd"],
 		["WelcomeOverlay", "res://tests/test_welcome_overlay.gd"],
 		["Polish", "res://tests/test_polish.gd"],
+		["VoiceChat", "res://tests/test_voice_chat.gd"],
+		["SettingsMenu", "res://tests/test_settings_menu.gd"],
+		["AgentAvatar", "res://tests/test_agent_avatar.gd"],
+		["MinimapExtended", "res://tests/test_minimap_extended.gd"],
+		["ProximityPrompt", "res://tests/test_proximity_prompt.gd"],
 	]
 	
 	for entry in test_files:
