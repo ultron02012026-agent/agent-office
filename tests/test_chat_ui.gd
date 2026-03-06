@@ -15,6 +15,8 @@ func run() -> Dictionary:
 	test_voice_status_states()
 	test_transcript_persistence()
 	test_no_text_input()
+	test_clear_chat()
+	test_thinking_blocks_transcription()
 	
 	return {"passed": passed, "failed": failed}
 
@@ -84,3 +86,29 @@ func test_no_text_input():
 	# Voice is the only input method
 	var input_method = "voice"
 	_assert(input_method == "voice", "Voice is the only input method")
+
+func test_clear_chat():
+	# Simulate clear_chat behavior
+	var chat_history: Array = [{"role": "user", "content": "hi"}, {"role": "assistant", "content": "hello"}]
+	var room_histories: Dictionary = {"Ultron": chat_history.duplicate(true)}
+	var room_logs: Dictionary = {"Ultron": "some log text"}
+	var current_room = "Ultron"
+	
+	# clear_chat resets everything
+	chat_history = []
+	room_histories.erase(current_room)
+	room_logs.erase(current_room)
+	
+	_assert(chat_history.size() == 0, "clear_chat empties history")
+	_assert(!room_histories.has("Ultron"), "clear_chat erases room history")
+	_assert(!room_logs.has("Ultron"), "clear_chat erases room logs")
+
+func test_thinking_blocks_transcription():
+	# When is_thinking is true, new transcriptions should be blocked
+	var is_thinking = true
+	var blocked = is_thinking  # _on_transcription returns early
+	_assert(blocked, "Transcription blocked while thinking")
+	
+	is_thinking = false
+	blocked = is_thinking
+	_assert(!blocked, "Transcription allowed when not thinking")

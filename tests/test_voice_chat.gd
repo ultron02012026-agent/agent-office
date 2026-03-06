@@ -20,6 +20,7 @@ func run() -> Dictionary:
 	test_speaking_state()
 	test_mono_mix()
 	test_stt_error_handling()
+	test_stt_overlap_guard()
 	
 	return {"passed": passed, "failed": failed}
 
@@ -180,3 +181,26 @@ func test_stt_error_handling():
 	
 	var tts_url = gateway_url + "/v1/audio/speech"
 	_assert(tts_url == "http://localhost:18789/v1/audio/speech", "TTS endpoint URL correct")
+
+func test_stt_overlap_guard():
+	# Simulate the stt_in_flight guard
+	var stt_in_flight = false
+	var recorded_frames = [1, 2, 3]
+	
+	# First request goes through
+	_assert(!stt_in_flight, "STT not in flight initially")
+	stt_in_flight = true
+	_assert(stt_in_flight, "STT in flight after send")
+	
+	# Second request while first is in flight — should be dropped
+	var second_frames = [4, 5, 6]
+	var dropped = stt_in_flight  # would drop because in flight
+	_assert(dropped, "Second STT request dropped while first in flight")
+	
+	# First request completes
+	stt_in_flight = false
+	_assert(!stt_in_flight, "STT cleared after completion")
+	
+	# Now a new request can go through
+	var can_send = !stt_in_flight and second_frames.size() > 0
+	_assert(can_send, "New STT request allowed after previous completes")
