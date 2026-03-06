@@ -26,6 +26,17 @@ func _build_ui():
 	panel.offset_bottom = 500
 	add_child(panel)
 	
+	# Apply larger font sizes via theme
+	var theme = Theme.new()
+	theme.set_font_size("font_size", "Label", 28)
+	theme.set_font_size("font_size", "Button", 26)
+	theme.set_font_size("font_size", "LineEdit", 26)
+	theme.set_font_size("font_size", "CheckBox", 26)
+	theme.set_font_size("font_size", "OptionButton", 26)
+	theme.set_font_size("font_size", "TabContainer", 24)
+	theme.set_font_size("font_size", "HSlider", 24)
+	panel.theme = theme
+	
 	var main_vbox = VBoxContainer.new()
 	panel.add_child(main_vbox)
 	
@@ -33,6 +44,7 @@ func _build_ui():
 	var title = Label.new()
 	title.text = "⚙️ Settings"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 36)
 	main_vbox.add_child(title)
 	
 	# Tab container
