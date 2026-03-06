@@ -87,13 +87,12 @@ func show_chat(room_name: String):
 		chat_log.text = "[color=gray]You entered " + room_name + "'s office.[/color]\n"
 	
 	panel.visible = true
-	# Keep mouse captured — player can still look around and move
-	# Press Enter to start typing, Enter to send, Escape to cancel
+	# Keep mouse captured — player can still look around
 	panel.modulate = Color(1, 1, 1, 0.7)  # Semi-transparent overlay
 	if voice_indicator:
 		voice_indicator.visible = false
 	if text_input:
-		text_input.release_focus()
+		text_input.grab_focus()
 	
 	# Inject office context and auto-greet on first visit via WebSocket
 	if is_first_visit and _gateway_ws and _gateway_ws.is_ws_connected():
@@ -146,21 +145,6 @@ func _unhandled_input(event: InputEvent):
 	if not panel.visible:
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
-		var is_typing = text_input and text_input.has_focus()
-		# Enter to start typing (when not already typing)
-		if not is_typing and event.keycode == KEY_ENTER:
-			if text_input:
-				text_input.text = ""
-				text_input.grab_focus()
-				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
-				get_viewport().set_input_as_handled()
-			return
-		# Escape to cancel typing and return to movement
-		if is_typing and event.keycode == KEY_ESCAPE:
-			text_input.release_focus()
-			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-			get_viewport().set_input_as_handled()
-			return
 		if event.ctrl_pressed and event.keycode == KEY_V:
 			_try_paste_image()
 
@@ -178,18 +162,12 @@ func _try_paste_image():
 func _on_text_submitted(text: String):
 	var msg = text.strip_edges()
 	if msg.is_empty() and _pending_image == null:
-		# Empty submit — exit typing mode
-		text_input.release_focus()
-		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		return
 	text_input.text = ""
 	if msg.is_empty():
 		msg = "What's in this image?"
 	_submit_message(msg)
 	text_input.placeholder_text = "Type a message..."
-	# Return to movement mode after sending
-	text_input.release_focus()
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _on_transcription(text: String):
 	if text.is_empty():

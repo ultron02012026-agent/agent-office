@@ -75,8 +75,8 @@ func _physics_process(delta):
 	
 	var input_dir = Vector2.ZERO
 	var chat_ui = get_node_or_null("/root/Main/ChatUI")
-	var is_typing = chat_ui and chat_ui.text_input and chat_ui.text_input.has_focus()
-	if not is_typing:
+	var chat_open = chat_ui and chat_ui.panel and chat_ui.panel.visible
+	if not chat_open:
 		input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
