@@ -42,15 +42,21 @@ func show_chat(room_name: String):
 	room_label.text = "📍 " + room_name + "'s Office"
 	
 	# Restore previous chat history for this room, or start fresh
+	var is_first_visit = false
 	if room_histories.has(room_name) and room_histories[room_name].size() > 0:
 		chat_history = room_histories[room_name].duplicate(true)
 		chat_log.text = room_logs.get(room_name, "")
 	else:
+		is_first_visit = true
 		chat_history = []
 		chat_log.text = "[color=gray]You entered " + room_name + "'s office.[/color]\n"
 	
 	panel.visible = true
 	set_voice_status("listening")
+	
+	# Auto-greet on first visit (agent says hello)
+	if is_first_visit and SettingsManager.gateway_url != "" and SettingsManager.gateway_token != "":
+		_request_greeting(room_name)
 
 func hide_chat():
 	# Save chat history before hiding
@@ -150,6 +156,7 @@ func _on_request_completed(result, response_code, _headers, body_bytes):
 	is_thinking = false
 	
 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+		_greeting_in_progress = false
 		chat_log.text += "[color=red]Error: " + str(response_code) + "[/color]\n"
 		set_voice_status("listening")
 		return
@@ -157,6 +164,10 @@ func _on_request_completed(result, response_code, _headers, body_bytes):
 	var json = JSON.parse_string(body_bytes.get_string_from_utf8())
 	if json and json.has("choices") and json["choices"].size() > 0:
 		var reply = json["choices"][0]["message"]["content"]
+		
+		# For greetings, only add the assistant reply (no fake user message)
+		if _greeting_in_progress:
+			_greeting_in_progress = false
 		chat_history.append({"role": "assistant", "content": reply})
 		
 		# Remove the "..." thinking indicator (last line)
@@ -188,6 +199,41 @@ func _on_request_completed(result, response_code, _headers, body_bytes):
 	else:
 		chat_log.text += "[color=red]No response from agent[/color]\n"
 		set_voice_status("listening")
+
+var _greeting_in_progress: bool = false
+
+func _request_greeting(_room_name: String):
+	# Agent auto-greets on first visit via a hidden system-level prompt
+	_greeting_in_progress = true
+	is_thinking = true
+	set_voice_status("thinking")
+	chat_log.text += "[color=gray][i]...[/i][/color]\n"
+	
+	var system_prompt = "You are " + current_room + ", an AI agent in a virtual office. Keep responses concise (2-3 sentences). Be conversational."
+	if SettingsManager.agent_configs.has(current_room):
+		var cfg = SettingsManager.agent_configs[current_room]
+		if cfg.has("system_prompt") and not cfg["system_prompt"].is_empty():
+			system_prompt = cfg["system_prompt"]
+	
+	var music_instructions = "\nYou can control the office music. If the user asks to change music volume, turn music on/off, etc., include one of these tags in your response (they'll be stripped before display):\n[MUSIC_UP] — increase volume\n[MUSIC_DOWN] — decrease volume\n[MUSIC_OFF] — mute music\n[MUSIC_ON] — unmute music"
+	system_prompt += music_instructions
+	
+	var messages = [
+		{"role": "system", "content": system_prompt},
+		{"role": "user", "content": "The user just walked into your office. Give a brief, friendly greeting (1 sentence)."}
+	]
+	
+	var body = JSON.stringify({
+		"model": "anthropic/claude-sonnet-4-20250514",
+		"messages": messages,
+		"max_tokens": 100
+	})
+	
+	var headers = ["Content-Type: application/json"]
+	if SettingsManager.gateway_token != "":
+		headers.append("Authorization: Bearer " + SettingsManager.gateway_token)
+	var url = SettingsManager.gateway_url + "/v1/chat/completions"
+	http_request.request(url, headers, HTTPClient.METHOD_POST, body)
 
 func clear_chat():
 	chat_log.text = "[color=gray]Chat cleared.[/color]\n"
