@@ -68,11 +68,15 @@ func _poll_chat_activity():
 	if not chat_ui:
 		return
 	
-	# Check each room's chat history
+	# Check each room's chat history (including current active room)
 	for room_name in room_activity.keys():
-		if chat_ui.room_histories.has(room_name):
-			var history = chat_ui.room_histories[room_name]
-			if history.size() > 0:
+		var history: Array = []
+		if room_name == chat_ui.current_room and chat_ui.chat_history.size() > 0:
+			history = chat_ui.chat_history
+		elif chat_ui.room_histories.has(room_name):
+			history = chat_ui.room_histories[room_name]
+		
+		if history.size() > 0:
 				var last = history[history.size() - 1]
 				var msg = last.get("content", "")
 				if msg.length() > 60:
