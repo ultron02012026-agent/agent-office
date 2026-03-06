@@ -1287,6 +1287,7 @@ layout_mode = 2
 layout_mode = 2
 text = "Room"
 horizontal_alignment = 1
+theme_override_font_sizes/font_size = 32
 
 [node name="ChatLog" type="RichTextLabel" parent="ChatUI/Panel/VBoxContainer"]
 layout_mode = 2
@@ -1294,15 +1295,20 @@ size_flags_vertical = 3
 bbcode_enabled = true
 text = ""
 scroll_following = true
+theme_override_font_sizes/normal_font_size = 28
+theme_override_font_sizes/bold_font_size = 28
+theme_override_font_sizes/italics_font_size = 28
 
 [node name="VoiceIndicator" type="Label" parent="ChatUI/Panel/VBoxContainer"]
 layout_mode = 2
 text = "🎙️ Listening..."
 horizontal_alignment = 1
+theme_override_font_sizes/font_size = 24
 
 [node name="TextInput" type="LineEdit" parent="ChatUI/Panel/VBoxContainer"]
 layout_mode = 2
 placeholder_text = "Type a message... (Enter to send)"
+theme_override_font_sizes/font_size = 28
 
 [node name="HTTPRequest" type="HTTPRequest" parent="ChatUI"]
 
