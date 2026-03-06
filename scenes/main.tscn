@@ -23,7 +23,7 @@
 [ext_resource type="Script" path="res://scripts/debug_overlay.gd" id="21"]
 [ext_resource type="Script" path="res://scripts/tv_display.gd" id="22"]
 [ext_resource type="Script" path="res://scripts/gateway_ws.gd" id="gateway_ws"]
-[ext_resource type="Texture2D" uid="uid://skybox_hdr" path="res://assets/environment/skybox.hdr" id="skybox_hdr"]
+[ext_resource type="Texture2D" uid="uid://skybox_hdr" path="res://assets/environment/grasslands_sunset_2k.hdr" id="skybox_hdr"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_hard.wav" id="audio_footstep_hard"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_soft.wav" id="audio_footstep_soft"]
 [ext_resource type="AudioStream" path="res://assets/audio/door_slide.wav" id="audio_door_slide"]
@@ -35,7 +35,7 @@
 
 ; ===== MATERIALS =====
 [sub_resource type="StandardMaterial3D" id="floor_mat"]
-albedo_color = Color(0.3, 0.3, 0.35, 1)
+albedo_color = Color(0.176, 0.353, 0.118, 1)
 
 [sub_resource type="StandardMaterial3D" id="desk_mat"]
 albedo_color = Color(0.45, 0.3, 0.15, 1)
@@ -148,7 +148,7 @@ albedo_color = Color(0.08, 0.08, 0.1, 1)
 metallic = 0.3
 roughness = 0.4
 
-; --- Sky & Environment (Shanghai Bund HDRI) ---
+; --- Sky & Environment (Grasslands Sunset HDRI) ---
 [sub_resource type="PanoramaSkyMaterial" id="sky_material"]
 panorama = ExtResource("skybox_hdr")
 
