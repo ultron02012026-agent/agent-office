@@ -29,6 +29,7 @@ var voice_status: String = "listening"  # listening, recording, processing
 
 var _gateway_ws: Node = null
 var _greeting_in_progress: bool = false
+var _pending_image: Image = null  # Clipboard image waiting to be sent
 
 func _ready():
 	panel.visible = false
@@ -131,11 +132,33 @@ func set_voice_status(status: String):
 			voice_indicator.text = "🔊 " + current_room + " is speaking..."
 			voice_indicator.modulate = Color(0.8, 0.7, 0.3, 0.9)
 
+func _unhandled_input(event: InputEvent):
+	if not panel.visible:
+		return
+	if event is InputEventKey and event.pressed and not event.echo:
+		if event.ctrl_pressed and event.keycode == KEY_V:
+			_try_paste_image()
+
+func _try_paste_image():
+	var img = DisplayServer.clipboard_get_image()
+	if img == null or img.is_empty():
+		return  # No image on clipboard, let normal text paste happen
+	_pending_image = img
+	# Show preview indicator
+	chat_log.text += "\n[color=green]📎 Image pasted (will send with next message)[/color]\n"
+	if text_input:
+		text_input.placeholder_text = "Type a message about this image, or press Enter to send..."
+		text_input.grab_focus()
+
 func _on_text_submitted(text: String):
-	if text.strip_edges().is_empty():
+	var msg = text.strip_edges()
+	if msg.is_empty() and _pending_image == null:
 		return
 	text_input.text = ""
-	_submit_message(text.strip_edges())
+	if msg.is_empty():
+		msg = "What's in this image?"
+	_submit_message(msg)
+	text_input.placeholder_text = "Type a message..."
 
 func _on_transcription(text: String):
 	if text.is_empty():
@@ -149,16 +172,35 @@ func _submit_message(text: String):
 		chat_log.text += "\n[color=gray][i](waiting for response...)[/i][/color]\n"
 		return
 	
-	chat_log.text += "\n[color=cyan]You:[/color] " + text + "\n"
+	var has_image = _pending_image != null
+	if has_image:
+		chat_log.text += "\n[color=cyan]You:[/color] 📎 " + text + "\n"
+	else:
+		chat_log.text += "\n[color=cyan]You:[/color] " + text + "\n"
 	chat_history.append({"role": "user", "content": text})
 	
 	is_thinking = true
 	set_voice_status("thinking")
 	chat_log.text += "[color=gray][i]...[/i][/color]\n"
 	
+	# Build attachments from pending image
+	var attachments: Array = []
+	if has_image:
+		var png_data = _pending_image.save_png_to_buffer()
+		var b64 = Marshalls.raw_to_base64(png_data)
+		attachments.append({
+			"type": "image",
+			"source": {
+				"type": "base64",
+				"media_type": "image/png",
+				"data": b64
+			}
+		})
+		_pending_image = null
+	
 	# Send via WebSocket if connected, otherwise fall back to HTTP
 	if _gateway_ws and _gateway_ws.is_ws_connected():
-		_gateway_ws.send_message(current_room, text)
+		_gateway_ws.send_message(current_room, text, attachments)
 	else:
 		_send_to_openclaw(text)
 

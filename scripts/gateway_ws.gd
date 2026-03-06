@@ -64,10 +64,13 @@ func _send_request(method: String, params: Dictionary) -> int:
 	_ws.send_text(frame)
 	return id
 
-func send_message(room_name: String, message: String):
+func send_message(room_name: String, message: String, attachments: Array = []):
 	var agent_id = agent_map.get(room_name, "main")
 	var session_key = "agent:" + agent_id + ":main"
-	_send_request("chat.send", {"sessionKey": session_key, "message": message, "deliver": false})
+	var params = {"sessionKey": session_key, "message": message, "deliver": false}
+	if attachments.size() > 0:
+		params["attachments"] = attachments
+	_send_request("chat.send", params)
 
 func inject_context(room_name: String, context: String):
 	var agent_id = agent_map.get(room_name, "main")
