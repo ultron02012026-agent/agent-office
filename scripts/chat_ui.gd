@@ -118,30 +118,21 @@ func _on_tts_finished():
 	if panel.visible:
 		set_voice_status("listening")
 
-func _send_to_openclaw(_user_msg: String):
-	# Use agent config for system prompt
-	var agent_name = current_room
-	var music_instructions = "\nYou can control the office music. If the user asks to change music volume, turn music on/off, etc., include one of these tags in your response (they'll be stripped before display):\n[MUSIC_UP] — increase volume\n[MUSIC_DOWN] — decrease volume\n[MUSIC_OFF] — mute music\n[MUSIC_ON] — unmute music"
-	
+func _build_system_prompt() -> String:
 	var system_prompt = "You are " + current_room + ", an AI agent in a virtual office. Keep responses concise (2-3 sentences). Be conversational."
-	
 	if SettingsManager.agent_configs.has(current_room):
 		var cfg = SettingsManager.agent_configs[current_room]
-		agent_name = cfg.get("agent_name", current_room)
 		if cfg.has("system_prompt") and not cfg["system_prompt"].is_empty():
 			system_prompt = cfg["system_prompt"]
-	
-	system_prompt += music_instructions
-	
-	var messages = [{"role": "system", "content": system_prompt}]
-	messages.append_array(chat_history)
-	
+	system_prompt += "\nYou can control the office music. If the user asks to change music volume, turn music on/off, etc., include one of these tags in your response (they'll be stripped before display):\n[MUSIC_UP] — increase volume\n[MUSIC_DOWN] — decrease volume\n[MUSIC_OFF] — mute music\n[MUSIC_ON] — unmute music"
+	return system_prompt
+
+func _send_chat_request(messages: Array, max_tokens: int = 200):
 	var body = JSON.stringify({
 		"model": "anthropic/claude-sonnet-4-20250514",
 		"messages": messages,
-		"max_tokens": 200
+		"max_tokens": max_tokens
 	})
-	
 	var headers = ["Content-Type: application/json"]
 	if SettingsManager.gateway_token != "":
 		headers.append("Authorization: Bearer " + SettingsManager.gateway_token)
@@ -150,7 +141,13 @@ func _send_to_openclaw(_user_msg: String):
 	if err != OK:
 		chat_log.text += "[color=red]Error connecting to OpenClaw[/color]\n"
 		is_thinking = false
+		_greeting_in_progress = false
 		set_voice_status("listening")
+
+func _send_to_openclaw(_user_msg: String):
+	var messages = [{"role": "system", "content": _build_system_prompt()}]
+	messages.append_array(chat_history)
+	_send_chat_request(messages)
 
 func _on_request_completed(result, response_code, _headers, body_bytes):
 	is_thinking = false
@@ -209,31 +206,11 @@ func _request_greeting(_room_name: String):
 	set_voice_status("thinking")
 	chat_log.text += "[color=gray][i]...[/i][/color]\n"
 	
-	var system_prompt = "You are " + current_room + ", an AI agent in a virtual office. Keep responses concise (2-3 sentences). Be conversational."
-	if SettingsManager.agent_configs.has(current_room):
-		var cfg = SettingsManager.agent_configs[current_room]
-		if cfg.has("system_prompt") and not cfg["system_prompt"].is_empty():
-			system_prompt = cfg["system_prompt"]
-	
-	var music_instructions = "\nYou can control the office music. If the user asks to change music volume, turn music on/off, etc., include one of these tags in your response (they'll be stripped before display):\n[MUSIC_UP] — increase volume\n[MUSIC_DOWN] — decrease volume\n[MUSIC_OFF] — mute music\n[MUSIC_ON] — unmute music"
-	system_prompt += music_instructions
-	
 	var messages = [
-		{"role": "system", "content": system_prompt},
+		{"role": "system", "content": _build_system_prompt()},
 		{"role": "user", "content": "The user just walked into your office. Give a brief, friendly greeting (1 sentence)."}
 	]
-	
-	var body = JSON.stringify({
-		"model": "anthropic/claude-sonnet-4-20250514",
-		"messages": messages,
-		"max_tokens": 100
-	})
-	
-	var headers = ["Content-Type: application/json"]
-	if SettingsManager.gateway_token != "":
-		headers.append("Authorization: Bearer " + SettingsManager.gateway_token)
-	var url = SettingsManager.gateway_url + "/v1/chat/completions"
-	http_request.request(url, headers, HTTPClient.METHOD_POST, body)
+	_send_chat_request(messages, 100)
 
 func clear_chat():
 	chat_log.text = "[color=gray]Chat cleared.[/color]\n"
