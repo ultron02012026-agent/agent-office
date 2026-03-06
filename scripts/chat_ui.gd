@@ -44,7 +44,10 @@ func _connect_voice_chat():
 func show_chat(room_name: String):
 	current_room = room_name
 	is_thinking = false
-	room_label.text = "📍 " + room_name + "'s Office"
+	var display_name = room_name
+	if SettingsManager.agent_configs.has(room_name):
+		display_name = SettingsManager.agent_configs[room_name].get("agent_name", room_name)
+	room_label.text = "📍 " + display_name + "'s Office"
 	
 	# Restore previous chat history for this room, or start fresh
 	var is_first_visit = false
