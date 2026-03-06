@@ -10,11 +10,11 @@ var room_tvs := {
 	"DJ Sam": ["Room4_TV_Main"],
 }
 
-# Ultron front desk monitors (screen glow nodes, not the bezels)
+# Ultron front desk — single ultrawide monitor
 var ultron_screens := {
-	1: "Ultron_FD_Screen1",
+	1: "Ultron_FD_Screen2",
 	2: "Ultron_FD_Screen2",
-	3: "Ultron_FD_Screen3",
+	3: "Ultron_FD_Screen2",
 }
 
 var _default_screen_mat: StandardMaterial3D
