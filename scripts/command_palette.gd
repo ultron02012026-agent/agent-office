@@ -4,7 +4,7 @@
 extends CanvasLayer
 
 var is_open: bool = false
-var commands_list := ["/goto spinfluencer", "/goto dexer", "/goto djsam", "/goto mollie", "/goto lobby", "/goto entrance", "/status", "/clear", "/sprint 25"]
+var commands_list := ["/goto spinfluencer", "/goto dexer", "/goto djsam", "/goto ultron", "/goto lobby", "/goto entrance", "/status", "/clear", "/sprint 25"]
 
 @onready var panel: PanelContainer
 @onready var input_field: LineEdit
@@ -16,7 +16,7 @@ var room_positions := {
 	"spinfluencer": Vector3(-5, 1, -10),
 	"dexer": Vector3(10, 1, -10),
 	"djsam": Vector3(-10, 1, 0),
-	"mollie": Vector3(5, 1, 5),
+	"ultron": Vector3(5, 1, 5),
 	"lobby": Vector3(5, 1, 8),
 	"entrance": Vector3(12, 1, 13),
 }
@@ -162,7 +162,7 @@ func _cmd_goto(target: String) -> String:
 
 func _cmd_status() -> String:
 	var status_text = "Agent Status:\n"
-	var agents = ["Ultron", "Spinfluencer", "Dexer", "DJ Sam", "Mollie"]
+	var agents = ["Ultron", "Spinfluencer", "Dexer", "DJ Sam"]
 	for agent in agents:
 		var dot = get_node_or_null("/root/Main/" + agent.replace(" ", "") + "_StatusDot") 
 		if not dot:

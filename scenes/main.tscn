@@ -100,7 +100,7 @@ albedo_color = Color(0.4, 1, 0.4, 1)
 [sub_resource type="StandardMaterial3D" id="avatar_mat_djsam"]
 albedo_color = Color(0.6, 0.2, 0.8, 1)
 
-[sub_resource type="StandardMaterial3D" id="avatar_mat_mollie"]
+[sub_resource type="StandardMaterial3D" id="avatar_mat_ultron_fd"]
 albedo_color = Color(1, 0.85, 0.4, 1)
 
 ; --- Door materials ---
@@ -160,7 +160,7 @@ albedo_color = Color(0.1, 0.1, 0.1, 1)
 [sub_resource type="StandardMaterial3D" id="welcome_mat_mat"]
 albedo_color = Color(0.4, 0.25, 0.15, 1)
 
-[sub_resource type="StandardMaterial3D" id="mollie_desk_mat"]
+[sub_resource type="StandardMaterial3D" id="ultron_fd_desk_mat"]
 albedo_color = Color(0.55, 0.4, 0.2, 1)
 emission_enabled = true
 emission = Color(0.4, 0.3, 0.1, 1)
@@ -227,7 +227,7 @@ size = Vector3(20, 3, 10)
 [sub_resource type="BoxShape3D" id="proximity_shape"]
 size = Vector3(3, 4, 3)
 
-[sub_resource type="BoxShape3D" id="mollie_area_shape"]
+[sub_resource type="BoxShape3D" id="ultron_fd_area_shape"]
 size = Vector3(6, 4, 6)
 
 ; ===== MESHES =====
@@ -338,20 +338,20 @@ emission_enabled = true
 emission = Color(0.7, 0.3, 1.0, 1)
 emission_energy_multiplier = 2.0
 
-; Mollie robot (warm gold tint)
-[sub_resource type="StandardMaterial3D" id="robot_body_mollie"]
+; Ultron front desk robot (warm gold tint)
+[sub_resource type="StandardMaterial3D" id="robot_body_ultron_fd"]
 albedo_color = Color(1.0, 0.96, 0.88, 1)
 
-[sub_resource type="StandardMaterial3D" id="robot_base_mollie"]
+[sub_resource type="StandardMaterial3D" id="robot_base_ultron_fd"]
 albedo_color = Color(0.8, 0.76, 0.68, 1)
 
-[sub_resource type="StandardMaterial3D" id="robot_eye_l_mollie"]
+[sub_resource type="StandardMaterial3D" id="robot_eye_l_ultron_fd"]
 albedo_color = Color(1.0, 0.85, 0.3, 1)
 emission_enabled = true
 emission = Color(1.0, 0.85, 0.3, 1)
 emission_energy_multiplier = 2.0
 
-[sub_resource type="StandardMaterial3D" id="robot_eye_r_mollie"]
+[sub_resource type="StandardMaterial3D" id="robot_eye_r_ultron_fd"]
 albedo_color = Color(1.0, 0.85, 0.3, 1)
 emission_enabled = true
 emission = Color(1.0, 0.85, 0.3, 1)
@@ -1048,96 +1048,96 @@ font_size = 36
 modulate = Color(0.5, 0.5, 0.5, 0.8)
 
 ; =============================================================================
-; MOLLIE — OFFICE MANAGER (open area, desk at x=5, z=5)
+; ULTRON — OFFICE MANAGER (open area, desk at x=5, z=5)
 ; Diamond-shaped desk, gold avatar, Area3D for interaction
 ; =============================================================================
-[node name="Mollie_Desk" type="CSGBox3D" parent="."]
+[node name="Ultron_FD_Desk" type="CSGBox3D" parent="."]
 transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 5, 0.4, 5)
 use_collision = true
 size = Vector3(2, 0.8, 2)
-material = SubResource("mollie_desk_mat")
+material = SubResource("ultron_fd_desk_mat")
 
-[node name="Mollie_DeskTop" type="CSGBox3D" parent="."]
+[node name="Ultron_FD_DeskTop" type="CSGBox3D" parent="."]
 transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 5, 0.82, 5)
 size = Vector3(2.2, 0.05, 2.2)
-material = SubResource("mollie_desk_mat")
+material = SubResource("ultron_fd_desk_mat")
 
-[node name="Mollie_Label" type="Label3D" parent="."]
+[node name="Ultron_FD_Label" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.5, 5)
 text = "Ultron — Front Desk"
 font_size = 40
 modulate = Color(0.2, 0.8, 1, 1)
 
 ; Monitor 1 (left)
-[node name="Mollie_Monitor1" type="CSGBox3D" parent="."]
+[node name="Ultron_FD_Monitor1" type="CSGBox3D" parent="."]
 transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 4.5, 1.2, 5.5)
 size = Vector3(0.8, 0.5, 0.04)
 material = SubResource("screen_mat")
 
 ; Monitor 1 screen glow
-[node name="Mollie_Screen1" type="CSGBox3D" parent="."]
+[node name="Ultron_FD_Screen1" type="CSGBox3D" parent="."]
 transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 4.48, 1.2, 5.52)
 size = Vector3(0.7, 0.4, 0.01)
 material = SubResource("whiteboard_mat")
 
 ; Monitor 2 (right)
-[node name="Mollie_Monitor2" type="CSGBox3D" parent="."]
+[node name="Ultron_FD_Monitor2" type="CSGBox3D" parent="."]
 transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 5.5, 1.2, 4.5)
 size = Vector3(0.8, 0.5, 0.04)
 material = SubResource("screen_mat")
 
 ; Monitor 2 screen glow
-[node name="Mollie_Screen2" type="CSGBox3D" parent="."]
+[node name="Ultron_FD_Screen2" type="CSGBox3D" parent="."]
 transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 5.52, 1.2, 4.48)
 size = Vector3(0.7, 0.4, 0.01)
 material = SubResource("whiteboard_mat")
 
 ; Keyboard
-[node name="Mollie_Keyboard" type="CSGBox3D" parent="."]
+[node name="Ultron_FD_Keyboard" type="CSGBox3D" parent="."]
 transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 5, 0.86, 5)
 size = Vector3(0.5, 0.02, 0.2)
 material = SubResource("desk_mat")
 
 ; Coffee mug
-[node name="Mollie_Mug" type="CSGCylinder3D" parent="."]
+[node name="Ultron_FD_Mug" type="CSGCylinder3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8, 0.92, 4.2)
 radius = 0.05
 height = 0.12
 material = SubResource("whiteboard_mat")
 
 ; Desk lamp (pole + shade)
-[node name="Mollie_LampPole" type="CSGCylinder3D" parent="."]
+[node name="Ultron_FD_LampPole" type="CSGCylinder3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2, 1.1, 5.8)
 radius = 0.02
 height = 0.5
 material = SubResource("desk_mat")
 
-[node name="Mollie_LampShade" type="CSGCylinder3D" parent="."]
+[node name="Ultron_FD_LampShade" type="CSGCylinder3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2, 1.4, 5.8)
 radius = 0.1
 height = 0.08
 material = SubResource("whiteboard_mat")
 
 ; Desk accent light (blue glow under desk edge)
-[node name="Mollie_AccentLight" type="OmniLight3D" parent="."]
+[node name="Ultron_FD_AccentLight" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.5, 5)
 light_color = Color(0.2, 0.7, 1, 1)
 light_energy = 0.5
 omni_range = 3
 
-[node name="Mollie_Light" type="OmniLight3D" parent="."]
+[node name="Ultron_FD_Light" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.8, 5)
 light_color = Color(1, 0.95, 0.85, 1)
 light_energy = 1.2
 omni_range = 6
 
-[node name="Mollie_Area" type="Area3D" parent="."]
+[node name="Ultron_FD_Area" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.5, 5)
 script = ExtResource("2")
-room_name = "Mollie"
+room_name = "Ultron"
 
-[node name="Mollie_AreaShape" type="CollisionShape3D" parent="Mollie_Area"]
-shape = SubResource("mollie_area_shape")
+[node name="Ultron_FD_AreaShape" type="CollisionShape3D" parent="Ultron_FD_Area"]
+shape = SubResource("ultron_fd_area_shape")
 
 ; =============================================================================
 ; DOOR FRAMES AND PANELS
@@ -1374,7 +1374,7 @@ text = "❗"
 font_size = 36
 modulate = Color(1, 0.3, 0.3, 1)
 
-[node name="Mollie_NotifBadge" type="Label3D" parent="."]
+[node name="Ultron_FD_NotifBadge" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.4, 5)
 visible = false
 text = "❗"
@@ -1396,7 +1396,7 @@ max_distance = 15.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.2, 1.2, 0)
 max_distance = 15.0
 
-[node name="Mollie_TTSPlayer" type="AudioStreamPlayer3D" parent="."]
+[node name="Ultron_FD_TTSPlayer" type="AudioStreamPlayer3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.2, 5.8)
 max_distance = 15.0
 
@@ -1499,10 +1499,10 @@ transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -4.9, 2.9, 0)
 script = ExtResource("10")
 agent_name = "DJ Sam"
 
-[node name="Mollie_StatusDot" type="Label3D" parent="."]
+[node name="Ultron_FD_StatusDot" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.4, 5)
 script = ExtResource("10")
-agent_name = "Mollie"
+agent_name = "Ultron"
 
 ; =============================================================================
 ; PROXIMITY ZONES (near doorways)
@@ -1569,8 +1569,8 @@ script = ExtResource("21")
 [connection signal="body_exited" from="Room3_Area" to="Room3_Area" method="_on_body_exited"]
 [connection signal="body_entered" from="Room4_Area" to="Room4_Area" method="_on_body_entered"]
 [connection signal="body_exited" from="Room4_Area" to="Room4_Area" method="_on_body_exited"]
-[connection signal="body_entered" from="Mollie_Area" to="Mollie_Area" method="_on_body_entered"]
-[connection signal="body_exited" from="Mollie_Area" to="Mollie_Area" method="_on_body_exited"]
+[connection signal="body_entered" from="Ultron_FD_Area" to="Ultron_FD_Area" method="_on_body_entered"]
+[connection signal="body_exited" from="Ultron_FD_Area" to="Ultron_FD_Area" method="_on_body_exited"]
 [connection signal="body_entered" from="Room2_Proximity" to="Room2_Proximity" method="_on_body_entered"]
 [connection signal="body_exited" from="Room2_Proximity" to="Room2_Proximity" method="_on_body_exited"]
 [connection signal="body_entered" from="Room3_Proximity" to="Room3_Proximity" method="_on_body_entered"]
@@ -1731,56 +1731,56 @@ radius = 0.2
 height = 0.05
 material = SubResource("robot_base_djsam")
 
-; --- MOLLIE (warm gold, at desk facing lobby) ---
+; --- ULTRON (front desk, Office Manager) ---
 ; Avatar behind desk, facing lobby (+z direction)
-[node name="Mollie_Avatar" type="Node3D" parent="."]
+[node name="Ultron_FD_Avatar" type="Node3D" parent="."]
 transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 4, 0.85, 6)
 script = ExtResource("6")
-room_name = "Mollie"
+room_name = "Ultron"
 
-[node name="Head" type="CSGSphere3D" parent="Mollie_Avatar"]
+[node name="Head" type="CSGSphere3D" parent="Ultron_FD_Avatar"]
 transform = Transform3D(1, 0, 0, 0, 0.85, 0, 0, 0, 1, 0, 0.85, 0)
 radius = 0.35
-material = SubResource("robot_body_mollie")
+material = SubResource("robot_body_ultron_fd")
 
-[node name="Visor" type="CSGBox3D" parent="Mollie_Avatar"]
+[node name="Visor" type="CSGBox3D" parent="Ultron_FD_Avatar"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, -0.17)
 size = Vector3(0.5, 0.25, 0.05)
 material = SubResource("robot_visor_mat")
 
-[node name="LeftEye" type="CSGSphere3D" parent="Mollie_Avatar"]
+[node name="LeftEye" type="CSGSphere3D" parent="Ultron_FD_Avatar"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.88, -0.19)
 radius = 0.06
-material = SubResource("robot_eye_l_mollie")
+material = SubResource("robot_eye_l_ultron_fd")
 
-[node name="RightEye" type="CSGSphere3D" parent="Mollie_Avatar"]
+[node name="RightEye" type="CSGSphere3D" parent="Ultron_FD_Avatar"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.88, -0.19)
 radius = 0.06
-material = SubResource("robot_eye_r_mollie")
+material = SubResource("robot_eye_r_ultron_fd")
 
-[node name="Body" type="CSGCylinder3D" parent="Mollie_Avatar"]
+[node name="Body" type="CSGCylinder3D" parent="Ultron_FD_Avatar"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
 radius = 0.25
 height = 0.5
-material = SubResource("robot_body_mollie")
+material = SubResource("robot_body_ultron_fd")
 
-[node name="LeftArm" type="CSGCylinder3D" parent="Mollie_Avatar"]
+[node name="LeftArm" type="CSGCylinder3D" parent="Ultron_FD_Avatar"]
 transform = Transform3D(1, 0, 0, 0, 0.966, 0.259, 0, -0.259, 0.966, -0.35, 0.4, 0)
 radius = 0.06
 height = 0.3
-material = SubResource("robot_body_mollie")
+material = SubResource("robot_body_ultron_fd")
 
-[node name="RightArm" type="CSGCylinder3D" parent="Mollie_Avatar"]
+[node name="RightArm" type="CSGCylinder3D" parent="Ultron_FD_Avatar"]
 transform = Transform3D(1, 0, 0, 0, 0.966, -0.259, 0, 0.259, 0.966, 0.35, 0.4, 0)
 radius = 0.06
 height = 0.3
-material = SubResource("robot_body_mollie")
+material = SubResource("robot_body_ultron_fd")
 
-[node name="Base" type="CSGCylinder3D" parent="Mollie_Avatar"]
+[node name="Base" type="CSGCylinder3D" parent="Ultron_FD_Avatar"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
 radius = 0.2
 height = 0.05
-material = SubResource("robot_base_mollie")
+material = SubResource("robot_base_ultron_fd")
 
 [node name="TVDisplay" type="Node" parent="."]
 script = ExtResource("22")
