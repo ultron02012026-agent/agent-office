@@ -311,9 +311,18 @@ func _build_system_prompt() -> String:
 			system_prompt = cfg["system_prompt"]
 	system_prompt += "\nYou can control your office environment using tags (they're stripped before display):"
 	system_prompt += "\n\nMusic: [MUSIC_UP] [MUSIC_DOWN] [MUSIC_OFF] [MUSIC_ON]"
-	system_prompt += "\n\nTV Screen (your office has a wall-mounted TV you can display images on):"
-	system_prompt += "\n[TV_SHOW:url] — display an image on your TV (use a direct image URL, png/jpg/webp)"
-	system_prompt += "\n[TV_OFF] — clear the TV screen"
+	if current_room == "Ultron":
+		system_prompt += "\n\nMonitors (you have 3 desk monitors — left, center, right):"
+		system_prompt += "\n[SCREEN1:url] — display image on left monitor"
+		system_prompt += "\n[SCREEN2:url] — display image on center monitor (main)"
+		system_prompt += "\n[SCREEN3:url] — display image on right monitor"
+		system_prompt += "\n[TV_SHOW:url] — shortcut for center monitor"
+		system_prompt += "\n[SCREEN_CLEAR:1] [SCREEN_CLEAR:2] [SCREEN_CLEAR:3] — clear specific monitor"
+		system_prompt += "\n[TV_OFF] — clear all monitors"
+	else:
+		system_prompt += "\n\nTV Screen (your office has a wall-mounted TV you can display images on):"
+		system_prompt += "\n[TV_SHOW:url] — display an image on your TV (use a direct image URL, png/jpg/webp)"
+		system_prompt += "\n[TV_OFF] — clear the TV screen"
 	system_prompt += "\n\nRoom Lights:"
 	system_prompt += "\n[LIGHTS_COLOR:#hexcolor] — change your office light color (e.g. #FF0000 for red)"
 	system_prompt += "\n[LIGHTS_BRIGHT:0-100] — set light brightness (0=off, 100=max)"
@@ -399,11 +408,27 @@ func _handle_tv_commands(text: String):
 	var tv_display = get_node_or_null("/root/Main/TVDisplay")
 	if not tv_display:
 		return
+	# Standard TV_SHOW (wall TV for other agents, center monitor for Ultron)
 	var regex = RegEx.new()
 	regex.compile("\\[TV_SHOW:(https?://[^\\]]+)\\]")
-	var match = regex.search(text)
-	if match:
-		tv_display.show_image_on_tv(current_room, match.get_string(1))
+	var tv_match = regex.search(text)
+	if tv_match:
+		tv_display.show_image_on_tv(current_room, tv_match.get_string(1))
+	# Ultron-specific: [SCREEN1:url] [SCREEN2:url] [SCREEN3:url]
+	var screen_regex = RegEx.new()
+	screen_regex.compile("\\[SCREEN([123]):(https?://[^\\]]+)\\]")
+	var screen_matches = screen_regex.search_all(text)
+	for m in screen_matches:
+		var screen_num = int(m.get_string(1))
+		var url = m.get_string(2)
+		tv_display.show_on_screen(screen_num, url)
+	# [SCREEN_CLEAR:N]
+	var clear_regex = RegEx.new()
+	clear_regex.compile("\\[SCREEN_CLEAR:([123])\\]")
+	var clear_matches = clear_regex.search_all(text)
+	for m in clear_matches:
+		tv_display.clear_screen(int(m.get_string(1)))
+	# TV_OFF clears all
 	if "[TV_OFF]" in text:
 		tv_display.clear_tv(current_room)
 
@@ -447,5 +472,9 @@ func _strip_command_tags(text: String) -> String:
 	regex.compile("\\[LIGHTS_COLOR:[^\\]]+\\]")
 	result = regex.sub(result, "", true)
 	regex.compile("\\[LIGHTS_BRIGHT:[^\\]]+\\]")
+	result = regex.sub(result, "", true)
+	regex.compile("\\[SCREEN[123]:[^\\]]+\\]")
+	result = regex.sub(result, "", true)
+	regex.compile("\\[SCREEN_CLEAR:[123]\\]")
 	result = regex.sub(result, "", true)
 	return result.strip_edges()
