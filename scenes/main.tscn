@@ -22,6 +22,7 @@
 [ext_resource type="Script" path="res://scripts/screenshot.gd" id="20"]
 [ext_resource type="Script" path="res://scripts/debug_overlay.gd" id="21"]
 [ext_resource type="Script" path="res://scripts/tv_display.gd" id="22"]
+[ext_resource type="Script" path="res://scripts/gateway_ws.gd" id="gateway_ws"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_hard.wav" id="audio_footstep_hard"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_soft.wav" id="audio_footstep_soft"]
 [ext_resource type="AudioStream" path="res://assets/audio/door_slide.wav" id="audio_door_slide"]
@@ -1265,8 +1266,6 @@ offset_bottom = 48
 text = "Lobby"
 
 ; ===== GATEWAY WEBSOCKET =====
-[ext_resource type="Script" path="res://scripts/gateway_ws.gd" id="gateway_ws"]
-
 [node name="GatewayWS" type="Node" parent="."]
 script = ExtResource("gateway_ws")
 
