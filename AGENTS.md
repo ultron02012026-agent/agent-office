@@ -1,112 +1,152 @@
 # Agent Office — AGENTS.md
 
 ## What Is This
-3D first-person office building (Godot 4.2, GDScript) where you walk into rooms and chat/voice-talk with AI agents via OpenClaw gateway API. Four rooms, central hallway, lobby.
+3D first-person office building (Godot 4, GDScript) where you walk into rooms and chat with real OpenClaw AI agents. Glass walls, Shanghai Bund HDRI skybox, EVE-style robot avatars. Each room connects to an actual agent with its own personality, memory, and skills via WebSocket.
 
 ## Tech Stack
-- **Engine:** Godot 4.2 (Forward Plus renderer)
+- **Engine:** Godot 4 (Forward Plus renderer)
 - **Language:** GDScript
-- **Backend:** OpenClaw Gateway (OpenAI-compatible API: chat completions, STT, TTS)
+- **Backend:** OpenClaw Gateway via WebSocket (`chat.send`, `chat.inject`, `chat.history`)
+- **Fallback:** REST `/v1/chat/completions` if WS disconnected
 - **Persistence:** ConfigFile to `user://settings.cfg`
+- **Repo:** `github.com/ultron02012026-agent/agent-office` (private)
 
 ## Architecture
 ```
 SettingsManager (autoload singleton)
     ↕ read by all scripts
 main.tscn (root scene)
-├── Player (CharacterBody3D) → player.gd — movement, input, room tracking
-├── Room[1-4]_Area (Area3D) → room_area.gd — enter/exit detection
-├── ChatUI (CanvasLayer) → chat_ui.gd — text chat + API calls
-├── VoiceChat (Node) → voice_chat.gd — mic capture, STT, TTS
+├── Player (CharacterBody3D) → player.gd — FPS movement, room tracking, HUD
+├── Room[2-4]_Area (Area3D) → room_area.gd — enter/exit detection
+├── Ultron_FD_Area (Area3D) → room_area.gd — front desk area
+├── GatewayWS (Node) → gateway_ws.gd — WebSocket client to OpenClaw gateway
+├── ChatUI (CanvasLayer) → chat_ui.gd — text chat, streaming responses, command tags
+├── VoiceChat (Node) → voice_chat.gd — mic capture (STT/TTS currently disabled)
+├── TVDisplay (Node) → tv_display.gd — image display on TVs and monitors
+├── Ambiance (Node) → ambiance.gd — background music, zone crossfade
 ├── SettingsMenu (CanvasLayer) → settings_menu.gd — tabbed settings UI
-├── [Agent]_Avatar (MeshInstance3D) → agent_avatar.gd — speaking pulse
+├── [Agent]_Avatar (Node3D) → agent_avatar.gd — EVE robot, 5-state animation
 ├── [Agent]_TTSPlayer (AudioStreamPlayer3D) — spatial TTS playback
-└── HUD (CanvasLayer) — room name + voice mode indicator
+├── AgentSocial (Node) → agent_social.gd — visitor orbs between rooms
+├── BulletinBoard (Node) → bulletin_board.gd — live chat activity display
+├── Minimap (CanvasLayer) → minimap.gd — overhead room map
+├── DayCycle (Node) → day_cycle.gd — day/night lighting cycle
+├── CommandPalette (CanvasLayer) → command_palette.gd — /goto, /status, /clear, /sprint
+├── NotificationManager (Node) → notification_manager.gd — chat notification badges
+├── WorldEnvironment → Shanghai Bund HDRI panoramic skybox
+└── HUD (CanvasLayer) — room name label
 ```
 
-## File Map
-| File | Description |
-|------|-------------|
-| `project.godot` | Godot config: autoloads, input mappings (WASD, V, Tab, Esc) |
-| `scenes/main.tscn` | Full office: 4 rooms, hallway, lobby, furniture, lights, avatars, UI layers |
-| `scenes/player.tscn` | CharacterBody3D with capsule collider + CameraPivot/Camera3D |
-| `scripts/player.gd` | FPS movement, mouse look, room enter/exit, voice toggle, HUD updates |
-| `scripts/room_area.gd` | Area3D trigger — calls `enter_room()`/`exit_room()` on player |
-| `scripts/chat_ui.gd` | Chat panel: message send, OpenClaw `/v1/chat/completions`, voice transcription handling |
-| `scripts/voice_chat.gd` | Mic capture → WAV → STT (`/v1/audio/transcriptions`) → TTS (`/v1/audio/speech`) → spatial playback |
-| `scripts/settings_manager.gd` | Autoload singleton: all settings vars, ConfigFile save/load, applies audio/display |
-| `scripts/settings_menu.gd` | Programmatic tabbed UI (Audio/Connection/Controls/Display/Agents), Esc to open |
-| `scripts/agent_avatar.gd` | MeshInstance3D pulse effect via emission when agent is speaking |
-| `tests/run_tests.gd` | Headless test runner (`godot --headless --script tests/run_tests.gd`) |
-| `tests/test_chat_ui.gd` | Tests: empty message rejection, thinking state, BBCode formatting |
-| `tests/test_player.gd` | Tests: camera clamp, room state tracking, HUD location |
-| `tests/test_room_area.gd` | Tests: room name propagation, enter/exit state |
-| `tests/test_settings.gd` | Tests: defaults, save/load roundtrip, agent config editing |
+## Rooms & Agents
 
-## Key Patterns
+| Room | Agent ID | Session Key | Robot Color | Description |
+|------|----------|-------------|-------------|-------------|
+| Spinfluencer (Room 2) | `spinfluencer` | `agent:spinfluencer:main` | Green | AI CEO of Spinfluenced |
+| Dexer (Room 3) | `dexer` | `agent:dexer:main` | Blue | Label-Dex AI agent |
+| DJ Sam (Room 4) | `dj-sam` | `agent:dj-sam:main` | Purple | DJ/music agent |
+| Ultron Front Desk | `main` | `agent:main:main` | Gold | Office Manager (Ultron) |
 
-### Rooms
-Each room = a set of CSGBox3D walls + Area3D trigger + desk/chairs + Label3D + OmniLight3D + avatar + TTSPlayer. The Area3D has `room_name` export. When player enters, `player.enter_room()` opens chat and binds voice to that room's TTSPlayer.
+## Key Scripts
 
-### Chat Flow
-1. Player enters room → `chat_ui.show_chat(room_name)` 
-2. User types or voice sends text → `_send_to_openclaw()` 
-3. POST to `{gateway_url}/v1/chat/completions` with system prompt + history
-4. Response displayed in RichTextLabel with BBCode colors
-5. If voice mode: response also sent to `voice_chat.request_tts()`
+| Script | Purpose |
+|--------|---------|
+| `gateway_ws.gd` | WebSocket client — connects to OpenClaw, sends `chat.send`/`chat.inject`, routes streaming events, auto-reconnects |
+| `chat_ui.gd` | Chat panel — text input, streaming delta display, command tag parsing (music/TV/lights/screens), greeting system, per-room history |
+| `tv_display.gd` | Fetches images from URLs, displays on room TVs and Ultron's 3 monitors |
+| `agent_avatar.gd` | EVE-style robot with 5 states: idle, listening, recording, thinking, speaking. Eye emission, head tilt, arm gestures |
+| `player.gd` | FPS movement (WASD), mouse look, room enter/exit, HUD updates |
+| `ambiance.gd` | Background music (Schedule 1 OST), zone crossfade, process_mode=ALWAYS |
+| `settings_manager.gd` | Autoload singleton — gateway URL/token, agent configs, audio/display settings |
+| `day_cycle.gd` | Simulated day/night cycle affecting light colors |
+| `agent_social.gd` | Random agent "visits" — glowing orbs matching eye color |
 
-### Voice Flow
-1. Tab toggles voice mode flag
-2. Hold V → `start_recording()` (AudioStreamMicrophone → AudioEffectCapture on "Record" bus)
-3. Release V → `stop_recording()` → save WAV → POST to `/v1/audio/transcriptions`
-4. Transcription emitted via signal → chat_ui processes as typed message
-5. Agent reply → POST to `/v1/audio/speech` → MP3 loaded → plays on room's AudioStreamPlayer3D
+## Command Tag System
+Agents include tags in responses to control the office. Tags are stripped before display.
 
-### Settings
-`SettingsManager` is an autoload (registered in project.godot). All scripts read from it directly (e.g., `SettingsManager.gateway_url`). Settings menu writes to SettingsManager vars, calls `save_settings()` on close.
+**Music (all agents):**
+`[MUSIC_UP]` `[MUSIC_DOWN]` `[MUSIC_OFF]` `[MUSIC_ON]`
 
-### Agent Config
-`SettingsManager.agent_configs` dict maps room names to `{agent_name, system_prompt}`. Editable in settings menu Agents tab. Used by chat_ui for system prompt in API calls.
+**TV/Screen (per room):**
+- `[TV_SHOW:url]` — display image on room TV (or Ultron center monitor)
+- `[TV_OFF]` — clear TV/all monitors
+
+**Ultron-only (3 monitors):**
+- `[SCREEN1:url]` `[SCREEN2:url]` `[SCREEN3:url]` — left/center/right monitors
+- `[SCREEN_CLEAR:1]` `[SCREEN_CLEAR:2]` `[SCREEN_CLEAR:3]`
+
+**Lights (per room):**
+- `[LIGHTS_COLOR:#hexcolor]` — change room light color
+- `[LIGHTS_BRIGHT:0-100]` — set brightness
+
+## Chat Flow (WebSocket)
+1. Player enters room → `gateway_ws.inject_office_context(room)` (first visit only)
+2. Auto-greeting fires via `chat.send` with greeting prompt
+3. User types message → `gateway_ws.send_message(room, text, attachments)`
+4. Delta events stream in → chat log updates in real-time
+5. Final event → parse command tags, display clean response, trigger TTS
+6. Image paste: Ctrl+V captures clipboard image, sends as base64 attachment
+
+## Gateway Connection
+- **URL:** `ws://` + `SettingsManager.gateway_url` (default `http://100.125.54.7:18789`)
+- **Auth:** `connect` frame with `auth.token` from `SettingsManager.gateway_token`
+- **Protocol:** JSON frames — `{"type":"req","id":N,"method":"...","params":{...}}`
+- **Events:** `{"type":"event","event":"chat","payload":{"state":"delta"|"final","message":"..."}}`
 
 ## Spatial Layout
 ```
-z=-15  ┌──── North wall ────┐
-       │                     │
-z=-11  │ Ultron    │ Dexer   │   (rooms at z=-8 center)
-z=-5   │ door      │ door    │
-       │  HALLWAY (x=-2..2)  │
-z=-3   │ Spinflu   │Architect│   (rooms at z=0 center)
-z=3    │ door      │ door    │
-       │                     │
-z=7    │      LOBBY          │   (player spawns at z=10)
-z=15   └─────────────────────┘
-       Left: x=-10    Right: x=10
+z=-15  ┌──────── North wall ────────┐
+       │                             │
+       │ Spinfluencer    │  Dexer    │  (rooms at z=-10)
+z=-5   │ (green, dbl)    │  (blue)   │
+       │    door          │  door     │
+       │      HALLWAY                 │
+       │ DJ Sam     │  Coming Soon   │  (rooms at z=0)
+z=3    │ (purple)   │   (locked)     │
+       │                             │
+       │        LOBBY                │
+       │   ┌──Ultron Front Desk──┐   │
+       │   │ 3 monitors, robot   │   │
+z=15   └───┴─────────────────────┴───┘
+       Left: x=-15    Right: x=15
 ```
+
+## Environment
+- **Skybox:** Shanghai Bund HDRI (neon city skyline at night, river reflections)
+- **Ground:** Dark reflective plaza (wet pavement look)
+- **Interior:** All glass walls for sunlight, structural pillars
+- **Lighting:** Ambient 0.8, room lights 1.5, hallway ceiling lights, accent lights
+- **Sealed building:** Glass wall at entrance — can see out, can't leave
 
 ## Common Tasks
 
+### Swap the skybox
+Replace `assets/environment/skybox.hdr` with any equirectangular HDR/EXR file.
+
 ### Add a new room
-1. In `main.tscn`: duplicate a room's walls/desk/chair/whiteboard/TV/light/label nodes, adjust positions
-2. Add new `Area3D` with `room_area.gd`, set `room_name` export
-3. Add `[Name]_Avatar` MeshInstance3D with `agent_avatar.gd`, set `room_name`
-4. Add `[Name]_TTSPlayer` AudioStreamPlayer3D at desk position
-5. Add doorway gap in hallway walls
-6. Add entry in `SettingsManager.agent_configs` default dict
-7. Connect Area3D body_entered/body_exited signals to itself
+1. In `main.tscn`: duplicate room walls/desk/chair/TV/light/label/avatar nodes
+2. Add `Area3D` with `room_area.gd`, set `room_name` export
+3. Add avatar with `agent_avatar.gd`, set `room_name`
+4. Add `TTSPlayer` AudioStreamPlayer3D
+5. Add entry in `SettingsManager.agent_configs`
+6. Add to `gateway_ws.gd` agent_map
+7. Add to minimap, bulletin_board, agent_social, command_palette arrays
 
-### Change the API endpoint
-Edit `SettingsManager.gateway_url` default value, or change at runtime via Settings > Connection tab.
-
-### Add a new setting
-1. Add var to `settings_manager.gd` with default
-2. Add `config.set_value`/`config.get_value` in `save_settings()`/`load_settings()`
-3. Add UI control in appropriate tab in `settings_menu.gd`
+### Add a new command tag
+1. Define tag format in `chat_ui.gd` `_build_system_prompt()`
+2. Add handler function (e.g., `_handle_tv_commands()`)
+3. Call handler from response processing
+4. Add to `_strip_command_tags()` regex
+5. Update `gateway_ws.gd` inject message
 
 ### Run tests
 ```bash
 godot --headless --script tests/run_tests.gd
 ```
+382 tests, 23 test files.
 
-### Add a new test
-1. Create `tests/test_xxx.gd` extending Node with `run() -> Dictionary` returning `{passed, failed}`
-2. Add entry to `test_files` array in `tests/run_tests.gd`
+## ⚠️ Scene File Rules
+**Do NOT rewrite `main.tscn` from scratch.** Always make surgical edits.
+- All `[ext_resource]` entries MUST be in the header (before `[sub_resource]`)
+- All `[sub_resource]` entries MUST be before `[node]` entries
+- `load_steps` must match total resource count
+- Sub-agents editing scenes: be ADDITIVE, never delete existing nodes
