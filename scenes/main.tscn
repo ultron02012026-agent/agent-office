@@ -1264,6 +1264,12 @@ offset_right = 300
 offset_bottom = 48
 text = "Lobby"
 
+; ===== GATEWAY WEBSOCKET =====
+[ext_resource type="Script" path="res://scripts/gateway_ws.gd" id="gateway_ws"]
+
+[node name="GatewayWS" type="Node" parent="."]
+script = ExtResource("gateway_ws")
+
 ; ===== CHAT UI =====
 [node name="ChatUI" type="CanvasLayer" parent="."]
 script = ExtResource("3")

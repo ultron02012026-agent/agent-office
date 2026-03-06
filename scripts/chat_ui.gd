@@ -1,8 +1,8 @@
-## Chat panel UI — text + voice conversation with agents.
+## Chat panel UI — text + voice conversation with agents via Gateway WebSocket.
 ## Chat history persists per room — leaving and returning restores previous conversation.
-## Key methods: show_chat(room), hide_chat(), _send_to_openclaw()
-## Signals: connects to VoiceChat.transcription_received
-## Depends on: SettingsManager (autoload), VoiceChat (/root/Main/VoiceChat), HTTPRequest child
+## Key methods: show_chat(room), hide_chat()
+## Signals: connects to VoiceChat.transcription_received, GatewayWS signals
+## Depends on: SettingsManager (autoload), VoiceChat, GatewayWS
 extends CanvasLayer
 
 var current_room: String = ""
@@ -12,6 +12,10 @@ var is_thinking: bool = false
 # Per-room chat history persistence
 var room_histories: Dictionary = {}  # room_name -> Array of {role, content}
 var room_logs: Dictionary = {}  # room_name -> String (BBCode chat log text)
+
+# Streaming state
+var _streaming_text: String = ""
+var _is_streaming: bool = false
 
 # Voice status indicator
 var voice_status: String = "listening"  # listening, recording, processing
@@ -23,6 +27,9 @@ var voice_status: String = "listening"  # listening, recording, processing
 @onready var text_input = $Panel/VBoxContainer/TextInput
 @onready var http_request = $HTTPRequest
 
+var _gateway_ws: Node = null
+var _greeting_in_progress: bool = false
+
 func _ready():
 	panel.visible = false
 	http_request.request_completed.connect(_on_request_completed)
@@ -33,6 +40,18 @@ func _ready():
 	
 	# Connect voice chat signals
 	_connect_voice_chat.call_deferred()
+	# Connect gateway WS signals
+	_connect_gateway.call_deferred()
+
+func _connect_gateway():
+	_gateway_ws = get_node_or_null("/root/Main/GatewayWS")
+	if _gateway_ws:
+		_gateway_ws.message_delta.connect(_on_ws_delta)
+		_gateway_ws.message_final.connect(_on_ws_final)
+		_gateway_ws.connected.connect(_on_ws_connected)
+		# Start connection
+		if SettingsManager.gateway_url != "" and SettingsManager.gateway_token != "":
+			_gateway_ws.start_connection()
 
 func _connect_voice_chat():
 	var voice_chat = get_node_or_null("/root/Main/VoiceChat")
@@ -41,9 +60,16 @@ func _connect_voice_chat():
 		voice_chat.tts_started.connect(_on_tts_started)
 		voice_chat.tts_finished.connect(_on_tts_finished)
 
+func _get_current_agent_id() -> String:
+	if _gateway_ws and _gateway_ws.agent_map.has(current_room):
+		return _gateway_ws.agent_map[current_room]
+	return ""
+
 func show_chat(room_name: String):
 	current_room = room_name
 	is_thinking = false
+	_is_streaming = false
+	_streaming_text = ""
 	var display_name = room_name
 	if SettingsManager.agent_configs.has(room_name):
 		display_name = SettingsManager.agent_configs[room_name].get("agent_name", room_name)
@@ -65,8 +91,9 @@ func show_chat(room_name: String):
 	if text_input:
 		text_input.grab_focus()
 	
-	# Auto-greet on first visit (agent says hello)
-	if is_first_visit and SettingsManager.gateway_url != "" and SettingsManager.gateway_token != "":
+	# Inject office context and auto-greet on first visit via WebSocket
+	if is_first_visit and _gateway_ws and _gateway_ws.is_ws_connected():
+		_gateway_ws.inject_office_context(room_name)
 		_request_greeting(room_name)
 
 func hide_chat():
@@ -79,6 +106,8 @@ func hide_chat():
 	current_room = ""
 	chat_history = []
 	is_thinking = false
+	_is_streaming = false
+	_streaming_text = ""
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func set_voice_status(status: String):
@@ -116,20 +145,22 @@ func _on_transcription(text: String):
 	_submit_message(text)
 
 func _submit_message(text: String):
-	# Guard against sending while already waiting for a response
 	if is_thinking:
 		chat_log.text += "\n[color=gray][i](waiting for response...)[/i][/color]\n"
 		return
 	
-	# Add user text to transcript
 	chat_log.text += "\n[color=cyan]You:[/color] " + text + "\n"
 	chat_history.append({"role": "user", "content": text})
 	
-	# Show thinking indicator
 	is_thinking = true
 	set_voice_status("thinking")
 	chat_log.text += "[color=gray][i]...[/i][/color]\n"
-	_send_to_openclaw(text)
+	
+	# Send via WebSocket if connected, otherwise fall back to HTTP
+	if _gateway_ws and _gateway_ws.is_ws_connected():
+		_gateway_ws.send_message(current_room, text)
+	else:
+		_send_to_openclaw(text)
 
 func _on_tts_started():
 	set_voice_status("speaking")
@@ -137,6 +168,140 @@ func _on_tts_started():
 func _on_tts_finished():
 	if panel.visible:
 		set_voice_status("listening")
+
+func _on_ws_connected():
+	print("[ChatUI] Gateway WebSocket connected")
+
+func _on_ws_delta(agent_id: String, text: String):
+	# Only handle deltas for the current room's agent
+	if _get_current_agent_id() != agent_id:
+		return
+	if not panel.visible:
+		return
+	
+	if not _is_streaming:
+		_is_streaming = true
+		_streaming_text = ""
+		# Remove thinking indicator
+		_remove_thinking_indicator()
+		# Start the agent's line
+		chat_log.text += "[color=yellow]" + current_room + ":[/color] "
+	
+	_streaming_text += text
+	# Update display with current streamed text (strip tags for display)
+	_update_streaming_display()
+
+func _on_ws_final(agent_id: String, text: String):
+	if _get_current_agent_id() != agent_id:
+		return
+	if not panel.visible:
+		return
+	
+	var final_text = text if not text.is_empty() else _streaming_text
+	
+	if not _is_streaming:
+		# We got a final without deltas — remove thinking indicator first
+		_remove_thinking_indicator()
+	
+	is_thinking = false
+	_is_streaming = false
+	_streaming_text = ""
+	
+	if final_text.is_empty():
+		set_voice_status("listening")
+		return
+	
+	# For greetings, only add assistant reply
+	if _greeting_in_progress:
+		_greeting_in_progress = false
+	
+	chat_history.append({"role": "assistant", "content": final_text})
+	
+	# Handle office command tags
+	_handle_music_commands(final_text)
+	_handle_tv_commands(final_text)
+	_handle_light_commands(final_text)
+	
+	var display_reply = _strip_command_tags(final_text).strip_edges()
+	
+	# Replace the streaming line with the final clean version
+	# Remove any partial streaming content and rewrite
+	var lines = chat_log.text.split("\n")
+	# Find and remove the last agent line (streaming) 
+	var cleaned_lines := []
+	var found_agent_line := false
+	for i in range(lines.size() - 1, -1, -1):
+		if not found_agent_line and lines[i].begins_with("[color=yellow]" + current_room + ":[/color]"):
+			found_agent_line = true
+			continue  # skip it, we'll re-add
+		cleaned_lines.push_front(lines[i])
+	
+	if found_agent_line:
+		chat_log.text = "\n".join(cleaned_lines) + "\n"
+	
+	chat_log.text += "[color=yellow]" + current_room + ":[/color] " + display_reply + "\n"
+	
+	# Play receive sound
+	var recv_sound = get_node_or_null("/root/Main/ChatReceiveSound")
+	if recv_sound and recv_sound.stream:
+		recv_sound.play()
+	
+	# Request TTS
+	var voice_chat = get_node_or_null("/root/Main/VoiceChat")
+	if voice_chat:
+		voice_chat.request_tts(display_reply)
+	
+	set_voice_status("listening")
+
+func _remove_thinking_indicator():
+	var lines = chat_log.text.split("\n")
+	var cleaned_lines := []
+	for line in lines:
+		if not ("[i]...[/i]" in line):
+			cleaned_lines.append(line)
+	chat_log.text = "\n".join(cleaned_lines)
+
+func _update_streaming_display():
+	# Show stripped version of streaming text on the current line
+	var display = _strip_command_tags(_streaming_text)
+	# Replace the last agent line with updated streaming content
+	var lines = chat_log.text.split("\n")
+	var new_lines := []
+	var replaced := false
+	for i in range(lines.size() - 1, -1, -1):
+		if not replaced and lines[i].begins_with("[color=yellow]" + current_room + ":[/color]"):
+			new_lines.push_front("[color=yellow]" + current_room + ":[/color] " + display)
+			replaced = true
+		else:
+			new_lines.push_front(lines[i])
+	if not replaced:
+		new_lines.append("[color=yellow]" + current_room + ":[/color] " + display)
+	chat_log.text = "\n".join(new_lines)
+
+func _request_greeting(room_name: String):
+	_greeting_in_progress = true
+	is_thinking = true
+	set_voice_status("thinking")
+	chat_log.text += "[color=gray][i]...[/i][/color]\n"
+	
+	if _gateway_ws and _gateway_ws.is_ws_connected():
+		_gateway_ws.send_message(room_name, "The user just walked into your office. Give a brief, friendly greeting (1 sentence).")
+	else:
+		# Fallback to HTTP
+		var messages = [
+			{"role": "system", "content": _build_system_prompt()},
+			{"role": "user", "content": "The user just walked into your office. Give a brief, friendly greeting (1 sentence)."}
+		]
+		_send_chat_request(messages, 100)
+
+func clear_chat():
+	chat_log.text = "[color=gray]Chat cleared.[/color]\n"
+	chat_history = []
+	if not current_room.is_empty():
+		room_histories.erase(current_room)
+		room_logs.erase(current_room)
+
+# ===== HTTP Fallback (kept for when WS is not connected) =====
 
 func _build_system_prompt() -> String:
 	var system_prompt = "You are " + current_room + ", an AI agent in a virtual office. Keep responses concise (2-3 sentences). Be conversational."
@@ -189,34 +354,22 @@ func _on_request_completed(result, response_code, _headers, body_bytes):
 	if json and json.has("choices") and json["choices"].size() > 0:
 		var reply = json["choices"][0]["message"]["content"]
 		
-		# For greetings, only add the assistant reply (no fake user message)
 		if _greeting_in_progress:
 			_greeting_in_progress = false
 		chat_history.append({"role": "assistant", "content": reply})
 		
-		# Remove the "..." thinking indicator (last line)
-		var lines = chat_log.text.split("\n")
-		var cleaned_lines = []
-		for i in range(lines.size()):
-			if not ("[i]...[/i]" in lines[i]):
-				cleaned_lines.append(lines[i])
-		chat_log.text = "\n".join(cleaned_lines)
+		_remove_thinking_indicator()
 		
-		# Handle office command tags
 		_handle_music_commands(reply)
 		_handle_tv_commands(reply)
 		_handle_light_commands(reply)
-		# Strip tags before display
-		var display_reply = _strip_command_tags(reply)
-		display_reply = display_reply.strip_edges()
+		var display_reply = _strip_command_tags(reply).strip_edges()
 		
 		chat_log.text += "[color=yellow]" + current_room + ":[/color] " + display_reply + "\n"
-		# Play receive sound
 		var recv_sound = get_node_or_null("/root/Main/ChatReceiveSound")
 		if recv_sound and recv_sound.stream:
 			recv_sound.play()
 		
-		# Request TTS for the response (without tags)
 		var voice_chat = get_node_or_null("/root/Main/VoiceChat")
 		if voice_chat:
 			voice_chat.request_tts(display_reply)
@@ -224,27 +377,7 @@ func _on_request_completed(result, response_code, _headers, body_bytes):
 		chat_log.text += "[color=red]No response from agent[/color]\n"
 		set_voice_status("listening")
 
-var _greeting_in_progress: bool = false
-
-func _request_greeting(_room_name: String):
-	# Agent auto-greets on first visit via a hidden system-level prompt
-	_greeting_in_progress = true
-	is_thinking = true
-	set_voice_status("thinking")
-	chat_log.text += "[color=gray][i]...[/i][/color]\n"
-	
-	var messages = [
-		{"role": "system", "content": _build_system_prompt()},
-		{"role": "user", "content": "The user just walked into your office. Give a brief, friendly greeting (1 sentence)."}
-	]
-	_send_chat_request(messages, 100)
-
-func clear_chat():
-	chat_log.text = "[color=gray]Chat cleared.[/color]\n"
-	chat_history = []
-	if not current_room.is_empty():
-		room_histories.erase(current_room)
-		room_logs.erase(current_room)
+# ===== Office Command Handlers =====
 
 func _handle_music_commands(text: String):
 	var ambiance = get_node_or_null("/root/Main/Ambiance")
@@ -266,7 +399,6 @@ func _handle_tv_commands(text: String):
 	var tv_display = get_node_or_null("/root/Main/TVDisplay")
 	if not tv_display:
 		return
-	# [TV_SHOW:url]
 	var regex = RegEx.new()
 	regex.compile("\\[TV_SHOW:(https?://[^\\]]+)\\]")
 	var match = regex.search(text)
@@ -276,7 +408,6 @@ func _handle_tv_commands(text: String):
 		tv_display.clear_tv(current_room)
 
 func _handle_light_commands(text: String):
-	# Find room light nodes
 	var room_prefix = ""
 	match current_room:
 		"Spinfluencer": room_prefix = "Room2"
@@ -284,7 +415,6 @@ func _handle_light_commands(text: String):
 		"DJ Sam": room_prefix = "Room4"
 		_: return
 	
-	# [LIGHTS_COLOR:#hexcolor]
 	var color_regex = RegEx.new()
 	color_regex.compile("\\[LIGHTS_COLOR:#([0-9a-fA-F]{6})\\]")
 	var color_match = color_regex.search(text)
@@ -296,13 +426,12 @@ func _handle_light_commands(text: String):
 			if light and light is OmniLight3D:
 				light.light_color = color
 	
-	# [LIGHTS_BRIGHT:0-100]
 	var bright_regex = RegEx.new()
 	bright_regex.compile("\\[LIGHTS_BRIGHT:(\\d+)\\]")
 	var bright_match = bright_regex.search(text)
 	if bright_match:
 		var val = clamp(int(bright_match.get_string(1)), 0, 100)
-		var energy = val / 100.0 * 2.0  # 0-100 maps to 0.0-2.0 energy
+		var energy = val / 100.0 * 2.0
 		for suffix in ["_Light", "_Light2"]:
 			var light = get_node_or_null("/root/Main/" + room_prefix + suffix)
 			if light and light is OmniLight3D:
@@ -312,7 +441,6 @@ func _strip_command_tags(text: String) -> String:
 	var result = text
 	for tag in ["[MUSIC_UP]", "[MUSIC_DOWN]", "[MUSIC_OFF]", "[MUSIC_ON]", "[TV_OFF]"]:
 		result = result.replace(tag, "")
-	# Strip parameterized tags
 	var regex = RegEx.new()
 	regex.compile("\\[TV_SHOW:[^\\]]+\\]")
 	result = regex.sub(result, "", true)
