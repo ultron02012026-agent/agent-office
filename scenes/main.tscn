@@ -1,4 +1,4 @@
-[gd_scene load_steps=70 format=3 uid="uid://main001"]
+[gd_scene load_steps=80 format=3 uid="uid://main001"]
 
 [ext_resource type="PackedScene" uid="uid://player001" path="res://scenes/player.tscn" id="1"]
 [ext_resource type="Script" path="res://scripts/room_area.gd" id="2"]
@@ -164,6 +164,57 @@ emission_enabled = true
 emission = Color(0.4, 0.3, 0.1, 1)
 emission_energy_multiplier = 0.1
 
+; --- Glass & Outdoor materials ---
+[sub_resource type="StandardMaterial3D" id="glass_mat"]
+transparency = 1
+albedo_color = Color(0.7, 0.85, 1.0, 0.15)
+metallic = 0.3
+roughness = 0.05
+
+[sub_resource type="StandardMaterial3D" id="glass_pillar_mat"]
+albedo_color = Color(0.3, 0.3, 0.35, 1)
+
+[sub_resource type="StandardMaterial3D" id="grass_mat"]
+albedo_color = Color(0.25, 0.45, 0.2, 1)
+
+[sub_resource type="StandardMaterial3D" id="mountain_mat"]
+albedo_color = Color(0.35, 0.35, 0.4, 1)
+
+[sub_resource type="StandardMaterial3D" id="mountain_snow_mat"]
+albedo_color = Color(0.85, 0.88, 0.92, 1)
+
+[sub_resource type="StandardMaterial3D" id="tree_trunk_mat"]
+albedo_color = Color(0.35, 0.25, 0.15, 1)
+
+[sub_resource type="StandardMaterial3D" id="tree_foliage_mat"]
+albedo_color = Color(0.2, 0.5, 0.2, 1)
+
+; --- Sky & Environment ---
+[sub_resource type="ProceduralSkyMaterial" id="sky_material"]
+sky_top_color = Color(0.35, 0.55, 0.9, 1)
+sky_horizon_color = Color(0.65, 0.75, 0.9, 1)
+ground_bottom_color = Color(0.25, 0.35, 0.2, 1)
+ground_horizon_color = Color(0.55, 0.6, 0.5, 1)
+
+[sub_resource type="Sky" id="sky"]
+sky_material = SubResource("sky_material")
+
+[sub_resource type="Environment" id="environment"]
+background_mode = 2
+sky = SubResource("sky")
+tonemap_mode = 3
+tonemap_white = 6.0
+ssao_enabled = true
+ssao_radius = 2.0
+ssao_intensity = 1.5
+glow_enabled = true
+glow_intensity = 0.3
+glow_bloom = 0.1
+ambient_light_source = 1
+ambient_light_color = Color(0.7, 0.75, 0.85, 1)
+ambient_light_energy = 0.4
+reflected_light_source = 1
+
 ; ===== SHAPES =====
 [sub_resource type="BoxShape3D" id="room_shape"]
 size = Vector3(9, 4, 9)
@@ -198,33 +249,42 @@ height = 0.04
 ; =============================================================================
 [node name="Main" type="Node3D"]
 
+; ===== WORLD ENVIRONMENT =====
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("environment")
+
 ; ===== LIGHTING =====
+; Sunlight — warm white, angled for natural shadows
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.866, -0.25, 0.433, 0, 0.866, 0.5, -0.5, -0.433, 0.75, 0, 10, 0)
+light_color = Color(1, 0.97, 0.92, 1)
+light_energy = 1.2
 shadow_enabled = true
+shadow_bias = 0.03
 
+; Reduced indoor lights (sky ambient handles most illumination now)
 [node name="AmbientLight" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
 light_color = Color(0.8, 0.8, 0.85, 1)
-light_energy = 0.15
+light_energy = 0.08
 omni_range = 30
 
 [node name="LobbyLight1" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.8, 5)
 light_color = Color(1, 0.95, 0.9, 1)
-light_energy = 0.6
+light_energy = 0.35
 omni_range = 12
 
 [node name="LobbyLight2" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.8, 12)
 light_color = Color(1, 0.95, 0.9, 1)
-light_energy = 0.5
+light_energy = 0.3
 omni_range = 10
 
 [node name="LobbyLight3" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.8, 0)
 light_color = Color(0.9, 0.9, 0.85, 1)
-light_energy = 0.4
+light_energy = 0.25
 omni_range = 8
 
 ; ===== FLOOR =====
@@ -254,42 +314,221 @@ size = Vector3(4, 0.02, 3)
 material = SubResource("welcome_mat_mat")
 
 ; =============================================================================
-; EXTERIOR WALLS
+; OUTDOOR ENVIRONMENT
 ; =============================================================================
-; North wall (z=-15)
-[node name="Wall_North" type="CSGBox3D" parent="."]
+; Ground plane (grass)
+[node name="OutdoorGround" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
+use_collision = true
+size = Vector3(200, 0.1, 200)
+material = SubResource("grass_mat")
+
+; --- Mountains (distant silhouettes, north-west) ---
+[node name="Mountain1" type="CSGBox3D" parent="."]
+transform = Transform3D(0.95, 0, 0.31, 0, 1, 0, -0.31, 0, 0.95, -40, 8, -60)
+size = Vector3(20, 16, 8)
+material = SubResource("mountain_mat")
+
+[node name="Mountain1_Snow" type="CSGBox3D" parent="."]
+transform = Transform3D(0.95, 0, 0.31, 0, 1, 0, -0.31, 0, 0.95, -40, 14, -60)
+size = Vector3(14, 4, 6)
+material = SubResource("mountain_snow_mat")
+
+[node name="Mountain2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 6, -55)
+size = Vector3(15, 12, 6)
+material = SubResource("mountain_mat")
+
+[node name="Mountain2_Snow" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 11, -55)
+size = Vector3(10, 3, 5)
+material = SubResource("mountain_snow_mat")
+
+[node name="Mountain3" type="CSGBox3D" parent="."]
+transform = Transform3D(0.98, 0, -0.2, 0, 1, 0, 0.2, 0, 0.98, 10, 5, -65)
+size = Vector3(25, 10, 7)
+material = SubResource("mountain_mat")
+
+[node name="Mountain3_Snow" type="CSGBox3D" parent="."]
+transform = Transform3D(0.98, 0, -0.2, 0, 1, 0, 0.2, 0, 0.98, 10, 9, -65)
+size = Vector3(18, 3, 5)
+material = SubResource("mountain_snow_mat")
+
+[node name="Mountain4" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 7, -50)
+size = Vector3(18, 14, 6)
+material = SubResource("mountain_mat")
+
+[node name="Mountain4_Snow" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 12, -50)
+size = Vector3(12, 4, 5)
+material = SubResource("mountain_snow_mat")
+
+; --- Trees (a few near the building) ---
+[node name="Tree1_Trunk" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 1.5, -20)
+size = Vector3(0.4, 3, 0.4)
+material = SubResource("tree_trunk_mat")
+
+[node name="Tree1_Foliage" type="CSGBox3D" parent="."]
+transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, -22, 4, -20)
+size = Vector3(3, 3, 3)
+material = SubResource("tree_foliage_mat")
+
+[node name="Tree2_Trunk" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 1.2, -22)
+size = Vector3(0.35, 2.4, 0.35)
+material = SubResource("tree_trunk_mat")
+
+[node name="Tree2_Foliage" type="CSGBox3D" parent="."]
+transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 20, 3.2, -22)
+size = Vector3(2.5, 2.5, 2.5)
+material = SubResource("tree_foliage_mat")
+
+[node name="Tree3_Trunk" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 1.8, 10)
+size = Vector3(0.45, 3.6, 0.45)
+material = SubResource("tree_trunk_mat")
+
+[node name="Tree3_Foliage" type="CSGBox3D" parent="."]
+transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 22, 4.8, 10)
+size = Vector3(3.5, 3, 3.5)
+material = SubResource("tree_foliage_mat")
+
+[node name="Tree4_Trunk" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 1.0, 18)
+size = Vector3(0.3, 2.0, 0.3)
+material = SubResource("tree_trunk_mat")
+
+[node name="Tree4_Foliage" type="CSGBox3D" parent="."]
+transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, -20, 3.0, 18)
+size = Vector3(2, 2, 2)
+material = SubResource("tree_foliage_mat")
+
+; =============================================================================
+; EXTERIOR WALLS — GLASS WITH STRUCTURAL PILLARS
+; =============================================================================
+; --- North wall (z=-15): glass panels between pillars ---
+[node name="Wall_North_Glass" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -15)
 use_collision = true
-size = Vector3(30, 3, 0.2)
-material = SubResource("wall_mat")
+size = Vector3(30, 3, 0.1)
+material = SubResource("glass_mat")
 
-; South wall (z=15) — left segment (with entrance gap at x=10 to 14)
-[node name="Wall_South_L" type="CSGBox3D" parent="."]
+; North wall pillars (every 10 units at room dividers + corners)
+[node name="Pillar_N1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 1.5, -15)
+use_collision = true
+size = Vector3(0.3, 3, 0.3)
+material = SubResource("glass_pillar_mat")
+
+[node name="Pillar_N2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, -15)
+use_collision = true
+size = Vector3(0.3, 3, 0.3)
+material = SubResource("glass_pillar_mat")
+
+[node name="Pillar_N3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.5, -15)
+use_collision = true
+size = Vector3(0.3, 3, 0.3)
+material = SubResource("glass_pillar_mat")
+
+[node name="Pillar_N4" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 1.5, -15)
+use_collision = true
+size = Vector3(0.3, 3, 0.3)
+material = SubResource("glass_pillar_mat")
+
+; --- South wall (z=15): glass with entrance gap (x=10 to 14) ---
+[node name="Wall_South_Glass_L" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 1.5, 15)
 use_collision = true
-size = Vector3(25, 3, 0.2)
-material = SubResource("wall_mat")
+size = Vector3(25, 3, 0.1)
+material = SubResource("glass_mat")
 
-; South wall — right segment (past entrance)
-[node name="Wall_South_R" type="CSGBox3D" parent="."]
+[node name="Wall_South_Glass_R" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 1.5, 15)
 use_collision = true
-size = Vector3(1, 3, 0.2)
-material = SubResource("wall_mat")
+size = Vector3(1, 3, 0.1)
+material = SubResource("glass_mat")
 
-; West wall (x=-15)
-[node name="Wall_West" type="CSGBox3D" parent="."]
+; South wall pillars
+[node name="Pillar_S1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 1.5, 15)
+use_collision = true
+size = Vector3(0.3, 3, 0.3)
+material = SubResource("glass_pillar_mat")
+
+[node name="Pillar_S2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, 15)
+use_collision = true
+size = Vector3(0.3, 3, 0.3)
+material = SubResource("glass_pillar_mat")
+
+[node name="Pillar_S3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.5, 15)
+use_collision = true
+size = Vector3(0.3, 3, 0.3)
+material = SubResource("glass_pillar_mat")
+
+[node name="Pillar_S4" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.5, 15)
+use_collision = true
+size = Vector3(0.3, 3, 0.3)
+material = SubResource("glass_pillar_mat")
+
+[node name="Pillar_S5" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 1.5, 15)
+use_collision = true
+size = Vector3(0.3, 3, 0.3)
+material = SubResource("glass_pillar_mat")
+
+[node name="Pillar_S6" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 1.5, 15)
+use_collision = true
+size = Vector3(0.3, 3, 0.3)
+material = SubResource("glass_pillar_mat")
+
+; --- West wall (x=-15): glass panels ---
+[node name="Wall_West_Glass" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 1.5, 0)
 use_collision = true
-size = Vector3(0.2, 3, 30)
-material = SubResource("wall_mat")
+size = Vector3(0.1, 3, 30)
+material = SubResource("glass_mat")
 
-; East wall (x=15)
-[node name="Wall_East" type="CSGBox3D" parent="."]
+; West wall pillars
+[node name="Pillar_W1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 1.5, -5)
+use_collision = true
+size = Vector3(0.3, 3, 0.3)
+material = SubResource("glass_pillar_mat")
+
+[node name="Pillar_W2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 1.5, 5)
+use_collision = true
+size = Vector3(0.3, 3, 0.3)
+material = SubResource("glass_pillar_mat")
+
+; --- East wall (x=15): glass panels ---
+[node name="Wall_East_Glass" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 1.5, 0)
 use_collision = true
-size = Vector3(0.2, 3, 30)
-material = SubResource("wall_mat")
+size = Vector3(0.1, 3, 30)
+material = SubResource("glass_mat")
+
+; East wall pillars
+[node name="Pillar_E1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 1.5, -5)
+use_collision = true
+size = Vector3(0.3, 3, 0.3)
+material = SubResource("glass_pillar_mat")
+
+[node name="Pillar_E2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 1.5, 5)
+use_collision = true
+size = Vector3(0.3, 3, 0.3)
+material = SubResource("glass_pillar_mat")
 
 ; =============================================================================
 ; INTERNAL WALLS — TOP ROW DIVIDERS
@@ -442,7 +681,7 @@ modulate = Color(0.2, 0.8, 1, 1)
 [node name="Room1_Light" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.8, -10)
 light_color = Color(0.8, 0.85, 1, 1)
-light_energy = 0.5
+light_energy = 0.3
 omni_range = 8
 
 [node name="Room1_Area" type="Area3D" parent="."]
@@ -521,7 +760,7 @@ modulate = Color(1, 0.4, 0.7, 1)
 [node name="Room2_Light" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8, -10)
 light_color = Color(1, 0.85, 0.9, 1)
-light_energy = 0.5
+light_energy = 0.3
 omni_range = 8
 
 [node name="Room2_Area" type="Area3D" parent="."]
@@ -614,7 +853,7 @@ modulate = Color(0.4, 1, 0.4, 1)
 [node name="Room3_Light" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.8, -10)
 light_color = Color(0.85, 1, 0.85, 1)
-light_energy = 0.5
+light_energy = 0.3
 omni_range = 8
 
 [node name="Room3_Area" type="Area3D" parent="."]
@@ -719,7 +958,7 @@ modulate = Color(0.7, 0.4, 0.9, 1)
 [node name="Room4_Light" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.8, 0)
 light_color = Color(0.8, 0.7, 1, 1)
-light_energy = 0.5
+light_energy = 0.3
 omni_range = 8
 
 [node name="Room4_Area" type="Area3D" parent="."]
@@ -776,7 +1015,7 @@ modulate = Color(1, 0.85, 0.4, 1)
 [node name="Mollie_Light" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.8, 5)
 light_color = Color(1, 0.95, 0.85, 1)
-light_energy = 0.4
+light_energy = 0.25
 omni_range = 6
 
 [node name="Mollie_Area" type="Area3D" parent="."]
