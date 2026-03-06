@@ -144,9 +144,9 @@ roughness = 0.05
 albedo_color = Color(0.3, 0.3, 0.35, 1)
 
 [sub_resource type="StandardMaterial3D" id="plaza_ground_mat"]
-albedo_color = Color(0.08, 0.08, 0.1, 1)
-metallic = 0.3
-roughness = 0.4
+albedo_color = Color(0.2, 0.45, 0.12, 1)
+metallic = 0.0
+roughness = 0.95
 
 ; --- Sky & Environment (Grasslands Sunset HDRI) ---
 [sub_resource type="PanoramaSkyMaterial" id="sky_material"]
@@ -361,7 +361,7 @@ material = SubResource("welcome_mat_mat")
 [node name="OutdoorGround" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
 use_collision = true
-size = Vector3(200, 0.1, 200)
+size = Vector3(2000, 0.1, 2000)
 material = SubResource("plaza_ground_mat")
 
 ; =============================================================================
