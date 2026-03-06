@@ -659,26 +659,26 @@ material = SubResource("glass_mat")
 [node name="Wall_TopSouth_1" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 1.5, -5)
 use_collision = true
-size = Vector3(4, 3, 0.2)
-material = SubResource("wall_mat")
+size = Vector3(4, 3, 0.1)
+material = SubResource("glass_mat")
 
 [node name="Wall_TopSouth_2" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, -5)
 use_collision = true
-size = Vector3(8, 3, 0.2)
-material = SubResource("wall_mat")
+size = Vector3(8, 3, 0.1)
+material = SubResource("glass_mat")
 
 [node name="Wall_TopSouth_3" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.5, -5)
 use_collision = true
-size = Vector3(8, 3, 0.2)
-material = SubResource("wall_mat")
+size = Vector3(8, 3, 0.1)
+material = SubResource("glass_mat")
 
 [node name="Wall_TopSouth_4" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 1.5, -5)
 use_collision = true
-size = Vector3(4, 3, 0.2)
-material = SubResource("wall_mat")
+size = Vector3(4, 3, 0.1)
+material = SubResource("glass_mat")
 
 ; =============================================================================
 ; INTERNAL WALLS — LEFT COLUMN EAST WALL (x=-5, z=-5 to 15) with 2 doorways
@@ -687,20 +687,20 @@ material = SubResource("wall_mat")
 [node name="Wall_LeftEast_1" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, -3)
 use_collision = true
-size = Vector3(0.2, 3, 4)
-material = SubResource("wall_mat")
+size = Vector3(0.1, 3, 4)
+material = SubResource("glass_mat")
 
 [node name="Wall_LeftEast_2" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, 5)
 use_collision = true
-size = Vector3(0.2, 3, 8)
-material = SubResource("wall_mat")
+size = Vector3(0.1, 3, 8)
+material = SubResource("glass_mat")
 
 [node name="Wall_LeftEast_3" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, 13)
 use_collision = true
-size = Vector3(0.2, 3, 4)
-material = SubResource("wall_mat")
+size = Vector3(0.1, 3, 4)
+material = SubResource("glass_mat")
 
 ; DJ Sam / Coming Soon divider (z=5, x=-15 to -5)
 [node name="Wall_Div_DJComing" type="CSGBox3D" parent="."]
@@ -1324,40 +1324,7 @@ horizontal_alignment = 1
 ; =============================================================================
 ; AGENT AVATARS
 ; =============================================================================
-[node name="Ultron_Avatar" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0.7, -13.2)
-mesh = SubResource("avatar_mesh")
-surface_material_override/0 = SubResource("avatar_mat_ultron")
-script = ExtResource("6")
-room_name = "Ultron"
-
-[node name="Spinfluencer_Avatar" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, -13.2)
-mesh = SubResource("avatar_mesh")
-surface_material_override/0 = SubResource("avatar_mat_spin")
-script = ExtResource("6")
-room_name = "Spinfluencer"
-
-[node name="Dexer_Avatar" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.7, -13.2)
-mesh = SubResource("avatar_mesh")
-surface_material_override/0 = SubResource("avatar_mat_dexer")
-script = ExtResource("6")
-room_name = "Dexer"
-
-[node name="DJSam_Avatar" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.2, 0.7, 0)
-mesh = SubResource("avatar_mesh")
-surface_material_override/0 = SubResource("avatar_mat_djsam")
-script = ExtResource("6")
-room_name = "DJ Sam"
-
-[node name="Mollie_Avatar" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.7, 5.8)
-mesh = SubResource("avatar_mesh")
-surface_material_override/0 = SubResource("avatar_mat_mollie")
-script = ExtResource("6")
-room_name = "Mollie"
+; Old capsule avatars removed — replaced by EVE robots below
 
 ; =============================================================================
 ; DOOR FRAME LABELS (outside doors, facing open area)
