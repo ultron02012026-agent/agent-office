@@ -38,6 +38,7 @@ func _ready():
 	# Connect text input
 	if text_input:
 		text_input.text_submitted.connect(_on_text_submitted)
+		text_input.gui_input.connect(_on_text_gui_input)
 	
 	# Connect voice chat signals
 	_connect_voice_chat.call_deferred()
@@ -140,6 +141,12 @@ func set_voice_status(status: String):
 			voice_indicator.visible = true
 			voice_indicator.text = "🔊 " + current_room + " is speaking..."
 			voice_indicator.modulate = Color(0.8, 0.7, 0.3, 0.9)
+
+func _on_text_gui_input(event: InputEvent):
+	# When text input is empty, swallow WASD so they pass through to player movement
+	if event is InputEventKey and event.pressed and text_input.text.is_empty():
+		if event.keycode in [KEY_W, KEY_A, KEY_S, KEY_D]:
+			text_input.accept_event()
 
 func _unhandled_input(event: InputEvent):
 	if not panel.visible:
