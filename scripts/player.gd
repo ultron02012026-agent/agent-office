@@ -147,16 +147,6 @@ func _update_hud():
 		else:
 			location = "📍 " + current_room + "'s Office"
 		
-		# Voice indicator in HUD
-		var voice_chat = get_node_or_null("/root/Main/VoiceChat")
-		if voice_chat and not current_room.is_empty():
-			if voice_chat.is_recording:
-				location += "  🔴 Recording"
-			elif voice_chat.is_speaking:
-				location += "  🔊 Speaking"
-			else:
-				location += "  🎙️ Voice Ready"
-		
 		hud_label.text = location
 	
 	# Mic indicator
