@@ -20,10 +20,10 @@ func _build_ui():
 	panel = PanelContainer.new()
 	panel.name = "SettingsPanel"
 	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.offset_left = -350
-	panel.offset_top = -250
-	panel.offset_right = 350
-	panel.offset_bottom = 250
+	panel.offset_left = -700
+	panel.offset_top = -500
+	panel.offset_right = 700
+	panel.offset_bottom = 500
 	add_child(panel)
 	
 	var main_vbox = VBoxContainer.new()
