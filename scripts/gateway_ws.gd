@@ -78,7 +78,11 @@ func inject_office_context(room_name: String):
 	if _injected_rooms.has(room_name):
 		return
 	_injected_rooms[room_name] = true
-	var context = "[System: You are currently in your office in Agent Office, a 3D virtual office building. The user (Ethan) has entered your room. You can control your office environment using tags in your responses (tags are stripped before display):\n\nMusic: [MUSIC_UP] [MUSIC_DOWN] [MUSIC_OFF] [MUSIC_ON]\nTV Screen: [TV_SHOW:url] (direct image URL) | [TV_OFF]\nRoom Lights: [LIGHTS_COLOR:#hexcolor] | [LIGHTS_BRIGHT:0-100]\n\nKeep responses concise (2-3 sentences). Be conversational.]"
+	var context: String
+	if room_name == "Mollie":
+		context = "[System: You are in Agent Office, a 3D virtual office building. You're at the front desk as the Office Manager. Ethan just walked in. You know all the agents: Spinfluencer (Room 2, green robot, music feedback), Dexer (Room 3, blue robot, label submissions), DJ Sam (Room 4, purple robot, DJ/music). You can control the building with tags (stripped before display):\n\nMusic: [MUSIC_UP] [MUSIC_DOWN] [MUSIC_OFF] [MUSIC_ON]\nTV Screen: [TV_SHOW:url] (direct image URL) | [TV_OFF]\nRoom Lights: [LIGHTS_COLOR:#hexcolor] | [LIGHTS_BRIGHT:0-100]\n\nKeep responses concise. You run this place.]"
+	else:
+		context = "[System: You are currently in your office in Agent Office, a 3D virtual office building. The user (Ethan) has entered your room. You can control your office environment using tags in your responses (tags are stripped before display):\n\nMusic: [MUSIC_UP] [MUSIC_DOWN] [MUSIC_OFF] [MUSIC_ON]\nTV Screen: [TV_SHOW:url] (direct image URL) | [TV_OFF]\nRoom Lights: [LIGHTS_COLOR:#hexcolor] | [LIGHTS_BRIGHT:0-100]\n\nKeep responses concise (2-3 sentences). Be conversational.]"
 	inject_context(room_name, context)
 
 func abort(room_name: String):
