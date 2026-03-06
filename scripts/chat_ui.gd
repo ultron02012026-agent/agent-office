@@ -1,4 +1,4 @@
-## Transcript panel UI — displays voice conversation with agents (voice-only, no text input).
+## Chat panel UI — text + voice conversation with agents.
 ## Chat history persists per room — leaving and returning restores previous conversation.
 ## Key methods: show_chat(room), hide_chat(), _send_to_openclaw()
 ## Signals: connects to VoiceChat.transcription_received
@@ -20,11 +20,16 @@ var voice_status: String = "listening"  # listening, recording, processing
 @onready var chat_log = $Panel/VBoxContainer/ChatLog
 @onready var room_label = $Panel/VBoxContainer/RoomLabel
 @onready var voice_indicator = $Panel/VBoxContainer/VoiceIndicator
+@onready var text_input = $Panel/VBoxContainer/TextInput
 @onready var http_request = $HTTPRequest
 
 func _ready():
 	panel.visible = false
 	http_request.request_completed.connect(_on_request_completed)
+	
+	# Connect text input
+	if text_input:
+		text_input.text_submitted.connect(_on_text_submitted)
 	
 	# Connect voice chat signals
 	_connect_voice_chat.call_deferred()
@@ -52,7 +57,10 @@ func show_chat(room_name: String):
 		chat_log.text = "[color=gray]You entered " + room_name + "'s office.[/color]\n"
 	
 	panel.visible = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	set_voice_status("listening")
+	if text_input:
+		text_input.grab_focus()
 	
 	# Auto-greet on first visit (agent says hello)
 	if is_first_visit and SettingsManager.gateway_url != "" and SettingsManager.gateway_token != "":
@@ -68,6 +76,7 @@ func hide_chat():
 	current_room = ""
 	chat_history = []
 	is_thinking = false
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func set_voice_status(status: String):
 	voice_status = status
@@ -90,12 +99,20 @@ func set_voice_status(status: String):
 			voice_indicator.text = "🔊 " + current_room + " is speaking..."
 			voice_indicator.modulate = Color(0.8, 0.7, 0.3, 0.9)
 
+func _on_text_submitted(text: String):
+	if text.strip_edges().is_empty():
+		return
+	text_input.text = ""
+	_submit_message(text.strip_edges())
+
 func _on_transcription(text: String):
 	if text.is_empty():
 		chat_log.text += "[color=red]Could not understand audio[/color]\n"
 		set_voice_status("listening")
 		return
-	
+	_submit_message(text)
+
+func _submit_message(text: String):
 	# Guard against sending while already waiting for a response
 	if is_thinking:
 		chat_log.text += "\n[color=gray][i](waiting for response...)[/i][/color]\n"

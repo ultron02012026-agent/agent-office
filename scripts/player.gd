@@ -82,7 +82,9 @@ func _physics_process(delta):
 		velocity.y -= 20.0 * delta
 	
 	var input_dir = Vector2.ZERO
-	if Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
+	var chat_ui = get_node_or_null("/root/Main/ChatUI")
+	var is_typing = chat_ui and chat_ui.text_input and chat_ui.text_input.has_focus()
+	if not is_typing:
 		input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()

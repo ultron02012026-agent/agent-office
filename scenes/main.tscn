@@ -1342,8 +1342,12 @@ scroll_following = true
 
 [node name="VoiceIndicator" type="Label" parent="ChatUI/Panel/VBoxContainer"]
 layout_mode = 2
-text = "🎙️ Listening... (hold V to talk)"
+text = "🎙️ Listening..."
 horizontal_alignment = 1
+
+[node name="TextInput" type="LineEdit" parent="ChatUI/Panel/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Type a message... (Enter to send)"
 
 [node name="HTTPRequest" type="HTTPRequest" parent="ChatUI"]
 
