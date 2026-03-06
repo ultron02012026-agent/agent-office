@@ -90,7 +90,8 @@ func show_chat(room_name: String):
 	# Keep mouse captured — player can still look around and move
 	# Press Enter to start typing, Enter to send, Escape to cancel
 	panel.modulate = Color(1, 1, 1, 0.7)  # Semi-transparent overlay
-	set_voice_status("listening")
+	if voice_indicator:
+		voice_indicator.visible = false
 	if text_input:
 		text_input.release_focus()
 	
@@ -122,18 +123,22 @@ func set_voice_status(status: String):
 		return
 	match status:
 		"listening":
-			voice_indicator.text = "🎙️ Listening..."
-			voice_indicator.modulate = Color(0.6, 0.8, 0.6, 0.8)
+			voice_indicator.visible = false
+			return
 		"recording":
+			voice_indicator.visible = true
 			voice_indicator.text = "🔴 LIVE"
 			voice_indicator.modulate = Color(1, 0.2, 0.2, 1)
 		"processing":
+			voice_indicator.visible = true
 			voice_indicator.text = "⏳ Processing..."
 			voice_indicator.modulate = Color(0.8, 0.8, 0.3, 0.9)
 		"thinking":
+			voice_indicator.visible = true
 			voice_indicator.text = "💭 " + current_room + " is thinking..."
 			voice_indicator.modulate = Color(0.6, 0.6, 0.8, 0.9)
 		"speaking":
+			voice_indicator.visible = true
 			voice_indicator.text = "🔊 " + current_room + " is speaking..."
 			voice_indicator.modulate = Color(0.8, 0.7, 0.3, 0.9)
 
