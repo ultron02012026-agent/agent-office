@@ -1138,10 +1138,67 @@ size = Vector3(2.2, 0.05, 2.2)
 material = SubResource("mollie_desk_mat")
 
 [node name="Mollie_Label" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.2, 5)
-text = "Mollie — Office Manager"
-font_size = 36
-modulate = Color(1, 0.85, 0.4, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.5, 5)
+text = "Ultron — Front Desk"
+font_size = 40
+modulate = Color(0.2, 0.8, 1, 1)
+
+; Monitor 1 (left)
+[node name="Mollie_Monitor1" type="CSGBox3D" parent="."]
+transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 4.5, 1.2, 5.5)
+size = Vector3(0.8, 0.5, 0.04)
+material = SubResource("screen_mat")
+
+; Monitor 1 screen glow
+[node name="Mollie_Screen1" type="CSGBox3D" parent="."]
+transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 4.48, 1.2, 5.52)
+size = Vector3(0.7, 0.4, 0.01)
+material = SubResource("whiteboard_mat")
+
+; Monitor 2 (right)
+[node name="Mollie_Monitor2" type="CSGBox3D" parent="."]
+transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 5.5, 1.2, 4.5)
+size = Vector3(0.8, 0.5, 0.04)
+material = SubResource("screen_mat")
+
+; Monitor 2 screen glow
+[node name="Mollie_Screen2" type="CSGBox3D" parent="."]
+transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 5.52, 1.2, 4.48)
+size = Vector3(0.7, 0.4, 0.01)
+material = SubResource("whiteboard_mat")
+
+; Keyboard
+[node name="Mollie_Keyboard" type="CSGBox3D" parent="."]
+transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 5, 0.86, 5)
+size = Vector3(0.5, 0.02, 0.2)
+material = SubResource("desk_mat")
+
+; Coffee mug
+[node name="Mollie_Mug" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8, 0.92, 4.2)
+radius = 0.05
+height = 0.12
+material = SubResource("whiteboard_mat")
+
+; Desk lamp (pole + shade)
+[node name="Mollie_LampPole" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2, 1.1, 5.8)
+radius = 0.02
+height = 0.5
+material = SubResource("desk_mat")
+
+[node name="Mollie_LampShade" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.2, 1.4, 5.8)
+radius = 0.1
+height = 0.08
+material = SubResource("whiteboard_mat")
+
+; Desk accent light (blue glow under desk edge)
+[node name="Mollie_AccentLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.5, 5)
+light_color = Color(0.2, 0.7, 1, 1)
+light_energy = 0.5
+omni_range = 3
 
 [node name="Mollie_Light" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.8, 5)
