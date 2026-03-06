@@ -1,4 +1,4 @@
-[gd_scene load_steps=80 format=3 uid="uid://main001"]
+[gd_scene load_steps=97 format=3 uid="uid://main001"]
 
 [ext_resource type="PackedScene" uid="uid://player001" path="res://scenes/player.tscn" id="1"]
 [ext_resource type="Script" path="res://scripts/room_area.gd" id="2"]
@@ -100,6 +100,105 @@ albedo_color = Color(0.6, 0.2, 0.8, 1)
 
 [sub_resource type="StandardMaterial3D" id="avatar_mat_mollie"]
 albedo_color = Color(1, 0.85, 0.4, 1)
+
+; --- Robot avatar materials ---
+[sub_resource type="StandardMaterial3D" id="robot_visor_mat"]
+albedo_color = Color(0.05, 0.05, 0.08, 1)
+
+; Ultron robot (blue tint)
+[sub_resource type="StandardMaterial3D" id="robot_body_ultron"]
+albedo_color = Color(0.85, 0.9, 1.0, 1)
+
+[sub_resource type="StandardMaterial3D" id="robot_base_ultron"]
+albedo_color = Color(0.65, 0.7, 0.8, 1)
+
+[sub_resource type="StandardMaterial3D" id="robot_eye_l_ultron"]
+albedo_color = Color(0.2, 0.7, 1.0, 1)
+emission_enabled = true
+emission = Color(0.2, 0.7, 1.0, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="StandardMaterial3D" id="robot_eye_r_ultron"]
+albedo_color = Color(0.2, 0.7, 1.0, 1)
+emission_enabled = true
+emission = Color(0.2, 0.7, 1.0, 1)
+emission_energy_multiplier = 2.0
+
+; Spinfluencer robot (pink tint)
+[sub_resource type="StandardMaterial3D" id="robot_body_spin"]
+albedo_color = Color(1.0, 0.88, 0.92, 1)
+
+[sub_resource type="StandardMaterial3D" id="robot_base_spin"]
+albedo_color = Color(0.8, 0.68, 0.72, 1)
+
+[sub_resource type="StandardMaterial3D" id="robot_eye_l_spin"]
+albedo_color = Color(1.0, 0.4, 0.7, 1)
+emission_enabled = true
+emission = Color(1.0, 0.4, 0.7, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="StandardMaterial3D" id="robot_eye_r_spin"]
+albedo_color = Color(1.0, 0.4, 0.7, 1)
+emission_enabled = true
+emission = Color(1.0, 0.4, 0.7, 1)
+emission_energy_multiplier = 2.0
+
+; Dexer robot (green tint)
+[sub_resource type="StandardMaterial3D" id="robot_body_dexer"]
+albedo_color = Color(0.88, 1.0, 0.9, 1)
+
+[sub_resource type="StandardMaterial3D" id="robot_base_dexer"]
+albedo_color = Color(0.68, 0.8, 0.7, 1)
+
+[sub_resource type="StandardMaterial3D" id="robot_eye_l_dexer"]
+albedo_color = Color(0.3, 1.0, 0.4, 1)
+emission_enabled = true
+emission = Color(0.3, 1.0, 0.4, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="StandardMaterial3D" id="robot_eye_r_dexer"]
+albedo_color = Color(0.3, 1.0, 0.4, 1)
+emission_enabled = true
+emission = Color(0.3, 1.0, 0.4, 1)
+emission_energy_multiplier = 2.0
+
+; DJ Sam robot (purple tint)
+[sub_resource type="StandardMaterial3D" id="robot_body_djsam"]
+albedo_color = Color(0.92, 0.88, 1.0, 1)
+
+[sub_resource type="StandardMaterial3D" id="robot_base_djsam"]
+albedo_color = Color(0.72, 0.68, 0.8, 1)
+
+[sub_resource type="StandardMaterial3D" id="robot_eye_l_djsam"]
+albedo_color = Color(0.7, 0.3, 1.0, 1)
+emission_enabled = true
+emission = Color(0.7, 0.3, 1.0, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="StandardMaterial3D" id="robot_eye_r_djsam"]
+albedo_color = Color(0.7, 0.3, 1.0, 1)
+emission_enabled = true
+emission = Color(0.7, 0.3, 1.0, 1)
+emission_energy_multiplier = 2.0
+
+; Mollie robot (warm gold tint)
+[sub_resource type="StandardMaterial3D" id="robot_body_mollie"]
+albedo_color = Color(1.0, 0.96, 0.88, 1)
+
+[sub_resource type="StandardMaterial3D" id="robot_base_mollie"]
+albedo_color = Color(0.8, 0.76, 0.68, 1)
+
+[sub_resource type="StandardMaterial3D" id="robot_eye_l_mollie"]
+albedo_color = Color(1.0, 0.85, 0.3, 1)
+emission_enabled = true
+emission = Color(1.0, 0.85, 0.3, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="StandardMaterial3D" id="robot_eye_r_mollie"]
+albedo_color = Color(1.0, 0.85, 0.3, 1)
+emission_enabled = true
+emission = Color(1.0, 0.85, 0.3, 1)
+emission_energy_multiplier = 2.0
 
 ; --- Door materials ---
 [sub_resource type="StandardMaterial3D" id="door_mat_ultron"]
@@ -1217,42 +1316,258 @@ horizontal_alignment = 1
 [node name="HTTPRequest" type="HTTPRequest" parent="ChatUI"]
 
 ; =============================================================================
-; AGENT AVATARS
+; AGENT AVATARS — EVE-style robots (CSG primitives)
 ; =============================================================================
-[node name="Ultron_Avatar" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0.7, -13.2)
-mesh = SubResource("avatar_mesh")
-surface_material_override/0 = SubResource("avatar_mat_ultron")
+
+; --- ULTRON (blue, at chair facing +z toward visitor/door) ---
+[node name="Ultron_Avatar" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -10, 0.05, -13.2)
 script = ExtResource("6")
 room_name = "Ultron"
 
-[node name="Spinfluencer_Avatar" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, -13.2)
-mesh = SubResource("avatar_mesh")
-surface_material_override/0 = SubResource("avatar_mat_spin")
+[node name="Head" type="CSGSphere3D" parent="Ultron_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 0.85, 0, 0, 0, 1, 0, 0.85, 0)
+radius = 0.35
+material = SubResource("robot_body_ultron")
+
+[node name="Visor" type="CSGBox3D" parent="Ultron_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, -0.17)
+size = Vector3(0.5, 0.25, 0.05)
+material = SubResource("robot_visor_mat")
+
+[node name="LeftEye" type="CSGSphere3D" parent="Ultron_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.88, -0.19)
+radius = 0.06
+material = SubResource("robot_eye_l_ultron")
+
+[node name="RightEye" type="CSGSphere3D" parent="Ultron_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.88, -0.19)
+radius = 0.06
+material = SubResource("robot_eye_r_ultron")
+
+[node name="Body" type="CSGCylinder3D" parent="Ultron_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+radius = 0.25
+height = 0.5
+material = SubResource("robot_body_ultron")
+
+[node name="LeftArm" type="CSGCylinder3D" parent="Ultron_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 0.966, 0.259, 0, -0.259, 0.966, -0.35, 0.4, 0)
+radius = 0.06
+height = 0.3
+material = SubResource("robot_body_ultron")
+
+[node name="RightArm" type="CSGCylinder3D" parent="Ultron_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 0.966, -0.259, 0, 0.259, 0.966, 0.35, 0.4, 0)
+radius = 0.06
+height = 0.3
+material = SubResource("robot_body_ultron")
+
+[node name="Base" type="CSGCylinder3D" parent="Ultron_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
+radius = 0.2
+height = 0.05
+material = SubResource("robot_base_ultron")
+
+; --- SPINFLUENCER (pink, at chair facing +z) ---
+[node name="Spinfluencer_Avatar" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.05, -13.2)
 script = ExtResource("6")
 room_name = "Spinfluencer"
 
-[node name="Dexer_Avatar" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.7, -13.2)
-mesh = SubResource("avatar_mesh")
-surface_material_override/0 = SubResource("avatar_mat_dexer")
+[node name="Head" type="CSGSphere3D" parent="Spinfluencer_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 0.85, 0, 0, 0, 1, 0, 0.85, 0)
+radius = 0.35
+material = SubResource("robot_body_spin")
+
+[node name="Visor" type="CSGBox3D" parent="Spinfluencer_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, -0.17)
+size = Vector3(0.5, 0.25, 0.05)
+material = SubResource("robot_visor_mat")
+
+[node name="LeftEye" type="CSGSphere3D" parent="Spinfluencer_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.88, -0.19)
+radius = 0.06
+material = SubResource("robot_eye_l_spin")
+
+[node name="RightEye" type="CSGSphere3D" parent="Spinfluencer_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.88, -0.19)
+radius = 0.06
+material = SubResource("robot_eye_r_spin")
+
+[node name="Body" type="CSGCylinder3D" parent="Spinfluencer_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+radius = 0.25
+height = 0.5
+material = SubResource("robot_body_spin")
+
+[node name="LeftArm" type="CSGCylinder3D" parent="Spinfluencer_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 0.966, 0.259, 0, -0.259, 0.966, -0.35, 0.4, 0)
+radius = 0.06
+height = 0.3
+material = SubResource("robot_body_spin")
+
+[node name="RightArm" type="CSGCylinder3D" parent="Spinfluencer_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 0.966, -0.259, 0, 0.259, 0.966, 0.35, 0.4, 0)
+radius = 0.06
+height = 0.3
+material = SubResource("robot_body_spin")
+
+[node name="Base" type="CSGCylinder3D" parent="Spinfluencer_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
+radius = 0.2
+height = 0.05
+material = SubResource("robot_base_spin")
+
+; --- DEXER (green, at chair facing +z) ---
+[node name="Dexer_Avatar" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 10, 0.05, -13.2)
 script = ExtResource("6")
 room_name = "Dexer"
 
-[node name="DJSam_Avatar" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.2, 0.7, 0)
-mesh = SubResource("avatar_mesh")
-surface_material_override/0 = SubResource("avatar_mat_djsam")
+[node name="Head" type="CSGSphere3D" parent="Dexer_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 0.85, 0, 0, 0, 1, 0, 0.85, 0)
+radius = 0.35
+material = SubResource("robot_body_dexer")
+
+[node name="Visor" type="CSGBox3D" parent="Dexer_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, -0.17)
+size = Vector3(0.5, 0.25, 0.05)
+material = SubResource("robot_visor_mat")
+
+[node name="LeftEye" type="CSGSphere3D" parent="Dexer_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.88, -0.19)
+radius = 0.06
+material = SubResource("robot_eye_l_dexer")
+
+[node name="RightEye" type="CSGSphere3D" parent="Dexer_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.88, -0.19)
+radius = 0.06
+material = SubResource("robot_eye_r_dexer")
+
+[node name="Body" type="CSGCylinder3D" parent="Dexer_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+radius = 0.25
+height = 0.5
+material = SubResource("robot_body_dexer")
+
+[node name="LeftArm" type="CSGCylinder3D" parent="Dexer_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 0.966, 0.259, 0, -0.259, 0.966, -0.35, 0.4, 0)
+radius = 0.06
+height = 0.3
+material = SubResource("robot_body_dexer")
+
+[node name="RightArm" type="CSGCylinder3D" parent="Dexer_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 0.966, -0.259, 0, 0.259, 0.966, 0.35, 0.4, 0)
+radius = 0.06
+height = 0.3
+material = SubResource("robot_body_dexer")
+
+[node name="Base" type="CSGCylinder3D" parent="Dexer_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
+radius = 0.2
+height = 0.05
+material = SubResource("robot_base_dexer")
+
+; --- DJ SAM (purple, at chair facing +x toward visitor/door) ---
+[node name="DJSam_Avatar" type="Node3D" parent="."]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -13.2, 0.05, 0)
 script = ExtResource("6")
 room_name = "DJ Sam"
 
-[node name="Mollie_Avatar" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.7, 5.8)
-mesh = SubResource("avatar_mesh")
-surface_material_override/0 = SubResource("avatar_mat_mollie")
+[node name="Head" type="CSGSphere3D" parent="DJSam_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 0.85, 0, 0, 0, 1, 0, 0.85, 0)
+radius = 0.35
+material = SubResource("robot_body_djsam")
+
+[node name="Visor" type="CSGBox3D" parent="DJSam_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, -0.17)
+size = Vector3(0.5, 0.25, 0.05)
+material = SubResource("robot_visor_mat")
+
+[node name="LeftEye" type="CSGSphere3D" parent="DJSam_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.88, -0.19)
+radius = 0.06
+material = SubResource("robot_eye_l_djsam")
+
+[node name="RightEye" type="CSGSphere3D" parent="DJSam_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.88, -0.19)
+radius = 0.06
+material = SubResource("robot_eye_r_djsam")
+
+[node name="Body" type="CSGCylinder3D" parent="DJSam_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+radius = 0.25
+height = 0.5
+material = SubResource("robot_body_djsam")
+
+[node name="LeftArm" type="CSGCylinder3D" parent="DJSam_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 0.966, 0.259, 0, -0.259, 0.966, -0.35, 0.4, 0)
+radius = 0.06
+height = 0.3
+material = SubResource("robot_body_djsam")
+
+[node name="RightArm" type="CSGCylinder3D" parent="DJSam_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 0.966, -0.259, 0, 0.259, 0.966, 0.35, 0.4, 0)
+radius = 0.06
+height = 0.3
+material = SubResource("robot_body_djsam")
+
+[node name="Base" type="CSGCylinder3D" parent="DJSam_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
+radius = 0.2
+height = 0.05
+material = SubResource("robot_base_djsam")
+
+; --- MOLLIE (warm gold, at desk facing lobby) ---
+[node name="Mollie_Avatar" type="Node3D" parent="."]
+transform = Transform3D(-0.707, 0, -0.707, 0, 1, 0, 0.707, 0, -0.707, 5, 0.05, 5.8)
 script = ExtResource("6")
 room_name = "Mollie"
+
+[node name="Head" type="CSGSphere3D" parent="Mollie_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 0.85, 0, 0, 0, 1, 0, 0.85, 0)
+radius = 0.35
+material = SubResource("robot_body_mollie")
+
+[node name="Visor" type="CSGBox3D" parent="Mollie_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, -0.17)
+size = Vector3(0.5, 0.25, 0.05)
+material = SubResource("robot_visor_mat")
+
+[node name="LeftEye" type="CSGSphere3D" parent="Mollie_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.88, -0.19)
+radius = 0.06
+material = SubResource("robot_eye_l_mollie")
+
+[node name="RightEye" type="CSGSphere3D" parent="Mollie_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.88, -0.19)
+radius = 0.06
+material = SubResource("robot_eye_r_mollie")
+
+[node name="Body" type="CSGCylinder3D" parent="Mollie_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+radius = 0.25
+height = 0.5
+material = SubResource("robot_body_mollie")
+
+[node name="LeftArm" type="CSGCylinder3D" parent="Mollie_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 0.966, 0.259, 0, -0.259, 0.966, -0.35, 0.4, 0)
+radius = 0.06
+height = 0.3
+material = SubResource("robot_body_mollie")
+
+[node name="RightArm" type="CSGCylinder3D" parent="Mollie_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 0.966, -0.259, 0, 0.259, 0.966, 0.35, 0.4, 0)
+radius = 0.06
+height = 0.3
+material = SubResource("robot_body_mollie")
+
+[node name="Base" type="CSGCylinder3D" parent="Mollie_Avatar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
+radius = 0.2
+height = 0.05
+material = SubResource("robot_base_mollie")
 
 ; =============================================================================
 ; DOOR FRAME LABELS (outside doors, facing open area)

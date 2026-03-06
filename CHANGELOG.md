@@ -4,6 +4,34 @@ All notable changes to Agent Office.
 
 ---
 
+## v0.10.0 — 2026-03-05
+*EVE-Style Robot Avatars*
+
+### Changed
+- **Agent avatars completely rebuilt** — replaced simple colored capsule MeshInstance3D avatars with EVE-from-WALL-E inspired robots built from CSG primitives
+- **Robot structure** per agent: squashed CSGSphere head, dark visor, glowing emissive eyes, cylindrical body, floating arms, flat disc base (~8 CSG nodes per robot)
+- **Theme-colored robots:** Ultron (blue glow), Spinfluencer (pink), Dexer (green), DJ Sam (purple), Mollie (warm gold)
+- **Avatar script rewritten** — now extends Node3D instead of MeshInstance3D, with full state machine
+
+### New
+- **Avatar state machine** — 5 states: idle, listening, recording, thinking, speaking
+  - **Idle:** gentle hover bob + subtle arm sway (±5°) + periodic personality micro-animations
+  - **Listening:** eyes glow at full brightness (3.0), slight forward lean
+  - **Recording:** same as listening (agent is listening while player speaks)
+  - **Thinking:** eyes dim (0.5 emission), slow blink animation (scale eyes to 0 and back over 0.3s every 2s), contemplative arm pose
+  - **Speaking:** rapid eye pulse (1.5→3.0), alternating head tilt (±3°), arm gesturing (±10°)
+- **Idle personality system** — every 10-20s, random micro-animation: head tilt, arm adjustment, or look-around rotation
+- **State detection** — automatically reads VoiceChat (is_speaking, is_speech_active) and ChatUI (is_thinking) to determine avatar state
+- **Unique eye materials per agent** — each eye has its own StandardMaterial3D for independent emission animation
+- **21 new sub_resource materials** in main.tscn (visor, body/base/eyes × 5 agents)
+
+### Updated
+- `agent_avatar.gd` — complete rewrite for Node3D robot model with state-driven animations
+- `main.tscn` — replaced 5 MeshInstance3D avatar nodes with 5 Node3D robot hierarchies (40 CSG child nodes total)
+- `test_agent_avatar.gd` — expanded to 16 tests covering state machine, animation math, blink timing, emission levels, personality scheduling
+
+---
+
 ## v0.9.0 — 2026-03-05
 *Major Layout Overhaul*
 
