@@ -144,7 +144,14 @@ func _build_system_prompt() -> String:
 		var cfg = SettingsManager.agent_configs[current_room]
 		if cfg.has("system_prompt") and not cfg["system_prompt"].is_empty():
 			system_prompt = cfg["system_prompt"]
-	system_prompt += "\nYou can control the office music. If the user asks to change music volume, turn music on/off, etc., include one of these tags in your response (they'll be stripped before display):\n[MUSIC_UP] — increase volume\n[MUSIC_DOWN] — decrease volume\n[MUSIC_OFF] — mute music\n[MUSIC_ON] — unmute music"
+	system_prompt += "\nYou can control your office environment using tags (they're stripped before display):"
+	system_prompt += "\n\nMusic: [MUSIC_UP] [MUSIC_DOWN] [MUSIC_OFF] [MUSIC_ON]"
+	system_prompt += "\n\nTV Screen (your office has a wall-mounted TV you can display images on):"
+	system_prompt += "\n[TV_SHOW:url] — display an image on your TV (use a direct image URL, png/jpg/webp)"
+	system_prompt += "\n[TV_OFF] — clear the TV screen"
+	system_prompt += "\n\nRoom Lights:"
+	system_prompt += "\n[LIGHTS_COLOR:#hexcolor] — change your office light color (e.g. #FF0000 for red)"
+	system_prompt += "\n[LIGHTS_BRIGHT:0-100] — set light brightness (0=off, 100=max)"
 	return system_prompt
 
 func _send_chat_request(messages: Array, max_tokens: int = 200):
@@ -195,12 +202,12 @@ func _on_request_completed(result, response_code, _headers, body_bytes):
 				cleaned_lines.append(lines[i])
 		chat_log.text = "\n".join(cleaned_lines)
 		
-		# Handle music control tags
+		# Handle office command tags
 		_handle_music_commands(reply)
+		_handle_tv_commands(reply)
+		_handle_light_commands(reply)
 		# Strip tags before display
-		var display_reply = reply
-		for tag in ["[MUSIC_UP]", "[MUSIC_DOWN]", "[MUSIC_OFF]", "[MUSIC_ON]"]:
-			display_reply = display_reply.replace(tag, "")
+		var display_reply = _strip_command_tags(reply)
 		display_reply = display_reply.strip_edges()
 		
 		chat_log.text += "[color=yellow]" + current_room + ":[/color] " + display_reply + "\n"
@@ -254,3 +261,63 @@ func _handle_music_commands(text: String):
 		music.stream_paused = false
 		if not music.playing:
 			music.play()
+
+func _handle_tv_commands(text: String):
+	var tv_display = get_node_or_null("/root/Main/TVDisplay")
+	if not tv_display:
+		return
+	# [TV_SHOW:url]
+	var regex = RegEx.new()
+	regex.compile("\\[TV_SHOW:(https?://[^\\]]+)\\]")
+	var match = regex.search(text)
+	if match:
+		tv_display.show_image_on_tv(current_room, match.get_string(1))
+	if "[TV_OFF]" in text:
+		tv_display.clear_tv(current_room)
+
+func _handle_light_commands(text: String):
+	# Find room light nodes
+	var room_prefix = ""
+	match current_room:
+		"Spinfluencer": room_prefix = "Room2"
+		"Dexer": room_prefix = "Room3"
+		"DJ Sam": room_prefix = "Room4"
+		_: return
+	
+	# [LIGHTS_COLOR:#hexcolor]
+	var color_regex = RegEx.new()
+	color_regex.compile("\\[LIGHTS_COLOR:#([0-9a-fA-F]{6})\\]")
+	var color_match = color_regex.search(text)
+	if color_match:
+		var hex = color_match.get_string(1)
+		var color = Color(hex)
+		for suffix in ["_Light", "_Light2"]:
+			var light = get_node_or_null("/root/Main/" + room_prefix + suffix)
+			if light and light is OmniLight3D:
+				light.light_color = color
+	
+	# [LIGHTS_BRIGHT:0-100]
+	var bright_regex = RegEx.new()
+	bright_regex.compile("\\[LIGHTS_BRIGHT:(\\d+)\\]")
+	var bright_match = bright_regex.search(text)
+	if bright_match:
+		var val = clamp(int(bright_match.get_string(1)), 0, 100)
+		var energy = val / 100.0 * 2.0  # 0-100 maps to 0.0-2.0 energy
+		for suffix in ["_Light", "_Light2"]:
+			var light = get_node_or_null("/root/Main/" + room_prefix + suffix)
+			if light and light is OmniLight3D:
+				light.light_energy = energy
+
+func _strip_command_tags(text: String) -> String:
+	var result = text
+	for tag in ["[MUSIC_UP]", "[MUSIC_DOWN]", "[MUSIC_OFF]", "[MUSIC_ON]", "[TV_OFF]"]:
+		result = result.replace(tag, "")
+	# Strip parameterized tags
+	var regex = RegEx.new()
+	regex.compile("\\[TV_SHOW:[^\\]]+\\]")
+	result = regex.sub(result, "", true)
+	regex.compile("\\[LIGHTS_COLOR:[^\\]]+\\]")
+	result = regex.sub(result, "", true)
+	regex.compile("\\[LIGHTS_BRIGHT:[^\\]]+\\]")
+	result = regex.sub(result, "", true)
+	return result.strip_edges()

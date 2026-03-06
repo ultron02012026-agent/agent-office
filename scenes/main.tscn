@@ -21,6 +21,7 @@
 [ext_resource type="Script" path="res://scripts/ambiance.gd" id="19"]
 [ext_resource type="Script" path="res://scripts/screenshot.gd" id="20"]
 [ext_resource type="Script" path="res://scripts/debug_overlay.gd" id="21"]
+[ext_resource type="Script" path="res://scripts/tv_display.gd" id="22"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_hard.wav" id="audio_footstep_hard"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_soft.wav" id="audio_footstep_soft"]
 [ext_resource type="AudioStream" path="res://assets/audio/door_slide.wav" id="audio_door_slide"]
@@ -1775,5 +1776,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
 radius = 0.2
 height = 0.05
 material = SubResource("robot_base_mollie")
+
+[node name="TVDisplay" type="Node" parent="."]
+script = ExtResource("22")
 
 ; =============================================================================
