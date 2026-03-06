@@ -148,8 +148,9 @@ func _unhandled_input(event: InputEvent):
 	if event is InputEventKey and event.pressed and not event.echo:
 		var is_typing = text_input and text_input.has_focus()
 		# Enter to start typing (when not already typing)
-		if not is_typing and (event.keycode == KEY_ENTER or event.keycode == KEY_T):
+		if not is_typing and event.keycode == KEY_ENTER:
 			if text_input:
+				text_input.text = ""
 				text_input.grab_focus()
 				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 				get_viewport().set_input_as_handled()
