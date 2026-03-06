@@ -15,21 +15,23 @@ var active_player: AudioStreamPlayer
 var music_player: AudioStreamPlayer
 
 func _ready():
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	lobby_player = _create_player("LobbyAmbiance")
 	office_player = _create_player("OfficeAmbiance")
 	hallway_player = _create_player("HallwayAmbiance")
 	active_player = lobby_player
 	
-	# Background music (loops)
+	# Background music (loops) — process even when tree is paused
 	music_player = AudioStreamPlayer.new()
 	music_player.name = "BackgroundMusic"
 	music_player.volume_db = -14.0
 	music_player.bus = "Master"
+	music_player.process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(music_player)
 	var bg_music = load("res://assets/audio/bg_music.mp3")
 	if bg_music:
-		bg_music.loop = true
 		music_player.stream = bg_music
+		music_player.stream.loop = true
 		music_player.play()
 	# Load ambient audio files
 	var office_stream = load("res://assets/audio/ambient_office.wav")
