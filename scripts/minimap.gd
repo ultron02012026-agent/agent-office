@@ -10,8 +10,8 @@ const PADDING := 10.0
 # Room definitions: name, color, world rect (x, z, w, h)
 var rooms := [
 	{"name": "Ultron", "color": Color(0.2, 0.8, 1, 0.4), "rect": Rect2(-15, -15, 10, 10)},
-	{"name": "Spin", "color": Color(1, 0.4, 0.7, 0.4), "rect": Rect2(-5, -15, 10, 10)},
-	{"name": "Dexer", "color": Color(0.4, 1, 0.4, 0.4), "rect": Rect2(5, -15, 10, 10)},
+	{"name": "Spin", "color": Color(0.4, 1, 0.4, 0.4), "rect": Rect2(-5, -15, 10, 10)},
+	{"name": "Dexer", "color": Color(0.3, 0.5, 1, 0.4), "rect": Rect2(5, -15, 10, 10)},
 	{"name": "DJ Sam", "color": Color(0.7, 0.4, 0.9, 0.4), "rect": Rect2(-15, -5, 10, 10)},
 	{"name": "Soon", "color": Color(0.4, 0.4, 0.4, 0.3), "rect": Rect2(-15, 5, 10, 10)},
 	{"name": "Mollie", "color": Color(1, 0.85, 0.4, 0.4), "rect": Rect2(2, 2, 6, 6)},
