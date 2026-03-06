@@ -51,20 +51,12 @@ func _unhandled_input(event):
 		# If settings is open, close it
 		if settings_menu and settings_menu.is_open:
 			settings_menu.close_menu()
-		# If in a room, exit the room (voice-only: no text input to close)
-		elif not current_room.is_empty():
-			var chat_ui = get_node_or_null("/root/Main/ChatUI")
-			if chat_ui:
-				chat_ui.hide_chat()
-			var voice_chat = get_node_or_null("/root/Main/VoiceChat")
-			if voice_chat:
-				voice_chat.clear_room()
-			current_room = ""
-			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-			_update_hud()
-		# Otherwise open settings
+		# Otherwise open settings (room exit happens via walking out through Area3D)
 		else:
-			if settings_menu and not settings_menu.is_open:
+			# Don't open settings if currently typing in chat
+			var chat_ui = get_node_or_null("/root/Main/ChatUI")
+			var is_chat_typing = chat_ui and chat_ui.text_input and chat_ui.text_input.has_focus()
+			if not is_chat_typing and settings_menu and not settings_menu.is_open:
 				settings_menu.open_menu()
 	
 	# Mic is always on via VAD when in a room — no push-to-talk needed

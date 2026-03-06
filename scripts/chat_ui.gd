@@ -87,10 +87,12 @@ func show_chat(room_name: String):
 		chat_log.text = "[color=gray]You entered " + room_name + "'s office.[/color]\n"
 	
 	panel.visible = true
-	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	# Keep mouse captured — player can still look around and move
+	# Press Enter to start typing, Enter to send, Escape to cancel
+	panel.modulate = Color(1, 1, 1, 0.7)  # Semi-transparent overlay
 	set_voice_status("listening")
 	if text_input:
-		text_input.grab_focus()
+		text_input.release_focus()
 	
 	# Inject office context and auto-greet on first visit via WebSocket
 	if is_first_visit and _gateway_ws and _gateway_ws.is_ws_connected():
@@ -109,7 +111,10 @@ func hide_chat():
 	is_thinking = false
 	_is_streaming = false
 	_streaming_text = ""
-	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	# Ensure typing mode is exited
+	if text_input and text_input.has_focus():
+		text_input.release_focus()
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func set_voice_status(status: String):
 	voice_status = status
@@ -136,6 +141,20 @@ func _unhandled_input(event: InputEvent):
 	if not panel.visible:
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
+		var is_typing = text_input and text_input.has_focus()
+		# Enter to start typing (when not already typing)
+		if not is_typing and (event.keycode == KEY_ENTER or event.keycode == KEY_T):
+			if text_input:
+				text_input.grab_focus()
+				Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+				get_viewport().set_input_as_handled()
+			return
+		# Escape to cancel typing and return to movement
+		if is_typing and event.keycode == KEY_ESCAPE:
+			text_input.release_focus()
+			Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+			get_viewport().set_input_as_handled()
+			return
 		if event.ctrl_pressed and event.keycode == KEY_V:
 			_try_paste_image()
 
@@ -153,12 +172,18 @@ func _try_paste_image():
 func _on_text_submitted(text: String):
 	var msg = text.strip_edges()
 	if msg.is_empty() and _pending_image == null:
+		# Empty submit — exit typing mode
+		text_input.release_focus()
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 		return
 	text_input.text = ""
 	if msg.is_empty():
 		msg = "What's in this image?"
 	_submit_message(msg)
 	text_input.placeholder_text = "Type a message..."
+	# Return to movement mode after sending
+	text_input.release_focus()
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 
 func _on_transcription(text: String):
 	if text.is_empty():
