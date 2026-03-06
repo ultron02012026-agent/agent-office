@@ -68,22 +68,31 @@ func _start_visit():
 	visitor_start_pos = agent_home[current_visitor]
 	visitor_target_pos = agent_positions[current_target]
 	
-	# Create visitor mesh (small capsule clone)
+	# Create visitor mesh (small glowing sphere)
 	visitor_mesh = MeshInstance3D.new()
-	var capsule = CapsuleMesh.new()
-	capsule.radius = 0.2
-	capsule.height = 0.8
-	visitor_mesh.mesh = capsule
+	var sphere = SphereMesh.new()
+	sphere.radius = 0.2
+	sphere.height = 0.4
+	visitor_mesh.mesh = sphere
 	
-	# Copy color from original avatar
+	# Use a glowing material matching the agent's color
+	var visitor_mat = StandardMaterial3D.new()
+	visitor_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	visitor_mat.albedo_color = Color(0.5, 0.8, 1.0, 0.7)
+	visitor_mat.emission_enabled = true
+	visitor_mat.emission = Color(0.5, 0.8, 1.0, 1)
+	visitor_mat.emission_energy_multiplier = 1.5
+	
+	# Try to match agent eye color from their avatar
 	var original = get_node_or_null("/root/Main/" + current_visitor + "_Avatar")
 	if original:
-		var mat = original.get_surface_override_material(0)
-		if mat:
-			var clone_mat = mat.duplicate()
-			clone_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-			clone_mat.albedo_color.a = 0.7
-			visitor_mesh.set_surface_override_material(0, clone_mat)
+		var left_eye = original.get_node_or_null("LeftEye")
+		if left_eye and left_eye is CSGShape3D and left_eye.material:
+			var eye_color = left_eye.material.emission
+			visitor_mat.albedo_color = Color(eye_color.r, eye_color.g, eye_color.b, 0.7)
+			visitor_mat.emission = eye_color
+	
+	visitor_mesh.set_surface_override_material(0, visitor_mat)
 	
 	visitor_mesh.global_position = visitor_start_pos
 	var main = get_node_or_null("/root/Main")
