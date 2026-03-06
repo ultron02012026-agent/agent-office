@@ -231,9 +231,26 @@ func _on_tts_finished():
 func _on_ws_connected():
 	print("[ChatUI] Gateway WebSocket connected")
 
+func _agent_id_to_room(agent_id: String) -> String:
+	if not _gateway_ws:
+		return ""
+	for room_name in _gateway_ws.agent_map:
+		if _gateway_ws.agent_map[room_name] == agent_id:
+			return room_name
+	return ""
+
 func _on_ws_delta(agent_id: String, text: String):
 	# Only handle deltas for the current room's agent
 	if _get_current_agent_id() != agent_id:
+		# Buffer for the correct room if it's a different agent
+		var target_room = _agent_id_to_room(agent_id)
+		if not target_room.is_empty() and target_room != current_room:
+			if not room_histories.has(target_room):
+				room_histories[target_room] = []
+			# Store streaming text in a buffer keyed by agent
+			if not has_meta("stream_" + agent_id):
+				set_meta("stream_" + agent_id, "")
+			set_meta("stream_" + agent_id, get_meta("stream_" + agent_id) + text)
 		return
 	if not panel.visible:
 		return
@@ -252,6 +269,22 @@ func _on_ws_delta(agent_id: String, text: String):
 
 func _on_ws_final(agent_id: String, text: String):
 	if _get_current_agent_id() != agent_id:
+		# Buffer the final response for the correct room
+		var target_room = _agent_id_to_room(agent_id)
+		if not target_room.is_empty() and target_room != current_room:
+			var buffered = ""
+			if has_meta("stream_" + agent_id):
+				buffered = get_meta("stream_" + agent_id)
+				remove_meta("stream_" + agent_id)
+			var final_text = text if not text.is_empty() else buffered
+			if not final_text.is_empty():
+				if not room_histories.has(target_room):
+					room_histories[target_room] = []
+				room_histories[target_room].append({"role": "assistant", "content": final_text})
+				var display = _strip_command_tags(final_text).strip_edges()
+				var log_text = room_logs.get(target_room, "")
+				log_text += "[color=yellow]" + target_room + ":[/color] " + display + "\n"
+				room_logs[target_room] = log_text
 		return
 	if not panel.visible:
 		return
