@@ -178,7 +178,7 @@ func _cmd_status() -> String:
 func _cmd_clear() -> String:
 	var chat_ui = get_node_or_null("/root/Main/ChatUI")
 	if chat_ui and not chat_ui.current_room.is_empty():
-		chat_ui._on_clear()
+		chat_ui.clear_chat()
 		return "✅ Chat cleared"
 	return "❌ Not in a room"
 

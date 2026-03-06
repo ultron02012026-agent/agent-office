@@ -90,6 +90,11 @@ func _on_transcription(text: String):
 		set_voice_status("listening")
 		return
 	
+	# Guard against sending while already waiting for a response
+	if is_thinking:
+		chat_log.text += "\n[color=gray][i](waiting for response...)[/i][/color]\n"
+		return
+	
 	# Add user text to transcript
 	chat_log.text += "\n[color=cyan]You:[/color] " + text + "\n"
 	chat_history.append({"role": "user", "content": text})
@@ -183,6 +188,13 @@ func _on_request_completed(result, response_code, _headers, body_bytes):
 	else:
 		chat_log.text += "[color=red]No response from agent[/color]\n"
 		set_voice_status("listening")
+
+func clear_chat():
+	chat_log.text = "[color=gray]Chat cleared.[/color]\n"
+	chat_history = []
+	if not current_room.is_empty():
+		room_histories.erase(current_room)
+		room_logs.erase(current_room)
 
 func _handle_music_commands(text: String):
 	var ambiance = get_node_or_null("/root/Main/Ambiance")

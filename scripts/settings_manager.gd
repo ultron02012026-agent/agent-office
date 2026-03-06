@@ -19,7 +19,7 @@ var gateway_token: String = ""
 # Controls
 var mouse_sensitivity: float = 0.003
 var invert_y: bool = false
-var push_to_talk_key: String = "V"
+var push_to_talk_key: String = "V"  # Deprecated: VAD replaced push-to-talk
 
 # Display
 var fullscreen: bool = false

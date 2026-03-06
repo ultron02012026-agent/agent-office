@@ -33,6 +33,7 @@ var min_speech_duration: float = 0.3  # minimum seconds of speech to process (ig
 var max_speech_duration: float = 30.0  # auto-send after this many seconds
 var speech_start_time: float = 0.0
 var mic_player: AudioStreamPlayer
+var stt_in_flight: bool = false  # guard against overlapping STT requests
 
 func _ready():
 	stt_http = HTTPRequest.new()
@@ -195,6 +196,10 @@ func stop_recording():
 func _save_and_transcribe():
 	if recorded_frames.size() == 0:
 		return
+	if stt_in_flight:
+		# Drop this recording — previous one still processing
+		recorded_frames.clear()
+		return
 	
 	var chat_ui = get_node_or_null("/root/Main/ChatUI")
 	if chat_ui and chat_ui.has_method("set_voice_status"):
@@ -267,11 +272,14 @@ func _send_to_stt(wav_path: String):
 		headers.append("Authorization: Bearer " + SettingsManager.gateway_token)
 	
 	var url = SettingsManager.gateway_url + "/v1/audio/transcriptions"
+	stt_in_flight = true
 	var err = stt_http.request_raw(url, headers, HTTPClient.METHOD_POST, body)
 	if err != OK:
+		stt_in_flight = false
 		push_error("VoiceChat: STT request failed: " + str(err))
 
 func _on_stt_completed(_result, response_code, _headers, body_bytes):
+	stt_in_flight = false
 	if response_code != 200:
 		push_warning("VoiceChat: STT returned " + str(response_code))
 		transcription_received.emit("")

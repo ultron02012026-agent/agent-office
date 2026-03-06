@@ -164,21 +164,11 @@ func _build_controls_tab():
 	invert_check.toggled.connect(func(on): SettingsManager.invert_y = on)
 	vbox.add_child(invert_check)
 	
-	# Push to talk key
-	var ptt_hbox = HBoxContainer.new()
-	vbox.add_child(ptt_hbox)
-	var ptt_label = Label.new()
-	ptt_label.text = "Push-to-Talk Key: "
-	ptt_hbox.add_child(ptt_label)
-	var ptt_btn = Button.new()
-	ptt_btn.name = "PTTButton"
-	ptt_btn.text = SettingsManager.push_to_talk_key
-	var waiting_for_key = false
-	ptt_btn.pressed.connect(func():
-		ptt_btn.text = "Press a key..."
-		waiting_for_key = true
-	)
-	ptt_hbox.add_child(ptt_btn)
+	# Voice mode info
+	var vad_label = Label.new()
+	vad_label.text = "Voice: Always-on (VAD) — mic activates in rooms"
+	vad_label.modulate = Color(0.7, 0.7, 0.7)
+	vbox.add_child(vad_label)
 
 func _build_display_tab():
 	var vbox = VBoxContainer.new()

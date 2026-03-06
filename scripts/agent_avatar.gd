@@ -45,6 +45,7 @@ var personality_active: bool = false
 var personality_timer: float = 0.0
 var personality_type: int = 0  # 0=head tilt, 1=arm adjust, 2=look around
 var personality_duration: float = 1.5
+var personality_look_dir: float = 1.0  # random direction for look-around
 
 # Thinking blink
 var blink_timer: float = 0.0
@@ -277,6 +278,7 @@ func _animate_personality(delta: float):
 			personality_timer = 0.0
 			personality_type = randi() % 3
 			personality_duration = randf_range(1.0, 2.0)
+			personality_look_dir = 1.0 if randf() > 0.5 else -1.0
 		return
 	
 	personality_timer += delta
@@ -299,7 +301,5 @@ func _animate_personality(delta: float):
 			if left_arm:
 				var adj = ease_t * deg_to_rad(8.0)
 				left_arm.rotation.x = left_arm_base_rot.x - adj
-		2:  # Look around (additive sway that returns to zero via ease curve)
-			var look = sin(t * PI) * deg_to_rad(10.0) * (1.0 if personality_type % 2 == 0 else -1.0)
-			# Apply as offset from base (no drift)
-			pass  # Handled via rotation.y lerp in _animate_face_player
+		2:  # Look around — handled in _animate_face_player via idle rotation
+			pass
