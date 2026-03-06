@@ -1,4 +1,4 @@
-[gd_scene load_steps=97 format=3 uid="uid://main001"]
+[gd_scene load_steps=90 format=3 uid="uid://main001"]
 
 [ext_resource type="PackedScene" uid="uid://player001" path="res://scenes/player.tscn" id="1"]
 [ext_resource type="Script" path="res://scripts/room_area.gd" id="2"]
@@ -30,7 +30,9 @@
 [ext_resource type="AudioStream" path="res://assets/audio/chat_receive.wav" id="audio_chat_receive"]
 [ext_resource type="AudioStream" path="res://assets/audio/sprint_alarm.wav" id="audio_sprint_alarm"]
 
-; ===== MATERIALS =====
+; =============================================================================
+; MATERIALS
+; =============================================================================
 [sub_resource type="StandardMaterial3D" id="floor_mat"]
 albedo_color = Color(0.3, 0.3, 0.35, 1)
 
@@ -101,105 +103,6 @@ albedo_color = Color(0.6, 0.2, 0.8, 1)
 [sub_resource type="StandardMaterial3D" id="avatar_mat_mollie"]
 albedo_color = Color(1, 0.85, 0.4, 1)
 
-; --- Robot avatar materials ---
-[sub_resource type="StandardMaterial3D" id="robot_visor_mat"]
-albedo_color = Color(0.05, 0.05, 0.08, 1)
-
-; Ultron robot (blue tint)
-[sub_resource type="StandardMaterial3D" id="robot_body_ultron"]
-albedo_color = Color(0.85, 0.9, 1.0, 1)
-
-[sub_resource type="StandardMaterial3D" id="robot_base_ultron"]
-albedo_color = Color(0.65, 0.7, 0.8, 1)
-
-[sub_resource type="StandardMaterial3D" id="robot_eye_l_ultron"]
-albedo_color = Color(0.2, 0.7, 1.0, 1)
-emission_enabled = true
-emission = Color(0.2, 0.7, 1.0, 1)
-emission_energy_multiplier = 2.0
-
-[sub_resource type="StandardMaterial3D" id="robot_eye_r_ultron"]
-albedo_color = Color(0.2, 0.7, 1.0, 1)
-emission_enabled = true
-emission = Color(0.2, 0.7, 1.0, 1)
-emission_energy_multiplier = 2.0
-
-; Spinfluencer robot (pink tint)
-[sub_resource type="StandardMaterial3D" id="robot_body_spin"]
-albedo_color = Color(1.0, 0.88, 0.92, 1)
-
-[sub_resource type="StandardMaterial3D" id="robot_base_spin"]
-albedo_color = Color(0.8, 0.68, 0.72, 1)
-
-[sub_resource type="StandardMaterial3D" id="robot_eye_l_spin"]
-albedo_color = Color(1.0, 0.4, 0.7, 1)
-emission_enabled = true
-emission = Color(1.0, 0.4, 0.7, 1)
-emission_energy_multiplier = 2.0
-
-[sub_resource type="StandardMaterial3D" id="robot_eye_r_spin"]
-albedo_color = Color(1.0, 0.4, 0.7, 1)
-emission_enabled = true
-emission = Color(1.0, 0.4, 0.7, 1)
-emission_energy_multiplier = 2.0
-
-; Dexer robot (green tint)
-[sub_resource type="StandardMaterial3D" id="robot_body_dexer"]
-albedo_color = Color(0.88, 1.0, 0.9, 1)
-
-[sub_resource type="StandardMaterial3D" id="robot_base_dexer"]
-albedo_color = Color(0.68, 0.8, 0.7, 1)
-
-[sub_resource type="StandardMaterial3D" id="robot_eye_l_dexer"]
-albedo_color = Color(0.3, 1.0, 0.4, 1)
-emission_enabled = true
-emission = Color(0.3, 1.0, 0.4, 1)
-emission_energy_multiplier = 2.0
-
-[sub_resource type="StandardMaterial3D" id="robot_eye_r_dexer"]
-albedo_color = Color(0.3, 1.0, 0.4, 1)
-emission_enabled = true
-emission = Color(0.3, 1.0, 0.4, 1)
-emission_energy_multiplier = 2.0
-
-; DJ Sam robot (purple tint)
-[sub_resource type="StandardMaterial3D" id="robot_body_djsam"]
-albedo_color = Color(0.92, 0.88, 1.0, 1)
-
-[sub_resource type="StandardMaterial3D" id="robot_base_djsam"]
-albedo_color = Color(0.72, 0.68, 0.8, 1)
-
-[sub_resource type="StandardMaterial3D" id="robot_eye_l_djsam"]
-albedo_color = Color(0.7, 0.3, 1.0, 1)
-emission_enabled = true
-emission = Color(0.7, 0.3, 1.0, 1)
-emission_energy_multiplier = 2.0
-
-[sub_resource type="StandardMaterial3D" id="robot_eye_r_djsam"]
-albedo_color = Color(0.7, 0.3, 1.0, 1)
-emission_enabled = true
-emission = Color(0.7, 0.3, 1.0, 1)
-emission_energy_multiplier = 2.0
-
-; Mollie robot (warm gold tint)
-[sub_resource type="StandardMaterial3D" id="robot_body_mollie"]
-albedo_color = Color(1.0, 0.96, 0.88, 1)
-
-[sub_resource type="StandardMaterial3D" id="robot_base_mollie"]
-albedo_color = Color(0.8, 0.76, 0.68, 1)
-
-[sub_resource type="StandardMaterial3D" id="robot_eye_l_mollie"]
-albedo_color = Color(1.0, 0.85, 0.3, 1)
-emission_enabled = true
-emission = Color(1.0, 0.85, 0.3, 1)
-emission_energy_multiplier = 2.0
-
-[sub_resource type="StandardMaterial3D" id="robot_eye_r_mollie"]
-albedo_color = Color(1.0, 0.85, 0.3, 1)
-emission_enabled = true
-emission = Color(1.0, 0.85, 0.3, 1)
-emission_energy_multiplier = 2.0
-
 ; --- Door materials ---
 [sub_resource type="StandardMaterial3D" id="door_mat_ultron"]
 albedo_color = Color(0.2, 0.6, 0.8, 0.8)
@@ -263,7 +166,7 @@ emission_enabled = true
 emission = Color(0.4, 0.3, 0.1, 1)
 emission_energy_multiplier = 0.1
 
-; --- Glass & Outdoor materials ---
+; --- Glass & Outdoor ---
 [sub_resource type="StandardMaterial3D" id="glass_mat"]
 transparency = 1
 albedo_color = Color(0.7, 0.85, 1.0, 0.15)
@@ -287,6 +190,24 @@ albedo_color = Color(0.35, 0.25, 0.15, 1)
 
 [sub_resource type="StandardMaterial3D" id="tree_foliage_mat"]
 albedo_color = Color(0.2, 0.5, 0.2, 1)
+
+; --- Furniture materials ---
+[sub_resource type="StandardMaterial3D" id="rug_mat"]
+albedo_color = Color(0.35, 0.28, 0.2, 1)
+
+[sub_resource type="StandardMaterial3D" id="couch_mat"]
+albedo_color = Color(0.2, 0.2, 0.25, 1)
+
+[sub_resource type="StandardMaterial3D" id="marble_mat"]
+albedo_color = Color(0.9, 0.88, 0.85, 1)
+metallic = 0.1
+roughness = 0.15
+
+[sub_resource type="StandardMaterial3D" id="bookshelf_mat"]
+albedo_color = Color(0.3, 0.2, 0.1, 1)
+
+[sub_resource type="StandardMaterial3D" id="plant_pot_mat"]
+albedo_color = Color(0.6, 0.35, 0.2, 1)
 
 ; --- Sky & Environment ---
 [sub_resource type="ProceduralSkyMaterial" id="sky_material"]
@@ -314,17 +235,21 @@ ambient_light_color = Color(0.7, 0.75, 0.85, 1)
 ambient_light_energy = 0.4
 reflected_light_source = 1
 
-; ===== SHAPES =====
+; =============================================================================
+; SHAPES
+; =============================================================================
 [sub_resource type="BoxShape3D" id="room_shape"]
-size = Vector3(9, 4, 9)
+size = Vector3(9, 5, 9)
 
 [sub_resource type="BoxShape3D" id="proximity_shape"]
-size = Vector3(3, 4, 3)
+size = Vector3(3, 5, 3)
 
 [sub_resource type="BoxShape3D" id="mollie_area_shape"]
-size = Vector3(6, 4, 6)
+size = Vector3(6, 5, 6)
 
-; ===== MESHES =====
+; =============================================================================
+; MESHES
+; =============================================================================
 [sub_resource type="CapsuleMesh" id="avatar_mesh"]
 radius = 0.3
 height = 1.4
@@ -344,7 +269,8 @@ bottom_radius = 0.6
 height = 0.04
 
 ; =============================================================================
-; ROOT
+; ROOT — Building: x=-15 to 20, z=-15 to 20 (35x35)
+; Office ceilings: y=4.5 | Open area ceiling: y=5.0 | All walls: 5 tall
 ; =============================================================================
 [node name="Main" type="Node3D"]
 
@@ -353,76 +279,156 @@ height = 0.04
 environment = SubResource("environment")
 
 ; ===== LIGHTING =====
-; Sunlight — warm white, angled for natural shadows
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.866, -0.25, 0.433, 0, 0.866, 0.5, -0.5, -0.433, 0.75, 0, 10, 0)
+transform = Transform3D(0.866, -0.25, 0.433, 0, 0.866, 0.5, -0.5, -0.433, 0.75, 0, 15, 0)
 light_color = Color(1, 0.97, 0.92, 1)
 light_energy = 1.2
 shadow_enabled = true
 shadow_bias = 0.03
 
-; Reduced indoor lights (sky ambient handles most illumination now)
 [node name="AmbientLight" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 3, 2.5)
 light_color = Color(0.8, 0.8, 0.85, 1)
 light_energy = 0.08
-omni_range = 30
+omni_range = 35
 
 [node name="LobbyLight1" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.8, 5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 4.8, 5)
 light_color = Color(1, 0.95, 0.9, 1)
-light_energy = 0.35
+light_energy = 0.3
 omni_range = 12
 
 [node name="LobbyLight2" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.8, 12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 4.8, 15)
 light_color = Color(1, 0.95, 0.9, 1)
-light_energy = 0.3
+light_energy = 0.25
 omni_range = 10
 
 [node name="LobbyLight3" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.8, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 4.8, 0)
 light_color = Color(0.9, 0.9, 0.85, 1)
-light_energy = 0.25
+light_energy = 0.2
 omni_range = 8
 
-; ===== FLOOR =====
+; === Hallway light ===
+[node name="HallwayLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8, 0)
+light_color = Color(0.9, 0.9, 0.95, 1)
+light_energy = 0.25
+omni_range = 12
+
+; === Per-room lights ===
+[node name="Room1_Light" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.8, -10)
+light_color = Color(0.8, 0.85, 1, 1)
+light_energy = 0.3
+omni_range = 8
+
+[node name="Room2_Light" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8, -10)
+light_color = Color(1, 0.85, 0.9, 1)
+light_energy = 0.3
+omni_range = 8
+
+[node name="Room2_RecordingLight" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.5, -14)
+mesh = SubResource("sphere_mesh")
+surface_material_override/0 = SubResource("recording_light_mat")
+
+[node name="Room2_RecordingLightGlow" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.5, -14)
+light_color = Color(1, 0, 0, 1)
+light_energy = 0.3
+omni_range = 2
+
+[node name="Room3_Light" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.8, -10)
+light_color = Color(0.85, 1, 0.85, 1)
+light_energy = 0.3
+omni_range = 8
+
+[node name="Room4_Light" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.8, 0)
+light_color = Color(0.8, 0.7, 1, 1)
+light_energy = 0.3
+omni_range = 8
+
+[node name="Mollie_Light" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.8, 5)
+light_color = Color(1, 0.95, 0.85, 1)
+light_energy = 0.25
+omni_range = 6
+
+; =============================================================================
+; FLOOR & CEILINGS
+; =============================================================================
+; Building floor
 [node name="Floor" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, -0.1, 2.5)
 use_collision = true
-size = Vector3(30, 0.2, 30)
+size = Vector3(35, 0.2, 35)
 material = SubResource("floor_mat")
 
-; ===== CEILING =====
-[node name="Ceiling" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.1, 0)
+; Office ceilings at y=4.5 (per room)
+[node name="Ceiling_Ultron" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 4.6, -10)
 use_collision = true
-size = Vector3(30, 0.2, 30)
+size = Vector3(10, 0.2, 10)
 material = SubResource("ceiling_mat")
 
-; ===== SKYLIGHT (lobby area ceiling) =====
-[node name="Skylight" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 3.05, 5)
-size = Vector3(8, 0.05, 8)
-material = SubResource("skylight_mat")
+[node name="Ceiling_Spin" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.6, -10)
+use_collision = true
+size = Vector3(10, 0.2, 10)
+material = SubResource("ceiling_mat")
 
-; ===== WELCOME MAT (entrance area) =====
-[node name="WelcomeMat" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 0.01, 13)
-size = Vector3(4, 0.02, 3)
-material = SubResource("welcome_mat_mat")
+[node name="Ceiling_Dexer" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 4.6, -10)
+use_collision = true
+size = Vector3(10, 0.2, 10)
+material = SubResource("ceiling_mat")
+
+[node name="Ceiling_DJSam" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 4.6, 0)
+use_collision = true
+size = Vector3(10, 0.2, 10)
+material = SubResource("ceiling_mat")
+
+[node name="Ceiling_ComingSoon" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 4.6, 10)
+use_collision = true
+size = Vector3(10, 0.2, 10)
+material = SubResource("ceiling_mat")
+
+; Open area ceiling at y=5.0 (two pieces for L-shape)
+[node name="Ceiling_OpenMain" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 5.1, 7.5)
+use_collision = true
+size = Vector3(25, 0.2, 25)
+material = SubResource("ceiling_mat")
+
+[node name="Ceiling_OpenNE" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.5, 5.1, -10)
+use_collision = true
+size = Vector3(5, 0.2, 10)
+material = SubResource("ceiling_mat")
+
+; Skylight accent (open area ceiling)
+[node name="Skylight" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 5.05, 8)
+size = Vector3(10, 0.05, 10)
+material = SubResource("skylight_mat")
 
 ; =============================================================================
 ; OUTDOOR ENVIRONMENT
 ; =============================================================================
-; Ground plane (grass)
 [node name="OutdoorGround" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
 use_collision = true
 size = Vector3(200, 0.1, 200)
 material = SubResource("grass_mat")
 
-; --- Mountains (distant silhouettes, north-west) ---
+; Mountains (north-west, distant)
 [node name="Mountain1" type="CSGBox3D" parent="."]
 transform = Transform3D(0.95, 0, 0.31, 0, 1, 0, -0.31, 0, 0.95, -40, 8, -60)
 size = Vector3(20, 16, 8)
@@ -463,7 +469,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 12, -50)
 size = Vector3(12, 4, 5)
 material = SubResource("mountain_snow_mat")
 
-; --- Trees (a few near the building) ---
+; Outdoor trees
 [node name="Tree1_Trunk" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 1.5, -20)
 size = Vector3(0.4, 3, 0.4)
@@ -475,247 +481,303 @@ size = Vector3(3, 3, 3)
 material = SubResource("tree_foliage_mat")
 
 [node name="Tree2_Trunk" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 1.2, -22)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 1.2, -22)
 size = Vector3(0.35, 2.4, 0.35)
 material = SubResource("tree_trunk_mat")
 
 [node name="Tree2_Foliage" type="CSGBox3D" parent="."]
-transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 20, 3.2, -22)
+transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 28, 3.2, -22)
 size = Vector3(2.5, 2.5, 2.5)
 material = SubResource("tree_foliage_mat")
 
 [node name="Tree3_Trunk" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22, 1.8, 10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28, 1.8, 15)
 size = Vector3(0.45, 3.6, 0.45)
 material = SubResource("tree_trunk_mat")
 
 [node name="Tree3_Foliage" type="CSGBox3D" parent="."]
-transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 22, 4.8, 10)
+transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 28, 4.8, 15)
 size = Vector3(3.5, 3, 3.5)
 material = SubResource("tree_foliage_mat")
 
 [node name="Tree4_Trunk" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 1.0, 18)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22, 1.0, 25)
 size = Vector3(0.3, 2.0, 0.3)
 material = SubResource("tree_trunk_mat")
 
 [node name="Tree4_Foliage" type="CSGBox3D" parent="."]
-transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, -20, 3.0, 18)
+transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, -22, 3.0, 25)
 size = Vector3(2, 2, 2)
 material = SubResource("tree_foliage_mat")
 
 ; =============================================================================
-; EXTERIOR WALLS — GLASS WITH STRUCTURAL PILLARS
+; EXTERIOR GLASS WALLS — Building perimeter with structural pillars
+; All walls 5 units tall, center y=2.5
 ; =============================================================================
-; --- North wall (z=-15): glass panels between pillars ---
-[node name="Wall_North_Glass" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -15)
+
+; --- North wall (z=-15) ---
+[node name="Wall_North" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 2.5, -15)
 use_collision = true
-size = Vector3(30, 3, 0.1)
+size = Vector3(35, 5, 0.1)
 material = SubResource("glass_mat")
 
-; North wall pillars (every 10 units at room dividers + corners)
 [node name="Pillar_N1" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 1.5, -15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 2.5, -15)
 use_collision = true
-size = Vector3(0.3, 3, 0.3)
+size = Vector3(0.25, 5, 0.25)
 material = SubResource("glass_pillar_mat")
 
 [node name="Pillar_N2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, -15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 2.5, -15)
 use_collision = true
-size = Vector3(0.3, 3, 0.3)
+size = Vector3(0.25, 5, 0.25)
 material = SubResource("glass_pillar_mat")
 
 [node name="Pillar_N3" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.5, -15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.5, -15)
 use_collision = true
-size = Vector3(0.3, 3, 0.3)
+size = Vector3(0.25, 5, 0.25)
 material = SubResource("glass_pillar_mat")
 
 [node name="Pillar_N4" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 1.5, -15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 2.5, -15)
 use_collision = true
-size = Vector3(0.3, 3, 0.3)
+size = Vector3(0.25, 5, 0.25)
 material = SubResource("glass_pillar_mat")
 
-; --- South wall (z=15): glass with entrance gap (x=10 to 14) ---
-[node name="Wall_South_Glass_L" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 1.5, 15)
+[node name="Pillar_N5" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 2.5, -15)
 use_collision = true
-size = Vector3(25, 3, 0.1)
+size = Vector3(0.25, 5, 0.25)
+material = SubResource("glass_pillar_mat")
+
+; --- South wall (z=20) with entrance gap x=15 to 19 ---
+[node name="Wall_South_L" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 20)
+use_collision = true
+size = Vector3(30, 5, 0.1)
 material = SubResource("glass_mat")
 
-[node name="Wall_South_Glass_R" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.5, 1.5, 15)
+[node name="Wall_South_R" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19.5, 2.5, 20)
 use_collision = true
-size = Vector3(1, 3, 0.1)
+size = Vector3(1, 5, 0.1)
 material = SubResource("glass_mat")
 
-; South wall pillars
 [node name="Pillar_S1" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 1.5, 15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 2.5, 20)
 use_collision = true
-size = Vector3(0.3, 3, 0.3)
+size = Vector3(0.25, 5, 0.25)
 material = SubResource("glass_pillar_mat")
 
 [node name="Pillar_S2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, 15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 2.5, 20)
 use_collision = true
-size = Vector3(0.3, 3, 0.3)
+size = Vector3(0.25, 5, 0.25)
 material = SubResource("glass_pillar_mat")
 
 [node name="Pillar_S3" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.5, 15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.5, 20)
 use_collision = true
-size = Vector3(0.3, 3, 0.3)
+size = Vector3(0.25, 5, 0.25)
 material = SubResource("glass_pillar_mat")
 
 [node name="Pillar_S4" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.5, 15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 2.5, 20)
 use_collision = true
-size = Vector3(0.3, 3, 0.3)
+size = Vector3(0.25, 5, 0.25)
 material = SubResource("glass_pillar_mat")
 
 [node name="Pillar_S5" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 1.5, 15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 19, 2.5, 20)
 use_collision = true
-size = Vector3(0.3, 3, 0.3)
+size = Vector3(0.25, 5, 0.25)
 material = SubResource("glass_pillar_mat")
 
 [node name="Pillar_S6" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 1.5, 15)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 2.5, 20)
 use_collision = true
-size = Vector3(0.3, 3, 0.3)
+size = Vector3(0.25, 5, 0.25)
 material = SubResource("glass_pillar_mat")
 
-; --- West wall (x=-15): glass panels ---
-[node name="Wall_West_Glass" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 1.5, 0)
+; --- West wall (x=-15) ---
+[node name="Wall_West" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 2.5, 2.5)
 use_collision = true
-size = Vector3(0.1, 3, 30)
+size = Vector3(0.1, 5, 35)
 material = SubResource("glass_mat")
 
-; West wall pillars
 [node name="Pillar_W1" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 1.5, -5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 2.5, -5)
 use_collision = true
-size = Vector3(0.3, 3, 0.3)
+size = Vector3(0.25, 5, 0.25)
 material = SubResource("glass_pillar_mat")
 
 [node name="Pillar_W2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 1.5, 5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 2.5, 5)
 use_collision = true
-size = Vector3(0.3, 3, 0.3)
+size = Vector3(0.25, 5, 0.25)
 material = SubResource("glass_pillar_mat")
 
-; --- East wall (x=15): glass panels ---
-[node name="Wall_East_Glass" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 1.5, 0)
+[node name="Pillar_W3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 2.5, 15)
 use_collision = true
-size = Vector3(0.1, 3, 30)
+size = Vector3(0.25, 5, 0.25)
+material = SubResource("glass_pillar_mat")
+
+; --- East wall (x=20) ---
+[node name="Wall_East" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 2.5, 2.5)
+use_collision = true
+size = Vector3(0.1, 5, 35)
 material = SubResource("glass_mat")
 
-; East wall pillars
 [node name="Pillar_E1" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 1.5, -5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 2.5, -5)
 use_collision = true
-size = Vector3(0.3, 3, 0.3)
+size = Vector3(0.25, 5, 0.25)
 material = SubResource("glass_pillar_mat")
 
 [node name="Pillar_E2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 1.5, 5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 2.5, 5)
 use_collision = true
-size = Vector3(0.3, 3, 0.3)
+size = Vector3(0.25, 5, 0.25)
+material = SubResource("glass_pillar_mat")
+
+[node name="Pillar_E3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 2.5, 15)
+use_collision = true
+size = Vector3(0.25, 5, 0.25)
 material = SubResource("glass_pillar_mat")
 
 ; =============================================================================
-; INTERNAL WALLS — TOP ROW DIVIDERS
+; INTERIOR SOLID WALLS — between adjacent offices
 ; =============================================================================
 ; Ultron/Spinfluencer divider (x=-5, z=-15 to -5)
 [node name="Wall_Div_UltSpin" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, -10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 2.5, -10)
 use_collision = true
-size = Vector3(0.2, 3, 10)
+size = Vector3(0.2, 5, 10)
 material = SubResource("wall_mat")
 
 ; Spinfluencer/Dexer divider (x=5, z=-15 to -5)
 [node name="Wall_Div_SpinDex" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.5, -10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.5, -10)
 use_collision = true
-size = Vector3(0.2, 3, 10)
+size = Vector3(0.2, 5, 10)
 material = SubResource("wall_mat")
 
-; =============================================================================
-; INTERNAL WALLS — TOP ROW SOUTH WALL (z=-5) with 3 doorways
-; Doorways at x=-10 (±1), x=0 (±1), x=10 (±1)
-; =============================================================================
-[node name="Wall_TopSouth_1" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 1.5, -5)
+; Ultron/DJ Sam shared wall (z=-5, x=-15 to -5) with Ultron door at x=-10
+[node name="Wall_UltDJ_L" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 2.5, -5)
 use_collision = true
-size = Vector3(4, 3, 0.2)
+size = Vector3(4, 5, 0.2)
 material = SubResource("wall_mat")
 
-[node name="Wall_TopSouth_2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, -5)
+[node name="Wall_UltDJ_R" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 2.5, -5)
 use_collision = true
-size = Vector3(8, 3, 0.2)
+size = Vector3(4, 5, 0.2)
 material = SubResource("wall_mat")
 
-[node name="Wall_TopSouth_3" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.5, -5)
-use_collision = true
-size = Vector3(8, 3, 0.2)
-material = SubResource("wall_mat")
-
-[node name="Wall_TopSouth_4" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 1.5, -5)
-use_collision = true
-size = Vector3(4, 3, 0.2)
-material = SubResource("wall_mat")
-
-; =============================================================================
-; INTERNAL WALLS — LEFT COLUMN EAST WALL (x=-5, z=-5 to 15) with 2 doorways
-; Doorways at z=0 (±1) and z=10 (±1, locked)
-; =============================================================================
-[node name="Wall_LeftEast_1" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, -3)
-use_collision = true
-size = Vector3(0.2, 3, 4)
-material = SubResource("wall_mat")
-
-[node name="Wall_LeftEast_2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, 5)
-use_collision = true
-size = Vector3(0.2, 3, 8)
-material = SubResource("wall_mat")
-
-[node name="Wall_LeftEast_3" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, 13)
-use_collision = true
-size = Vector3(0.2, 3, 4)
-material = SubResource("wall_mat")
-
-; DJ Sam / Coming Soon divider (z=5, x=-15 to -5)
+; DJ Sam/Coming Soon divider (z=5, x=-15 to -5)
 [node name="Wall_Div_DJComing" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.5, 5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.5, 5)
 use_collision = true
-size = Vector3(10, 3, 0.2)
+size = Vector3(10, 5, 0.2)
 material = SubResource("wall_mat")
+
+; Coming Soon south wall (z=15, x=-15 to -5)
+[node name="Wall_ComingSouth" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.5, 15)
+use_collision = true
+size = Vector3(10, 5, 0.2)
+material = SubResource("wall_mat")
+
+; =============================================================================
+; INTERIOR GLASS WALLS — offices facing open area
+; =============================================================================
+
+; Top row south wall GLASS (z=-5, x=-5 to 15) with doors at x=0, x=10
+; Segment: x=-5 to -1
+[node name="Glass_TopS_1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 2.5, -5)
+use_collision = true
+size = Vector3(4, 5, 0.1)
+material = SubResource("glass_mat")
+
+; Gap x=-1 to 1 (Spinfluencer door)
+; Segment: x=1 to 9
+[node name="Glass_TopS_2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.5, -5)
+use_collision = true
+size = Vector3(8, 5, 0.1)
+material = SubResource("glass_mat")
+
+; Gap x=9 to 11 (Dexer door)
+; Segment: x=11 to 15
+[node name="Glass_TopS_3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 2.5, -5)
+use_collision = true
+size = Vector3(4, 5, 0.1)
+material = SubResource("glass_mat")
+
+; Left column east wall GLASS (x=-5, z=-5 to 20) with doors at z=0, z=10
+; Segment: z=-5 to -1
+[node name="Glass_LeftE_1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 2.5, -3)
+use_collision = true
+size = Vector3(0.1, 5, 4)
+material = SubResource("glass_mat")
+
+; Gap z=-1 to 1 (DJ Sam door)
+; Segment: z=1 to 9
+[node name="Glass_LeftE_2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 2.5, 5)
+use_collision = true
+size = Vector3(0.1, 5, 8)
+material = SubResource("glass_mat")
+
+; Gap z=9 to 11 (Coming Soon locked door)
+; Segment: z=11 to 20
+[node name="Glass_LeftE_3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 2.5, 15.5)
+use_collision = true
+size = Vector3(0.1, 5, 9)
+material = SubResource("glass_mat")
+
+; Dexer east wall GLASS (x=15, z=-15 to -5) — faces kitchen nook
+[node name="Glass_DexerE" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 2.5, -10)
+use_collision = true
+size = Vector3(0.1, 5, 10)
+material = SubResource("glass_mat")
 
 ; =============================================================================
 ; ENTRANCE
 ; =============================================================================
 [node name="Entrance_Sign" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 2.5, 14.9)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 3.8, 19.9)
 text = "Agent Office"
 font_size = 72
 modulate = Color(0.2, 0.6, 1, 1)
 
+[node name="WelcomeMat" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17, 0.01, 18)
+size = Vector3(4, 0.02, 3)
+material = SubResource("welcome_mat_mat")
+
 ; =============================================================================
-; ROOM 1: ULTRON (x=-15 to -5, z=-15 to -5, center -10,-10) — BLUE THEME
-; Door on south wall at z=-5, x=-10
+; ROOM 1: ULTRON (x=-15 to -5, z=-15 to -5) — BLUE THEME
+; Solid walls: east (x=-5, Spin), south (z=-5, DJ Sam)
+; Glass walls: north (z=-15, exterior), west (x=-15, exterior)
 ; =============================================================================
+[node name="Room1_Rug" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0.02, -10)
+size = Vector3(8, 0.04, 8)
+material = SubResource("rug_mat")
+
 [node name="Room1_Desk" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0.4, -12)
 use_collision = true
@@ -731,1129 +793,4 @@ material = SubResource("chair_mat")
 [node name="Room1_Chair2" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0.25, -10.5)
 use_collision = true
-size = Vector3(0.6, 0.5, 0.6)
-material = SubResource("chair_mat")
-
-[node name="Room1_Screen" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.2, -12.4)
-size = Vector3(1.5, 1, 0.05)
-material = SubResource("screen_mat")
-
-[node name="Room1_ExtraMonitor" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.5, 1.2, -12.4)
-size = Vector3(1.0, 0.7, 0.05)
-material = SubResource("screen_mat")
-
-[node name="Room1_Whiteboard" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.6, -14.85)
-size = Vector3(2, 1.2, 0.05)
-material = SubResource("whiteboard_mat")
-
-[node name="Room1_WhiteboardLabel" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.35, -14.84)
-text = "Whiteboard"
-font_size = 24
-modulate = Color(0.4, 0.4, 0.4, 1)
-
-[node name="Room1_TV_Main" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.85, 1.6, -10)
-size = Vector3(0.05, 1.2, 2)
-material = SubResource("screen_mat")
-
-[node name="Room1_TV_Secondary" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.6, -5.15)
-size = Vector3(1.2, 0.8, 0.05)
-material = SubResource("screen_mat")
-
-[node name="Room1_ServerRack" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 1.2, -7)
-use_collision = true
-size = Vector3(0.6, 2.4, 0.8)
-material = SubResource("server_rack_mat")
-
-[node name="Room1_Label" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.8, -5.15)
-text = "Ultron"
-font_size = 48
-modulate = Color(0.2, 0.8, 1, 1)
-
-[node name="Room1_Light" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.8, -10)
-light_color = Color(0.8, 0.85, 1, 1)
-light_energy = 0.3
-omni_range = 8
-
-[node name="Room1_Area" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.5, -10)
-script = ExtResource("2")
-room_name = "Ultron"
-
-[node name="Room1_AreaShape" type="CollisionShape3D" parent="Room1_Area"]
-shape = SubResource("room_shape")
-
-; =============================================================================
-; ROOM 2: SPINFLUENCER (x=-5 to 5, z=-15 to -5, center 0,-10) — PINK THEME
-; Door on south wall at z=-5, x=0
-; =============================================================================
-[node name="Room2_Desk" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, -12)
-use_collision = true
-size = Vector3(2, 0.8, 1)
-material = SubResource("desk_mat")
-
-[node name="Room2_Chair1" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, -13.2)
-use_collision = true
-size = Vector3(0.6, 0.5, 0.6)
-material = SubResource("chair_mat")
-
-[node name="Room2_Chair2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, -10.5)
-use_collision = true
-size = Vector3(0.6, 0.5, 0.6)
-material = SubResource("chair_mat")
-
-[node name="Room2_Whiteboard" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, -14.85)
-size = Vector3(2, 1.2, 0.05)
-material = SubResource("whiteboard_mat")
-
-[node name="Room2_WhiteboardLabel" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.35, -14.84)
-text = "Whiteboard"
-font_size = 24
-modulate = Color(0.4, 0.4, 0.4, 1)
-
-[node name="Room2_TV_Main" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.85, 1.6, -10)
-size = Vector3(0.05, 1.2, 2)
-material = SubResource("screen_mat")
-
-[node name="Room2_TV_Secondary" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, -5.15)
-size = Vector3(1.2, 0.8, 0.05)
-material = SubResource("screen_mat")
-
-[node name="Room2_RecordingLight" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.5, -14)
-mesh = SubResource("sphere_mesh")
-surface_material_override/0 = SubResource("recording_light_mat")
-
-[node name="Room2_RecordingLightGlow" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2.5, -14)
-light_color = Color(1, 0, 0, 1)
-light_energy = 0.3
-omni_range = 2
-
-[node name="Room2_VinylRecord" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.82, -12)
-mesh = SubResource("vinyl_mesh")
-surface_material_override/0 = SubResource("vinyl_mat")
-
-[node name="Room2_Label" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8, -5.15)
-text = "Spinfluencer"
-font_size = 48
-modulate = Color(1, 0.4, 0.7, 1)
-
-[node name="Room2_Light" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.8, -10)
-light_color = Color(1, 0.85, 0.9, 1)
-light_energy = 0.3
-omni_range = 8
-
-[node name="Room2_Area" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -10)
-script = ExtResource("2")
-room_name = "Spinfluencer"
-
-[node name="Room2_AreaShape" type="CollisionShape3D" parent="Room2_Area"]
-shape = SubResource("room_shape")
-
-; =============================================================================
-; ROOM 3: DEXER (x=5 to 15, z=-15 to -5, center 10,-10) — GREEN THEME
-; Door on south wall at z=-5, x=10
-; =============================================================================
-[node name="Room3_Desk" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.4, -12)
-use_collision = true
-size = Vector3(2, 0.8, 1)
-material = SubResource("desk_mat")
-
-[node name="Room3_Chair1" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.25, -13.2)
-use_collision = true
-size = Vector3(0.6, 0.5, 0.6)
-material = SubResource("chair_mat")
-
-[node name="Room3_Chair2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.25, -10.5)
-use_collision = true
-size = Vector3(0.6, 0.5, 0.6)
-material = SubResource("chair_mat")
-
-[node name="Room3_Whiteboard" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.6, -14.85)
-size = Vector3(2, 1.2, 0.05)
-material = SubResource("whiteboard_mat")
-
-[node name="Room3_WhiteboardLabel" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.35, -14.84)
-text = "Whiteboard"
-font_size = 24
-modulate = Color(0.4, 0.4, 0.4, 1)
-
-[node name="Room3_TV_Main" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.85, 1.6, -10)
-size = Vector3(0.05, 1.2, 2)
-material = SubResource("screen_mat")
-
-[node name="Room3_TV_Secondary" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.6, -5.15)
-size = Vector3(1.2, 0.8, 0.05)
-material = SubResource("screen_mat")
-
-[node name="Room3_FilingCabinet1" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0.3, -7)
-use_collision = true
-size = Vector3(0.8, 0.6, 0.5)
-material = SubResource("filing_mat")
-
-[node name="Room3_FilingCabinet2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 0.9, -7)
-use_collision = true
-size = Vector3(0.8, 0.6, 0.5)
-material = SubResource("filing_mat")
-
-[node name="Room3_FilingCabinet3" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14, 1.5, -7)
-use_collision = true
-size = Vector3(0.8, 0.6, 0.5)
-material = SubResource("filing_mat")
-
-[node name="Room3_LabelRed" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.3, 0.9, -12)
-size = Vector3(0.15, 0.15, 0.15)
-
-[node name="Room3_LabelGreen" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.55, 0.9, -12)
-size = Vector3(0.15, 0.15, 0.15)
-
-[node name="Room3_LabelBlue" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.8, 0.9, -12)
-size = Vector3(0.15, 0.15, 0.15)
-
-[node name="Room3_Label" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.8, -5.15)
-text = "Dexer"
-font_size = 48
-modulate = Color(0.4, 1, 0.4, 1)
-
-[node name="Room3_Light" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.8, -10)
-light_color = Color(0.85, 1, 0.85, 1)
-light_energy = 0.3
-omni_range = 8
-
-[node name="Room3_Area" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.5, -10)
-script = ExtResource("2")
-room_name = "Dexer"
-
-[node name="Room3_AreaShape" type="CollisionShape3D" parent="Room3_Area"]
-shape = SubResource("room_shape")
-
-; =============================================================================
-; ROOM 4: DJ SAM (x=-15 to -5, z=-5 to 5, center -10,0) — PURPLE/ORANGE THEME
-; Door on east wall at x=-5, z=0
-; =============================================================================
-[node name="Room4_Desk" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.4, 0)
-use_collision = true
-size = Vector3(2, 0.8, 1)
-material = SubResource("desk_mat")
-
-[node name="Room4_Chair1" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.2, 0.25, 0)
-use_collision = true
-size = Vector3(0.6, 0.5, 0.6)
-material = SubResource("chair_mat")
-
-[node name="Room4_Chair2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0.25, 0)
-use_collision = true
-size = Vector3(0.6, 0.5, 0.6)
-material = SubResource("chair_mat")
-
-[node name="Room4_Whiteboard" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.6, -4.85)
-size = Vector3(2, 1.2, 0.05)
-material = SubResource("whiteboard_mat")
-
-[node name="Room4_WhiteboardLabel" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.35, -4.84)
-text = "Whiteboard"
-font_size = 24
-modulate = Color(0.4, 0.4, 0.4, 1)
-
-[node name="Room4_TV_Main" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.85, 1.6, 0)
-size = Vector3(0.05, 1.2, 2)
-material = SubResource("screen_mat")
-
-[node name="Room4_TV_Secondary" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.6, 4.85)
-size = Vector3(1.2, 0.8, 0.05)
-material = SubResource("screen_mat")
-
-; DJ Sam decorations: turntable, speaker stacks, headphones placeholder
-[node name="Room4_Turntable" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.82, -2)
-mesh = SubResource("turntable_mesh")
-surface_material_override/0 = SubResource("turntable_mat")
-
-[node name="Room4_TurntableBase" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.4, -2)
-use_collision = true
-size = Vector3(1.4, 0.8, 1.0)
-material = SubResource("desk_mat")
-
-[node name="Room4_SpeakerL" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0.6, -3)
-use_collision = true
-size = Vector3(0.8, 1.2, 0.6)
-material = SubResource("speaker_mat")
-
-[node name="Room4_SpeakerL2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 1.5, -3)
-use_collision = true
-size = Vector3(0.7, 0.6, 0.5)
-material = SubResource("speaker_mat")
-
-[node name="Room4_SpeakerR" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 0.6, 3)
-use_collision = true
-size = Vector3(0.8, 1.2, 0.6)
-material = SubResource("speaker_mat")
-
-[node name="Room4_SpeakerR2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 1.5, 3)
-use_collision = true
-size = Vector3(0.7, 0.6, 0.5)
-material = SubResource("speaker_mat")
-
-; Headphones placeholder on desk
-[node name="Room4_Headphones" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.5, 0.9, 0.3)
-size = Vector3(0.3, 0.2, 0.4)
-material = SubResource("turntable_mat")
-
-[node name="Room4_Label" type="Label3D" parent="."]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -5.15, 2.8, 0)
-text = "DJ Sam"
-font_size = 48
-modulate = Color(0.7, 0.4, 0.9, 1)
-
-[node name="Room4_Light" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.8, 0)
-light_color = Color(0.8, 0.7, 1, 1)
-light_energy = 0.3
-omni_range = 8
-
-[node name="Room4_Area" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.5, 0)
-script = ExtResource("2")
-room_name = "DJ Sam"
-
-[node name="Room4_AreaShape" type="CollisionShape3D" parent="Room4_Area"]
-shape = SubResource("room_shape")
-
-; =============================================================================
-; ROOM 5: COMING SOON (x=-15 to -5, z=5 to 15, center -10,10) — GRAY/DIM
-; Locked door on east wall at x=-5, z=10 (door has collision, no anim script)
-; =============================================================================
-[node name="Room5_Label" type="Label3D" parent="."]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -5.15, 2.8, 10)
-text = "Coming Soon"
-font_size = 48
-modulate = Color(0.5, 0.5, 0.5, 1)
-
-[node name="Room5_Light" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.8, 10)
-light_color = Color(0.6, 0.6, 0.6, 1)
-light_energy = 0.2
-omni_range = 6
-
-[node name="Room5_ComingSoonSign" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.5, -10)
-text = "🔒 Coming Soon"
-font_size = 36
-modulate = Color(0.5, 0.5, 0.5, 0.8)
-
-; =============================================================================
-; MOLLIE — OFFICE MANAGER (open area, desk at x=5, z=5)
-; Diamond-shaped desk, gold avatar, Area3D for interaction
-; =============================================================================
-[node name="Mollie_Desk" type="CSGBox3D" parent="."]
-transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 5, 0.4, 5)
-use_collision = true
-size = Vector3(2, 0.8, 2)
-material = SubResource("mollie_desk_mat")
-
-[node name="Mollie_DeskTop" type="CSGBox3D" parent="."]
-transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 5, 0.82, 5)
-size = Vector3(2.2, 0.05, 2.2)
-material = SubResource("mollie_desk_mat")
-
-[node name="Mollie_Label" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.2, 5)
-text = "Mollie — Office Manager"
-font_size = 36
-modulate = Color(1, 0.85, 0.4, 1)
-
-[node name="Mollie_Light" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.8, 5)
-light_color = Color(1, 0.95, 0.85, 1)
-light_energy = 0.25
-omni_range = 6
-
-[node name="Mollie_Area" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.5, 5)
-script = ExtResource("2")
-room_name = "Mollie"
-
-[node name="Mollie_AreaShape" type="CollisionShape3D" parent="Mollie_Area"]
-shape = SubResource("mollie_area_shape")
-
-; =============================================================================
-; DOOR FRAMES AND PANELS
-; =============================================================================
-; --- Ultron door (z=-5, x=-10) — faces south ---
-[node name="Door1_FrameL" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.3, 1.5, -5.05)
-use_collision = true
-size = Vector3(0.15, 3, 0.1)
-material = SubResource("door_frame_mat")
-
-[node name="Door1_FrameR" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.7, 1.5, -5.05)
-use_collision = true
-size = Vector3(0.15, 3, 0.1)
-material = SubResource("door_frame_mat")
-
-[node name="Door1_Strip" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.95, -5.05)
-size = Vector3(1.4, 0.1, 0.12)
-material = SubResource("door_strip_ultron")
-
-[node name="Door1_Panel" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.5, -5.05)
-size = Vector3(1.2, 2.8, 0.08)
-script = ExtResource("14")
-room_name = "Ultron"
-material = SubResource("door_mat_ultron")
-
-; --- Spinfluencer door (z=-5, x=0) — faces south ---
-[node name="Door2_FrameL" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7, 1.5, -5.05)
-use_collision = true
-size = Vector3(0.15, 3, 0.1)
-material = SubResource("door_frame_mat")
-
-[node name="Door2_FrameR" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7, 1.5, -5.05)
-use_collision = true
-size = Vector3(0.15, 3, 0.1)
-material = SubResource("door_frame_mat")
-
-[node name="Door2_Strip" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.95, -5.05)
-size = Vector3(1.4, 0.1, 0.12)
-material = SubResource("door_strip_spin")
-
-[node name="Door2_Panel" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -5.05)
-size = Vector3(1.2, 2.8, 0.08)
-script = ExtResource("14")
-room_name = "Spinfluencer"
-material = SubResource("door_mat_spin")
-
-; --- Dexer door (z=-5, x=10) — faces south ---
-[node name="Door3_FrameL" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.7, 1.5, -5.05)
-use_collision = true
-size = Vector3(0.15, 3, 0.1)
-material = SubResource("door_frame_mat")
-
-[node name="Door3_FrameR" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.3, 1.5, -5.05)
-use_collision = true
-size = Vector3(0.15, 3, 0.1)
-material = SubResource("door_frame_mat")
-
-[node name="Door3_Strip" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.95, -5.05)
-size = Vector3(1.4, 0.1, 0.12)
-material = SubResource("door_strip_dexer")
-
-[node name="Door3_Panel" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.5, -5.05)
-size = Vector3(1.2, 2.8, 0.08)
-script = ExtResource("14")
-room_name = "Dexer"
-material = SubResource("door_mat_dexer")
-
-; --- DJ Sam door (x=-5, z=0) — faces east ---
-[node name="Door4_FrameL" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.05, 1.5, -0.7)
-use_collision = true
-size = Vector3(0.1, 3, 0.15)
-material = SubResource("door_frame_mat")
-
-[node name="Door4_FrameR" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.05, 1.5, 0.7)
-use_collision = true
-size = Vector3(0.1, 3, 0.15)
-material = SubResource("door_frame_mat")
-
-[node name="Door4_Strip" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.05, 2.95, 0)
-size = Vector3(0.12, 0.1, 1.4)
-material = SubResource("door_strip_djsam")
-
-[node name="Door4_Panel" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.05, 1.5, 0)
-size = Vector3(0.08, 2.8, 1.2)
-script = ExtResource("14")
-room_name = "DJ Sam"
-material = SubResource("door_mat_djsam")
-
-; --- Coming Soon door (x=-5, z=10) — LOCKED (has collision, no anim script) ---
-[node name="Door5_FrameL" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.05, 1.5, 9.3)
-use_collision = true
-size = Vector3(0.1, 3, 0.15)
-material = SubResource("door_frame_mat")
-
-[node name="Door5_FrameR" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.05, 1.5, 10.7)
-use_collision = true
-size = Vector3(0.1, 3, 0.15)
-material = SubResource("door_frame_mat")
-
-[node name="Door5_Strip" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.05, 2.95, 10)
-size = Vector3(0.12, 0.1, 1.4)
-material = SubResource("door_strip_coming")
-
-[node name="Door5_Panel" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.05, 1.5, 10)
-use_collision = true
-size = Vector3(0.08, 2.8, 1.2)
-material = SubResource("door_mat_coming")
-
-[node name="Door5_LockLabel" type="Label3D" parent="."]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -4.95, 1.5, 10)
-text = "🔒"
-font_size = 48
-
-; =============================================================================
-; PLAYER — spawns at entrance (bottom-right), facing north-west
-; =============================================================================
-[node name="Player" parent="." instance=ExtResource("1")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1, 13)
-
-; =============================================================================
-; HUD
-; =============================================================================
-[node name="HUD" type="CanvasLayer" parent="."]
-layer = 10
-
-[node name="RoomHUD" type="Label" parent="HUD"]
-offset_left = 16
-offset_top = 16
-offset_right = 300
-offset_bottom = 48
-text = "Lobby"
-
-; ===== CHAT UI =====
-[node name="ChatUI" type="CanvasLayer" parent="."]
-script = ExtResource("3")
-
-[node name="Panel" type="PanelContainer" parent="ChatUI"]
-anchors_preset = 2
-anchor_left = 0.0
-anchor_top = 1.0
-anchor_right = 0.0
-anchor_bottom = 1.0
-offset_left = 16
-offset_top = -280
-offset_right = 420
-offset_bottom = -16
-grow_vertical = 0
-modulate = Color(1, 1, 1, 0.75)
-
-[node name="VBoxContainer" type="VBoxContainer" parent="ChatUI/Panel"]
-layout_mode = 2
-
-[node name="RoomLabel" type="Label" parent="ChatUI/Panel/VBoxContainer"]
-layout_mode = 2
-text = "Room"
-horizontal_alignment = 1
-
-[node name="ChatLog" type="RichTextLabel" parent="ChatUI/Panel/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-bbcode_enabled = true
-text = ""
-scroll_following = true
-
-[node name="VoiceIndicator" type="Label" parent="ChatUI/Panel/VBoxContainer"]
-layout_mode = 2
-text = "🎙️ Listening... (hold V to talk)"
-horizontal_alignment = 1
-
-[node name="HTTPRequest" type="HTTPRequest" parent="ChatUI"]
-
-; =============================================================================
-; AGENT AVATARS — EVE-style robots (CSG primitives)
-; =============================================================================
-
-; --- ULTRON (blue, at chair facing +z toward visitor/door) ---
-[node name="Ultron_Avatar" type="Node3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -10, 0.05, -13.2)
-script = ExtResource("6")
-room_name = "Ultron"
-
-[node name="Head" type="CSGSphere3D" parent="Ultron_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 0.85, 0, 0, 0, 1, 0, 0.85, 0)
-radius = 0.35
-material = SubResource("robot_body_ultron")
-
-[node name="Visor" type="CSGBox3D" parent="Ultron_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, -0.17)
-size = Vector3(0.5, 0.25, 0.05)
-material = SubResource("robot_visor_mat")
-
-[node name="LeftEye" type="CSGSphere3D" parent="Ultron_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.88, -0.19)
-radius = 0.06
-material = SubResource("robot_eye_l_ultron")
-
-[node name="RightEye" type="CSGSphere3D" parent="Ultron_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.88, -0.19)
-radius = 0.06
-material = SubResource("robot_eye_r_ultron")
-
-[node name="Body" type="CSGCylinder3D" parent="Ultron_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
-radius = 0.25
-height = 0.5
-material = SubResource("robot_body_ultron")
-
-[node name="LeftArm" type="CSGCylinder3D" parent="Ultron_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 0.966, 0.259, 0, -0.259, 0.966, -0.35, 0.4, 0)
-radius = 0.06
-height = 0.3
-material = SubResource("robot_body_ultron")
-
-[node name="RightArm" type="CSGCylinder3D" parent="Ultron_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 0.966, -0.259, 0, 0.259, 0.966, 0.35, 0.4, 0)
-radius = 0.06
-height = 0.3
-material = SubResource("robot_body_ultron")
-
-[node name="Base" type="CSGCylinder3D" parent="Ultron_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
-radius = 0.2
-height = 0.05
-material = SubResource("robot_base_ultron")
-
-; --- SPINFLUENCER (pink, at chair facing +z) ---
-[node name="Spinfluencer_Avatar" type="Node3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 0, 0.05, -13.2)
-script = ExtResource("6")
-room_name = "Spinfluencer"
-
-[node name="Head" type="CSGSphere3D" parent="Spinfluencer_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 0.85, 0, 0, 0, 1, 0, 0.85, 0)
-radius = 0.35
-material = SubResource("robot_body_spin")
-
-[node name="Visor" type="CSGBox3D" parent="Spinfluencer_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, -0.17)
-size = Vector3(0.5, 0.25, 0.05)
-material = SubResource("robot_visor_mat")
-
-[node name="LeftEye" type="CSGSphere3D" parent="Spinfluencer_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.88, -0.19)
-radius = 0.06
-material = SubResource("robot_eye_l_spin")
-
-[node name="RightEye" type="CSGSphere3D" parent="Spinfluencer_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.88, -0.19)
-radius = 0.06
-material = SubResource("robot_eye_r_spin")
-
-[node name="Body" type="CSGCylinder3D" parent="Spinfluencer_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
-radius = 0.25
-height = 0.5
-material = SubResource("robot_body_spin")
-
-[node name="LeftArm" type="CSGCylinder3D" parent="Spinfluencer_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 0.966, 0.259, 0, -0.259, 0.966, -0.35, 0.4, 0)
-radius = 0.06
-height = 0.3
-material = SubResource("robot_body_spin")
-
-[node name="RightArm" type="CSGCylinder3D" parent="Spinfluencer_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 0.966, -0.259, 0, 0.259, 0.966, 0.35, 0.4, 0)
-radius = 0.06
-height = 0.3
-material = SubResource("robot_body_spin")
-
-[node name="Base" type="CSGCylinder3D" parent="Spinfluencer_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
-radius = 0.2
-height = 0.05
-material = SubResource("robot_base_spin")
-
-; --- DEXER (green, at chair facing +z) ---
-[node name="Dexer_Avatar" type="Node3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 10, 0.05, -13.2)
-script = ExtResource("6")
-room_name = "Dexer"
-
-[node name="Head" type="CSGSphere3D" parent="Dexer_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 0.85, 0, 0, 0, 1, 0, 0.85, 0)
-radius = 0.35
-material = SubResource("robot_body_dexer")
-
-[node name="Visor" type="CSGBox3D" parent="Dexer_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, -0.17)
-size = Vector3(0.5, 0.25, 0.05)
-material = SubResource("robot_visor_mat")
-
-[node name="LeftEye" type="CSGSphere3D" parent="Dexer_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.88, -0.19)
-radius = 0.06
-material = SubResource("robot_eye_l_dexer")
-
-[node name="RightEye" type="CSGSphere3D" parent="Dexer_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.88, -0.19)
-radius = 0.06
-material = SubResource("robot_eye_r_dexer")
-
-[node name="Body" type="CSGCylinder3D" parent="Dexer_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
-radius = 0.25
-height = 0.5
-material = SubResource("robot_body_dexer")
-
-[node name="LeftArm" type="CSGCylinder3D" parent="Dexer_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 0.966, 0.259, 0, -0.259, 0.966, -0.35, 0.4, 0)
-radius = 0.06
-height = 0.3
-material = SubResource("robot_body_dexer")
-
-[node name="RightArm" type="CSGCylinder3D" parent="Dexer_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 0.966, -0.259, 0, 0.259, 0.966, 0.35, 0.4, 0)
-radius = 0.06
-height = 0.3
-material = SubResource("robot_body_dexer")
-
-[node name="Base" type="CSGCylinder3D" parent="Dexer_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
-radius = 0.2
-height = 0.05
-material = SubResource("robot_base_dexer")
-
-; --- DJ SAM (purple, at chair facing +x toward visitor/door) ---
-[node name="DJSam_Avatar" type="Node3D" parent="."]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -13.2, 0.05, 0)
-script = ExtResource("6")
-room_name = "DJ Sam"
-
-[node name="Head" type="CSGSphere3D" parent="DJSam_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 0.85, 0, 0, 0, 1, 0, 0.85, 0)
-radius = 0.35
-material = SubResource("robot_body_djsam")
-
-[node name="Visor" type="CSGBox3D" parent="DJSam_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, -0.17)
-size = Vector3(0.5, 0.25, 0.05)
-material = SubResource("robot_visor_mat")
-
-[node name="LeftEye" type="CSGSphere3D" parent="DJSam_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.88, -0.19)
-radius = 0.06
-material = SubResource("robot_eye_l_djsam")
-
-[node name="RightEye" type="CSGSphere3D" parent="DJSam_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.88, -0.19)
-radius = 0.06
-material = SubResource("robot_eye_r_djsam")
-
-[node name="Body" type="CSGCylinder3D" parent="DJSam_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
-radius = 0.25
-height = 0.5
-material = SubResource("robot_body_djsam")
-
-[node name="LeftArm" type="CSGCylinder3D" parent="DJSam_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 0.966, 0.259, 0, -0.259, 0.966, -0.35, 0.4, 0)
-radius = 0.06
-height = 0.3
-material = SubResource("robot_body_djsam")
-
-[node name="RightArm" type="CSGCylinder3D" parent="DJSam_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 0.966, -0.259, 0, 0.259, 0.966, 0.35, 0.4, 0)
-radius = 0.06
-height = 0.3
-material = SubResource("robot_body_djsam")
-
-[node name="Base" type="CSGCylinder3D" parent="DJSam_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
-radius = 0.2
-height = 0.05
-material = SubResource("robot_base_djsam")
-
-; --- MOLLIE (warm gold, at desk facing lobby) ---
-[node name="Mollie_Avatar" type="Node3D" parent="."]
-transform = Transform3D(-0.707, 0, -0.707, 0, 1, 0, 0.707, 0, -0.707, 5, 0.05, 5.8)
-script = ExtResource("6")
-room_name = "Mollie"
-
-[node name="Head" type="CSGSphere3D" parent="Mollie_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 0.85, 0, 0, 0, 1, 0, 0.85, 0)
-radius = 0.35
-material = SubResource("robot_body_mollie")
-
-[node name="Visor" type="CSGBox3D" parent="Mollie_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, -0.17)
-size = Vector3(0.5, 0.25, 0.05)
-material = SubResource("robot_visor_mat")
-
-[node name="LeftEye" type="CSGSphere3D" parent="Mollie_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.1, 0.88, -0.19)
-radius = 0.06
-material = SubResource("robot_eye_l_mollie")
-
-[node name="RightEye" type="CSGSphere3D" parent="Mollie_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1, 0.88, -0.19)
-radius = 0.06
-material = SubResource("robot_eye_r_mollie")
-
-[node name="Body" type="CSGCylinder3D" parent="Mollie_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
-radius = 0.25
-height = 0.5
-material = SubResource("robot_body_mollie")
-
-[node name="LeftArm" type="CSGCylinder3D" parent="Mollie_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 0.966, 0.259, 0, -0.259, 0.966, -0.35, 0.4, 0)
-radius = 0.06
-height = 0.3
-material = SubResource("robot_body_mollie")
-
-[node name="RightArm" type="CSGCylinder3D" parent="Mollie_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 0.966, -0.259, 0, 0.259, 0.966, 0.35, 0.4, 0)
-radius = 0.06
-height = 0.3
-material = SubResource("robot_body_mollie")
-
-[node name="Base" type="CSGCylinder3D" parent="Mollie_Avatar"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
-radius = 0.2
-height = 0.05
-material = SubResource("robot_base_mollie")
-
-; =============================================================================
-; DOOR FRAME LABELS (outside doors, facing open area)
-; =============================================================================
-[node name="Room1_DoorLabel" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.6, -4.9)
-text = "Ultron"
-font_size = 32
-modulate = Color(0.2, 0.8, 1, 1)
-
-[node name="Room2_DoorLabel" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6, -4.9)
-text = "Spinfluencer"
-font_size = 32
-modulate = Color(1, 0.4, 0.7, 1)
-
-[node name="Room3_DoorLabel" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.6, -4.9)
-text = "Dexer"
-font_size = 32
-modulate = Color(0.4, 1, 0.4, 1)
-
-[node name="Room4_DoorLabel" type="Label3D" parent="."]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -4.9, 2.6, 0)
-text = "DJ Sam"
-font_size = 32
-modulate = Color(0.7, 0.4, 0.9, 1)
-
-[node name="Room5_DoorLabel" type="Label3D" parent="."]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -4.9, 2.6, 10)
-text = "Coming Soon"
-font_size = 32
-modulate = Color(0.5, 0.5, 0.5, 1)
-
-; =============================================================================
-; NOTIFICATION BADGES (above door labels)
-; =============================================================================
-[node name="Ultron_NotifBadge" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.3, 2.8, -4.9)
-visible = false
-text = "❗"
-font_size = 36
-modulate = Color(1, 0.3, 0.3, 1)
-
-[node name="Spinfluencer_NotifBadge" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.7, 2.8, -4.9)
-visible = false
-text = "❗"
-font_size = 36
-modulate = Color(1, 0.3, 0.3, 1)
-
-[node name="Dexer_NotifBadge" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.7, 2.8, -4.9)
-visible = false
-text = "❗"
-font_size = 36
-modulate = Color(1, 0.3, 0.3, 1)
-
-[node name="DJSam_NotifBadge" type="Label3D" parent="."]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -4.9, 2.8, -0.7)
-visible = false
-text = "❗"
-font_size = 36
-modulate = Color(1, 0.3, 0.3, 1)
-
-[node name="Mollie_NotifBadge" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 2.4, 5)
-visible = false
-text = "❗"
-font_size = 36
-modulate = Color(1, 0.3, 0.3, 1)
-
-; =============================================================================
-; TTS AUDIO PLAYERS (3D positional, at avatar locations)
-; =============================================================================
-[node name="Ultron_TTSPlayer" type="AudioStreamPlayer3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.2, -13.2)
-max_distance = 15.0
-
-[node name="Spinfluencer_TTSPlayer" type="AudioStreamPlayer3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, -13.2)
-max_distance = 15.0
-
-[node name="Dexer_TTSPlayer" type="AudioStreamPlayer3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.2, -13.2)
-max_distance = 15.0
-
-[node name="DJSam_TTSPlayer" type="AudioStreamPlayer3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.2, 1.2, 0)
-max_distance = 15.0
-
-[node name="Mollie_TTSPlayer" type="AudioStreamPlayer3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.2, 5.8)
-max_distance = 15.0
-
-; =============================================================================
-; AUDIO STUBS
-; =============================================================================
-[node name="FootstepHallway" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("audio_footstep_hard")
-[node name="FootstepRoom" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("audio_footstep_soft")
-
-[node name="NotificationSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("audio_notification")
-
-[node name="RoomEnterSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("audio_room_chime")
-[node name="RoomExitSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("audio_door_slide")
-
-[node name="ChatSendSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("audio_chat_send")
-
-[node name="ChatReceiveSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("audio_chat_receive")
-
-[node name="SprintAlarmSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("audio_sprint_alarm")
-
-; =============================================================================
-; SYSTEM NODES
-; =============================================================================
-[node name="VoiceChat" type="Node" parent="."]
-script = ExtResource("4")
-
-[node name="DayCycle" type="Node" parent="."]
-script = ExtResource("12")
-
-[node name="NotificationManager" type="Node" parent="."]
-script = ExtResource("13")
-
-[node name="SettingsMenu" type="CanvasLayer" parent="."]
-layer = 20
-process_mode = 3
-script = ExtResource("5")
-
-; ===== PROXIMITY PROMPT =====
-[node name="ProximityPrompt" type="Label" parent="HUD"]
-visible = false
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -200
-offset_top = -60
-offset_right = 200
-offset_bottom = -30
-horizontal_alignment = 1
-theme_override_colors/font_color = Color(0.8, 0.9, 1, 1)
-
-; ===== MINIMAP =====
-[node name="Minimap" type="Control" parent="HUD"]
-script = ExtResource("9")
-
-; ===== MIC INDICATOR =====
-[node name="MicIndicator" type="Label" parent="HUD"]
-visible = false
-offset_left = 16
-offset_top = 50
-offset_right = 200
-offset_bottom = 80
-text = "🎙️ Recording..."
-theme_override_colors/font_color = Color(1, 0.3, 0.3, 1)
-
-; ===== WELCOME OVERLAY =====
-[node name="WelcomeOverlay" type="CanvasLayer" parent="."]
-layer = 30
-script = ExtResource("7")
-
-; ===== ROOM TITLE CARD =====
-[node name="RoomTitleCard" type="CanvasLayer" parent="."]
-layer = 15
-script = ExtResource("8")
-
-; =============================================================================
-; AGENT STATUS INDICATORS (dots above doors)
-; =============================================================================
-[node name="Room1_StatusDot" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.9, -4.9)
-script = ExtResource("10")
-agent_name = "Ultron"
-
-[node name="Room2_StatusDot" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9, -4.9)
-script = ExtResource("10")
-agent_name = "Spinfluencer"
-
-[node name="Room3_StatusDot" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.9, -4.9)
-script = ExtResource("10")
-agent_name = "Dexer"
-
-[node name="Room4_StatusDot" type="Label3D" parent="."]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -4.9, 2.9, 0)
-script = ExtResource("10")
-agent_name = "DJ Sam"
-
-[node name="Mollie_StatusDot" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.4, 5)
-script = ExtResource("10")
-agent_name = "Mollie"
-
-; =============================================================================
-; PROXIMITY ZONES (near doorways)
-; =============================================================================
-[node name="Room1_Proximity" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.5, -5)
-script = ExtResource("11")
-room_name = "Ultron"
-
-[node name="Room1_ProximityShape" type="CollisionShape3D" parent="Room1_Proximity"]
-shape = SubResource("proximity_shape")
-
-[node name="Room2_Proximity" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -5)
-script = ExtResource("11")
-room_name = "Spinfluencer"
-
-[node name="Room2_ProximityShape" type="CollisionShape3D" parent="Room2_Proximity"]
-shape = SubResource("proximity_shape")
-
-[node name="Room3_Proximity" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.5, -5)
-script = ExtResource("11")
-room_name = "Dexer"
-
-[node name="Room3_ProximityShape" type="CollisionShape3D" parent="Room3_Proximity"]
-shape = SubResource("proximity_shape")
-
-[node name="Room4_Proximity" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1.5, 0)
-script = ExtResource("11")
-room_name = "DJ Sam"
-
-[node name="Room4_ProximityShape" type="CollisionShape3D" parent="Room4_Proximity"]
-shape = SubResource("proximity_shape")
-
-; ===== AGENT SOCIAL (visits) =====
-[node name="AgentSocial" type="Node" parent="."]
-script = ExtResource("15")
-
-; ===== COMMAND PALETTE =====
-[node name="CommandPalette" type="CanvasLayer" parent="."]
-layer = 25
-script = ExtResource("16")
-
-; ===== BULLETIN BOARD =====
-[node name="BulletinBoard" type="Node" parent="."]
-script = ExtResource("17")
-
-; ===== SPRINT TIMER =====
-[node name="SprintTimer" type="Control" parent="HUD"]
-script = ExtResource("18")
-
-; ===== AMBIANCE =====
-[node name="Ambiance" type="Node" parent="."]
-script = ExtResource("19")
-
-; ===== SCREENSHOT =====
-[node name="Screenshot" type="Node" parent="."]
-script = ExtResource("20")
-
-; ===== DEBUG OVERLAY =====
-[node name="DebugOverlay" type="Control" parent="HUD"]
-script = ExtResource("21")
-
-; =============================================================================
-; CONNECTIONS
-; =============================================================================
-[connection signal="body_entered" from="Room1_Area" to="Room1_Area" method="_on_body_entered"]
-[connection signal="body_exited" from="Room1_Area" to="Room1_Area" method="_on_body_exited"]
-[connection signal="body_entered" from="Room2_Area" to="Room2_Area" method="_on_body_entered"]
-[connection signal="body_exited" from="Room2_Area" to="Room2_Area" method="_on_body_exited"]
-[connection signal="body_entered" from="Room3_Area" to="Room3_Area" method="_on_body_entered"]
-[connection signal="body_exited" from="Room3_Area" to="Room3_Area" method="_on_body_exited"]
-[connection signal="body_entered" from="Room4_Area" to="Room4_Area" method="_on_body_entered"]
-[connection signal="body_exited" from="Room4_Area" to="Room4_Area" method="_on_body_exited"]
-[connection signal="body_entered" from="Mollie_Area" to="Mollie_Area" method="_on_body_entered"]
-[connection signal="body_exited" from="Mollie_Area" to="Mollie_Area" method="_on_body_exited"]
-[connection signal="body_entered" from="Room1_Proximity" to="Room1_Proximity" method="_on_body_entered"]
-[connection signal="body_exited" from="Room1_Proximity" to="Room1_Proximity" method="_on_body_exited"]
-[connection signal="body_entered" from="Room2_Proximity" to="Room2_Proximity" method="_on_body_entered"]
-[connection signal="body_exited" from="Room2_Proximity" to="Room2_Proximity" method="_on_body_exited"]
-[connection signal="body_entered" from="Room3_Proximity" to="Room3_Proximity" method="_on_body_entered"]
-[connection signal="body_exited" from="Room3_Proximity" to="Room3_Proximity" method="_on_body_exited"]
-[connection signal="body_entered" from="Room4_Proximity" to="Room4_Proximity" method="_on_body_entered"]
-[connection signal="body_exited" from="Room4_Proximity" to="Room4_Proximity" method="_on_body_exited"]
+size = Vector3(0.6
