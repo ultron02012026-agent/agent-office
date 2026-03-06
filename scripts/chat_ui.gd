@@ -175,6 +175,7 @@ func _on_text_submitted(text: String):
 		msg = "What's in this image?"
 	_submit_message(msg)
 	text_input.placeholder_text = "Type a message..."
+	text_input.grab_focus.call_deferred()
 
 func _on_transcription(text: String):
 	if text.is_empty():
