@@ -18,21 +18,23 @@ var visitor_target_pos: Vector3
 
 # Agent room positions (doorway positions in hallway)
 var agent_positions := {
-	"Ultron": Vector3(-2, 0.7, -8),
-	"Spinfluencer": Vector3(-2, 0.7, 0),
-	"Dexer": Vector3(2, 0.7, -8),
-	"Architect": Vector3(2, 0.7, 0),
+	"Ultron": Vector3(-10, 0.7, -5),
+	"Spinfluencer": Vector3(0, 0.7, -5),
+	"Dexer": Vector3(10, 0.7, -5),
+	"DJ Sam": Vector3(-5, 0.7, 0),
+	"Mollie": Vector3(5, 0.7, 5),
 }
 
 # Agent home positions (inside room, at desk)
 var agent_home := {
-	"Ultron": Vector3(-7, 0.7, -10.2),
-	"Spinfluencer": Vector3(-7, 0.7, -2.2),
-	"Dexer": Vector3(7, 0.7, -10.2),
-	"Architect": Vector3(7, 0.7, -2.2),
+	"Ultron": Vector3(-10, 0.7, -13.2),
+	"Spinfluencer": Vector3(0, 0.7, -13.2),
+	"Dexer": Vector3(10, 0.7, -13.2),
+	"DJ Sam": Vector3(-13.2, 0.7, 0),
+	"Mollie": Vector3(5, 0.7, 5.8),
 }
 
-var agent_names := ["Ultron", "Spinfluencer", "Dexer", "Architect"]
+var agent_names := ["Ultron", "Spinfluencer", "Dexer", "DJ Sam", "Mollie"]
 var current_visitor: String = ""
 var current_target: String = ""
 

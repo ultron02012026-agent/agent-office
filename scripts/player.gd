@@ -115,9 +115,15 @@ func _physics_process(delta):
 	_update_hud()
 
 func _play_footstep():
-	# Disabled — synthesized footsteps sound bad. 
-	# TODO: Add real recorded footstep samples
-	pass
+	var surface = get_surface_type()
+	if surface == "room":
+		var player_node = get_node_or_null("/root/Main/FootstepRoom")
+		if player_node and player_node.stream:
+			player_node.play()
+	else:
+		var player_node = get_node_or_null("/root/Main/FootstepHallway")
+		if player_node and player_node.stream:
+			player_node.play()
 
 func get_surface_type() -> String:
 	if current_room.is_empty():

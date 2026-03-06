@@ -3,19 +3,20 @@
 extends Control
 
 const MAP_SIZE := Vector2(180, 180)
-const WORLD_MIN := Vector2(-12, -15)  # x_min, z_min in world
-const WORLD_MAX := Vector2(12, 15)    # x_max, z_max in world
+const WORLD_MIN := Vector2(-15, -15)  # x_min, z_min in world
+const WORLD_MAX := Vector2(15, 15)    # x_max, z_max in world
 const PADDING := 10.0
 
 # Room definitions: name, color, world rect (x, z, w, h)
 var rooms := [
-	{"name": "Ultron", "color": Color(0.2, 0.8, 1, 0.4), "rect": Rect2(-10, -11, 8, 6)},
-	{"name": "Spin", "color": Color(1, 0.4, 0.7, 0.4), "rect": Rect2(-10, -3, 8, 6)},
-	{"name": "Dexer", "color": Color(0.4, 1, 0.4, 0.4), "rect": Rect2(2, -11, 8, 6)},
-	{"name": "Architect", "color": Color(1, 0.8, 0.2, 0.4), "rect": Rect2(2, -3, 8, 6)},
+	{"name": "Ultron", "color": Color(0.2, 0.8, 1, 0.4), "rect": Rect2(-15, -15, 10, 10)},
+	{"name": "Spin", "color": Color(1, 0.4, 0.7, 0.4), "rect": Rect2(-5, -15, 10, 10)},
+	{"name": "Dexer", "color": Color(0.4, 1, 0.4, 0.4), "rect": Rect2(5, -15, 10, 10)},
+	{"name": "DJ Sam", "color": Color(0.7, 0.4, 0.9, 0.4), "rect": Rect2(-15, -5, 10, 10)},
+	{"name": "Soon", "color": Color(0.4, 0.4, 0.4, 0.3), "rect": Rect2(-15, 5, 10, 10)},
+	{"name": "Mollie", "color": Color(1, 0.85, 0.4, 0.4), "rect": Rect2(2, 2, 6, 6)},
 ]
-var hallway_rect := Rect2(-2, -15, 4, 22)  # hallway
-var lobby_rect := Rect2(-5, 7, 10, 8)  # lobby
+var lobby_rect := Rect2(-5, -5, 20, 20)  # open area
 
 var player_pos := Vector2.ZERO
 
@@ -50,13 +51,8 @@ func _draw():
 	draw_rect(Rect2(Vector2.ZERO, size), Color(0, 0, 0, 0.6))
 	draw_rect(Rect2(Vector2.ZERO, size), Color(0.3, 0.3, 0.4, 0.5), false, 1.0)
 	
-	# Hallway
-	draw_rect(_world_rect_to_map(hallway_rect), Color(0.4, 0.4, 0.45, 0.3))
-	
-	# Lobby
-	draw_rect(_world_rect_to_map(lobby_rect), Color(0.3, 0.5, 0.7, 0.3))
-	var lobby_map = _world_rect_to_map(lobby_rect)
-	draw_string(ThemeDB.fallback_font, lobby_map.position + Vector2(lobby_map.size.x * 0.2, lobby_map.size.y * 0.6), "Lobby", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color(0.7, 0.7, 0.7))
+	# Open area / lobby
+	draw_rect(_world_rect_to_map(lobby_rect), Color(0.3, 0.5, 0.7, 0.2))
 	
 	# Rooms
 	for room in rooms:
@@ -64,6 +60,10 @@ func _draw():
 		draw_rect(mr, room["color"])
 		draw_rect(mr, room["color"] * 1.5, false, 1.0)
 		draw_string(ThemeDB.fallback_font, mr.position + Vector2(4, mr.size.y * 0.55), room["name"], HORIZONTAL_ALIGNMENT_LEFT, -1, 9, Color(0.9, 0.9, 0.9))
+	
+	# Entrance marker
+	var entrance_pos = _world_to_map(Vector2(12, 14))
+	draw_string(ThemeDB.fallback_font, entrance_pos + Vector2(-10, 0), "▼", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.8, 0.8, 0.3))
 	
 	# Player dot
 	var player_map = _world_to_map(player_pos)

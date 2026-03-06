@@ -12,7 +12,7 @@ var update_interval: float = 2.0  # refresh every 2 seconds
 func _ready():
 	_create_board()
 	# Initialize empty activity
-	for room in ["Ultron", "Spinfluencer", "Dexer", "Architect"]:
+	for room in ["Ultron", "Spinfluencer", "Dexer", "DJ Sam", "Mollie"]:
 		room_activity[room] = {"last_message": "No activity yet", "timestamp": 0.0, "sender": ""}
 
 func _create_board():

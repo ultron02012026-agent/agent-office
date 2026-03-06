@@ -31,7 +31,8 @@ var agent_configs: Dictionary = {
 	"Ultron": {"agent_name": "Ultron", "system_prompt": "You are Ultron, an AI agent."},
 	"Spinfluencer": {"agent_name": "Spinfluencer", "system_prompt": "You are Spinfluencer, an AI agent."},
 	"Dexer": {"agent_name": "Dexer", "system_prompt": "You are Dexer, an AI agent."},
-	"Architect": {"agent_name": "Architect", "system_prompt": "You are Architect, an AI agent."},
+	"DJ Sam": {"agent_name": "DJ Sam", "system_prompt": "You are DJ Sam, an AI agent and music specialist."},
+	"Mollie": {"agent_name": "Mollie", "system_prompt": "You are Mollie, the office manager and secretary for Agent Office. You help the user navigate the office, manage settings, add new agents, and control the environment. You're friendly, organized, and the first face people see."},
 }
 
 func _ready():

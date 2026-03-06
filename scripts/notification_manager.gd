@@ -9,7 +9,7 @@ var notifications: Dictionary = {}
 # Simulated notification timer
 var sim_timer: float = 0.0
 var sim_interval: float = 60.0  # simulate a notification every 60 seconds
-var sim_rooms: Array = ["Ultron", "Spinfluencer", "Dexer", "Architect"]
+var sim_rooms: Array = ["Ultron", "Spinfluencer", "Dexer", "DJ Sam", "Mollie"]
 var sim_index: int = 0
 
 func _ready():

@@ -30,6 +30,7 @@ var silence_timeout: float = 1.2  # seconds of silence before we consider speech
 var silence_timer: float = 0.0
 var is_speech_active: bool = false
 var min_speech_duration: float = 0.3  # minimum seconds of speech to process (ignore short noise)
+var max_speech_duration: float = 30.0  # auto-send after this many seconds
 var speech_start_time: float = 0.0
 var mic_player: AudioStreamPlayer
 
@@ -69,6 +70,9 @@ func _setup_mic_bus():
 func set_room(room_name: String, tts_player_node: AudioStreamPlayer3D = null):
 	current_room = room_name
 	tts_player = tts_player_node
+	# Always restart listening to update tts_player reference
+	if vad_enabled:
+		vad_enabled = false
 	_start_listening()
 
 func clear_room():
@@ -143,6 +147,14 @@ func _process(delta):
 		
 		silence_timer = 0.0
 		recorded_frames.append_array(frames)
+		
+		# Auto-send if recording too long (prevent memory issues)
+		var speech_duration = (Time.get_ticks_msec() / 1000.0) - speech_start_time
+		if speech_duration >= max_speech_duration:
+			is_speech_active = false
+			is_recording = false
+			_save_and_transcribe()
+			return
 	else:
 		if is_speech_active:
 			# Still recording but silence detected

@@ -110,13 +110,17 @@ func _on_tts_finished():
 func _send_to_openclaw(_user_msg: String):
 	# Use agent config for system prompt
 	var agent_name = current_room
-	var system_prompt = "You are " + current_room + ", an AI agent in a virtual office. Keep responses concise (2-3 sentences). Be conversational.\nYou can control the office music. If the user asks to change music volume, turn music on/off, etc., include one of these tags in your response (they'll be stripped before display):\n[MUSIC_UP] — increase volume\n[MUSIC_DOWN] — decrease volume\n[MUSIC_OFF] — mute music\n[MUSIC_ON] — unmute music"
+	var music_instructions = "\nYou can control the office music. If the user asks to change music volume, turn music on/off, etc., include one of these tags in your response (they'll be stripped before display):\n[MUSIC_UP] — increase volume\n[MUSIC_DOWN] — decrease volume\n[MUSIC_OFF] — mute music\n[MUSIC_ON] — unmute music"
+	
+	var system_prompt = "You are " + current_room + ", an AI agent in a virtual office. Keep responses concise (2-3 sentences). Be conversational."
 	
 	if SettingsManager.agent_configs.has(current_room):
 		var cfg = SettingsManager.agent_configs[current_room]
 		agent_name = cfg.get("agent_name", current_room)
 		if cfg.has("system_prompt") and not cfg["system_prompt"].is_empty():
 			system_prompt = cfg["system_prompt"]
+	
+	system_prompt += music_instructions
 	
 	var messages = [{"role": "system", "content": system_prompt}]
 	messages.append_array(chat_history)
