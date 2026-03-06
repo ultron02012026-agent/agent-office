@@ -28,7 +28,6 @@ var vsync: bool = true
 
 # Agent config (room_name -> {agent_name, system_prompt})
 var agent_configs: Dictionary = {
-	"Ultron": {"agent_name": "Ultron", "system_prompt": "You are Ultron, an AI agent."},
 	"Spinfluencer": {"agent_name": "Spinfluencer", "system_prompt": "You are Spinfluencer, an AI agent."},
 	"Dexer": {"agent_name": "Dexer", "system_prompt": "You are Dexer, an AI agent."},
 	"DJ Sam": {"agent_name": "DJ Sam", "system_prompt": "You are DJ Sam, an AI agent and music specialist."},

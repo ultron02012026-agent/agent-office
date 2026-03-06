@@ -4,7 +4,7 @@
 extends CanvasLayer
 
 var is_open: bool = false
-var commands_list := ["/goto ultron", "/goto spinfluencer", "/goto dexer", "/goto djsam", "/goto mollie", "/goto lobby", "/goto entrance", "/status", "/clear", "/sprint 25"]
+var commands_list := ["/goto spinfluencer", "/goto dexer", "/goto djsam", "/goto mollie", "/goto lobby", "/goto entrance", "/status", "/clear", "/sprint 25"]
 
 @onready var panel: PanelContainer
 @onready var input_field: LineEdit
@@ -13,8 +13,7 @@ var commands_list := ["/goto ultron", "/goto spinfluencer", "/goto dexer", "/got
 
 # Room teleport positions
 var room_positions := {
-	"ultron": Vector3(-10, 1, -10),
-	"spinfluencer": Vector3(0, 1, -10),
+	"spinfluencer": Vector3(-5, 1, -10),
 	"dexer": Vector3(10, 1, -10),
 	"djsam": Vector3(-10, 1, 0),
 	"mollie": Vector3(5, 1, 5),
