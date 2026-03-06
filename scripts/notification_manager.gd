@@ -57,6 +57,7 @@ func has_notification(room_name: String) -> bool:
 	return notifications.get(room_name, false)
 
 func _update_badge(room_name: String, show: bool):
-	var badge = get_node_or_null("/root/Main/" + room_name + "_NotifBadge")
+	var node_name = room_name.replace(" ", "")
+	var badge = get_node_or_null("/root/Main/" + node_name + "_NotifBadge")
 	if badge:
 		badge.visible = show

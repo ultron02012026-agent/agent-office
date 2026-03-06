@@ -23,8 +23,8 @@ func _create_board():
 	# Whiteboard background (already exists as lobby back wall area)
 	var board_bg = CSGBox3D.new()
 	board_bg.name = "BulletinBoardBG"
-	board_bg.size = Vector3(4, 2.5, 0.05)
-	board_bg.position = Vector3(0, 1.8, 14.85)
+	board_bg.size = Vector3(0.05, 2.5, 4)
+	board_bg.position = Vector3(-4.85, 1.8, 8)
 	var bg_mat = StandardMaterial3D.new()
 	bg_mat.albedo_color = Color(0.95, 0.95, 0.9, 1)
 	bg_mat.emission_enabled = true
@@ -39,7 +39,8 @@ func _create_board():
 	title.text = "📋 What's Happening"
 	title.font_size = 32
 	title.modulate = Color(0.2, 0.2, 0.3, 1)
-	title.position = Vector3(0, 2.85, 14.84)
+	title.position = Vector3(-4.84, 2.85, 8)
+	title.rotation_degrees = Vector3(0, 90, 0)
 	main.add_child(title)
 	
 	# Activity text
@@ -47,7 +48,8 @@ func _create_board():
 	board_label.name = "BulletinContent"
 	board_label.font_size = 18
 	board_label.modulate = Color(0.15, 0.15, 0.2, 1)
-	board_label.position = Vector3(0, 1.8, 14.83)
+	board_label.position = Vector3(-4.83, 1.8, 8)
+	board_label.rotation_degrees = Vector3(0, 90, 0)
 	board_label.width = 350
 	board_label.autowrap_mode = TextServer.AUTOWRAP_WORD
 	main.add_child(board_label)
@@ -97,7 +99,7 @@ func _update_board_text():
 		return
 	
 	var text = ""
-	for room_name in ["Ultron", "Spinfluencer", "Dexer", "Architect"]:
+	for room_name in ["Ultron", "Spinfluencer", "Dexer", "DJ Sam", "Mollie"]:
 		var activity = room_activity.get(room_name, {})
 		var msg = activity.get("last_message", "No activity")
 		var sender = activity.get("sender", "")

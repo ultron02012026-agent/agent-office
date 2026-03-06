@@ -4,6 +4,38 @@ All notable changes to Agent Office.
 
 ---
 
+## v0.9.0 — 2026-03-05
+*Major Layout Overhaul*
+
+### Changed
+- **Complete floor plan redesign** — replaced old hallway-with-rooms-on-sides layout with a new open-plan building
+- **New layout:** 3 offices across the top (Ultron, Spinfluencer, Dexer), 2 rooms on left column (DJ Sam, Coming Soon), large open lobby area on the right with Mollie's reception desk, entrance at bottom-right
+- **Building is 30×30 units** with proper exterior walls and interior dividers
+- **Player spawns at entrance** (bottom-right) facing into the building toward Mollie
+- **Bulletin board repositioned** to left column east wall, visible from open area
+
+### New
+- **DJ Sam room** — purple/orange theme with turntable placeholder (flat CSGCylinder), speaker stacks, headphones, replaces old Architect room
+- **Coming Soon room** — gray/dim locked room with no agent, no furniture, locked door (solid with collision, doesn't open). Placeholder for future agents
+- **Mollie — Office Manager** — open-area reception desk (diamond-shaped rotated CSGBox at 45°), gold/warm avatar, Area3D interaction zone. System prompt: friendly office manager who helps navigate, manage settings, and control the environment
+- **Entrance area** — "Agent Office" sign above entrance gap in south-east wall, welcome mat (different floor color)
+- **Open lobby** — large right-side area with good lighting (3 OmniLight3D), skylight effect on ceiling
+
+### Updated Scripts
+- `settings_manager.gd` — added DJ Sam and Mollie to default agent_configs
+- `minimap.gd` — complete rewrite with new room positions matching new layout
+- `agent_social.gd` — updated agent positions, doorway positions, and agent list (5 agents)
+- `notification_manager.gd` — added DJ Sam and Mollie to notification rotation
+- `bulletin_board.gd` — repositioned to open area wall, added DJ Sam and Mollie
+- `command_palette.gd` — added /goto djsam, /goto mollie, /goto entrance; updated all teleport positions
+
+### Removed
+- Old hallway layout (north-south corridor with rooms on sides)
+- Old lobby at south end
+- Architect room and all Architect references (replaced by DJ Sam)
+
+---
+
 ## v0.8.0 — 2026-03-05
 *Voice-Only Interaction*
 

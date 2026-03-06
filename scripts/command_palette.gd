@@ -4,7 +4,7 @@
 extends CanvasLayer
 
 var is_open: bool = false
-var commands_list := ["/goto ultron", "/goto spinfluencer", "/goto dexer", "/goto architect", "/goto lobby", "/status", "/clear", "/sprint 25"]
+var commands_list := ["/goto ultron", "/goto spinfluencer", "/goto dexer", "/goto djsam", "/goto mollie", "/goto lobby", "/goto entrance", "/status", "/clear", "/sprint 25"]
 
 @onready var panel: PanelContainer
 @onready var input_field: LineEdit
@@ -13,11 +13,13 @@ var commands_list := ["/goto ultron", "/goto spinfluencer", "/goto dexer", "/got
 
 # Room teleport positions
 var room_positions := {
-	"ultron": Vector3(-6, 1, -8),
-	"spinfluencer": Vector3(-6, 1, 0),
-	"dexer": Vector3(6, 1, -8),
-	"architect": Vector3(6, 1, 0),
-	"lobby": Vector3(0, 1, 10),
+	"ultron": Vector3(-10, 1, -10),
+	"spinfluencer": Vector3(0, 1, -10),
+	"dexer": Vector3(10, 1, -10),
+	"djsam": Vector3(-10, 1, 0),
+	"mollie": Vector3(5, 1, 5),
+	"lobby": Vector3(5, 1, 8),
+	"entrance": Vector3(12, 1, 13),
 }
 
 func _ready():
@@ -161,7 +163,7 @@ func _cmd_goto(target: String) -> String:
 
 func _cmd_status() -> String:
 	var status_text = "Agent Status:\n"
-	var agents = ["Ultron", "Spinfluencer", "Dexer", "Architect"]
+	var agents = ["Ultron", "Spinfluencer", "Dexer", "DJ Sam", "Mollie"]
 	for agent in agents:
 		var dot = get_node_or_null("/root/Main/" + agent.replace(" ", "") + "_StatusDot") 
 		if not dot:
