@@ -28,16 +28,20 @@ func _ready():
 	add_child(music_player)
 	var bg_music = load("res://assets/audio/bg_music.mp3")
 	if bg_music:
+		bg_music.loop = true
 		music_player.stream = bg_music
-		music_player.finished.connect(func(): music_player.play())  # loop
 		music_player.play()
 	# Load ambient audio files
 	var office_stream = load("res://assets/audio/ambient_office.wav")
 	var hallway_stream = load("res://assets/audio/ambient_hallway.wav")
 	if office_stream:
+		if office_stream is AudioStreamWAV:
+			office_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
 		lobby_player.stream = office_stream  # lobby uses office hum too
 		office_player.stream = office_stream
 	if hallway_stream:
+		if hallway_stream is AudioStreamWAV:
+			hallway_stream.loop_mode = AudioStreamWAV.LOOP_FORWARD
 		hallway_player.stream = hallway_stream
 	# Start playing the initial zone
 	if active_player.stream:
@@ -63,10 +67,12 @@ func _process(delta):
 	if active_player:
 		active_player.volume_db = lerp(active_player.volume_db, target_volume_db, delta * fade_speed)
 	
-	# Fade out inactive players
+	# Fade out inactive players and stop them when silent
 	for p in [lobby_player, office_player, hallway_player]:
 		if p != active_player:
 			p.volume_db = lerp(p.volume_db, -80.0, delta * fade_speed)
+			if p.volume_db <= -60.0 and p.playing:
+				p.stop()
 
 func _get_zone(player_node) -> String:
 	if not player_node.current_room.is_empty():
