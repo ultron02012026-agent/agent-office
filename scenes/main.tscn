@@ -1,4 +1,4 @@
-[gd_scene load_steps=99 format=3 uid="uid://main001"]
+[gd_scene load_steps=85 format=3 uid="uid://main001"]
 
 [ext_resource type="PackedScene" uid="uid://player001" path="res://scenes/player.tscn" id="1"]
 [ext_resource type="Script" path="res://scripts/room_area.gd" id="2"]
@@ -37,9 +37,6 @@
 [sub_resource type="StandardMaterial3D" id="floor_mat"]
 albedo_color = Color(0.3, 0.3, 0.35, 1)
 
-[sub_resource type="StandardMaterial3D" id="wall_mat"]
-albedo_color = Color(0.6, 0.6, 0.55, 1)
-
 [sub_resource type="StandardMaterial3D" id="desk_mat"]
 albedo_color = Color(0.45, 0.3, 0.15, 1)
 
@@ -64,12 +61,6 @@ albedo_color = Color(0.7, 0.7, 0.72, 1)
 [sub_resource type="StandardMaterial3D" id="door_frame_mat"]
 albedo_color = Color(0.35, 0.35, 0.4, 1)
 
-[sub_resource type="StandardMaterial3D" id="server_rack_mat"]
-albedo_color = Color(0.15, 0.15, 0.2, 1)
-emission_enabled = true
-emission = Color(0.1, 0.3, 0.6, 1)
-emission_energy_multiplier = 0.2
-
 [sub_resource type="StandardMaterial3D" id="recording_light_mat"]
 albedo_color = Color(1, 0.1, 0.1, 1)
 emission_enabled = true
@@ -89,25 +80,6 @@ emission = Color(0.6, 0.8, 1, 1)
 emission_energy_multiplier = 0.4
 
 ; --- Avatar materials ---
-[sub_resource type="StandardMaterial3D" id="avatar_mat_ultron"]
-albedo_color = Color(0.2, 0.8, 1, 1)
-
-[sub_resource type="StandardMaterial3D" id="avatar_mat_spin"]
-albedo_color = Color(1, 0.4, 0.7, 1)
-
-[sub_resource type="StandardMaterial3D" id="avatar_mat_dexer"]
-albedo_color = Color(0.4, 1, 0.4, 1)
-
-[sub_resource type="StandardMaterial3D" id="avatar_mat_djsam"]
-albedo_color = Color(0.6, 0.2, 0.8, 1)
-
-[sub_resource type="StandardMaterial3D" id="avatar_mat_ultron_fd"]
-albedo_color = Color(1, 0.85, 0.4, 1)
-
-; --- Door materials ---
-[sub_resource type="StandardMaterial3D" id="door_mat_ultron"]
-albedo_color = Color(0.2, 0.6, 0.8, 0.8)
-
 [sub_resource type="StandardMaterial3D" id="door_mat_spin"]
 albedo_color = Color(0.8, 0.3, 0.5, 0.8)
 
@@ -121,12 +93,6 @@ albedo_color = Color(0.5, 0.2, 0.6, 0.8)
 albedo_color = Color(0.4, 0.4, 0.4, 0.9)
 
 ; --- Door strip materials ---
-[sub_resource type="StandardMaterial3D" id="door_strip_ultron"]
-albedo_color = Color(0.2, 0.8, 1, 1)
-emission_enabled = true
-emission = Color(0.2, 0.8, 1, 1)
-emission_energy_multiplier = 0.5
-
 [sub_resource type="StandardMaterial3D" id="door_strip_spin"]
 albedo_color = Color(1, 0.4, 0.7, 1)
 emission_enabled = true
@@ -219,10 +185,6 @@ size = Vector3(3, 4, 3)
 size = Vector3(6, 4, 6)
 
 ; ===== MESHES =====
-[sub_resource type="CapsuleMesh" id="avatar_mesh"]
-radius = 0.3
-height = 1.4
-
 [sub_resource type="SphereMesh" id="sphere_mesh"]
 radius = 0.15
 height = 0.3
@@ -251,25 +213,6 @@ height = 0.04
 albedo_color = Color(0.05, 0.05, 0.08, 1)
 
 ; Ultron robot (blue tint)
-[sub_resource type="StandardMaterial3D" id="robot_body_ultron"]
-albedo_color = Color(0.85, 0.9, 1.0, 1)
-
-[sub_resource type="StandardMaterial3D" id="robot_base_ultron"]
-albedo_color = Color(0.65, 0.7, 0.8, 1)
-
-[sub_resource type="StandardMaterial3D" id="robot_eye_l_ultron"]
-albedo_color = Color(0.2, 0.7, 1.0, 1)
-emission_enabled = true
-emission = Color(0.2, 0.7, 1.0, 1)
-emission_energy_multiplier = 2.0
-
-[sub_resource type="StandardMaterial3D" id="robot_eye_r_ultron"]
-albedo_color = Color(0.2, 0.7, 1.0, 1)
-emission_enabled = true
-emission = Color(0.2, 0.7, 1.0, 1)
-emission_energy_multiplier = 2.0
-
-; Spinfluencer robot (green tint)
 [sub_resource type="StandardMaterial3D" id="robot_body_spin"]
 albedo_color = Color(0.88, 1.0, 0.9, 1)
 
