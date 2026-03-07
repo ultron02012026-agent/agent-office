@@ -7,6 +7,8 @@
 extends CharacterBody3D
 
 const SPEED = 7.0
+const SPRINT_SPEED = 12.0
+const JUMP_VELOCITY = 8.0
 const BOB_FREQUENCY = 14.0
 const BOB_AMPLITUDE = 0.03
 
@@ -73,18 +75,26 @@ func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y -= 20.0 * delta
 	
-	var input_dir = Vector2.ZERO
+	# Jump
 	var chat_ui = get_node_or_null("/root/Main/ChatUI")
-	if not (chat_ui and chat_ui.chat_focused):
+	var in_chat = chat_ui and chat_ui.chat_focused
+	if not in_chat and Input.is_action_just_pressed("jump") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
+	
+	var input_dir = Vector2.ZERO
+	if not in_chat:
 		input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
+	
+	var is_sprinting = not in_chat and Input.is_action_pressed("sprint")
+	var current_speed = SPRINT_SPEED if is_sprinting else SPEED
 	
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
-		velocity.x = direction.x * SPEED
-		velocity.z = direction.z * SPEED
+		velocity.x = direction.x * current_speed
+		velocity.z = direction.z * current_speed
 	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
-		velocity.z = move_toward(velocity.z, 0, SPEED)
+		velocity.x = move_toward(velocity.x, 0, current_speed)
+		velocity.z = move_toward(velocity.z, 0, current_speed)
 	
 	move_and_slide()
 	
