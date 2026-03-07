@@ -529,19 +529,23 @@ func _handle_music_commands(text: String):
 			music.play()
 
 func _handle_tv_commands(text: String):
+	print("[ChatUI] _handle_tv_commands called, text length=%d" % text.length())
 	var tv_display = get_node_or_null("/root/Main/TVDisplay")
 	if not tv_display:
+		print("[ChatUI] TVDisplay node not found!")
 		return
 	# Standard TV_SHOW (wall TV for other agents, center monitor for Ultron)
 	var regex = RegEx.new()
 	regex.compile("\\[TV_SHOW:(https?://[^\\]]+)\\]")
 	var tv_match = regex.search(text)
 	if tv_match:
+		print("[ChatUI] TV_SHOW match: ", tv_match.get_string(1))
 		tv_display.show_image_on_tv(current_room, tv_match.get_string(1))
 	# Ultron-specific: [SCREEN1:url] [SCREEN2:url] [SCREEN3:url]
 	var screen_regex = RegEx.new()
 	screen_regex.compile("\\[SCREEN([123]):(https?://[^\\]]+)\\]")
 	var screen_matches = screen_regex.search_all(text)
+	print("[ChatUI] SCREEN matches: %d" % screen_matches.size())
 	for m in screen_matches:
 		var screen_num = int(m.get_string(1))
 		var url = m.get_string(2)
