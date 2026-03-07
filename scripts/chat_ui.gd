@@ -30,6 +30,7 @@ var voice_status: String = "listening"  # listening, recording, processing
 var _gateway_ws: Node = null
 var _greeting_in_progress: bool = false
 var _pending_image: Image = null  # Clipboard image waiting to be sent
+var chat_focused: bool = false  # true = typing mode (WASD types), false = move mode (WASD walks)
 
 func _ready():
 	panel.visible = false
@@ -92,8 +93,11 @@ func show_chat(room_name: String):
 	panel.modulate = Color(1, 1, 1, 0.7)  # Semi-transparent overlay
 	if voice_indicator:
 		voice_indicator.visible = false
+	# Start in move mode — press Enter to chat
+	chat_focused = false
 	if text_input:
-		text_input.grab_focus.call_deferred()
+		text_input.release_focus()
+		text_input.placeholder_text = "Press Enter to chat"
 
 	# Inject office context and auto-greet on first visit via WebSocket
 	if is_first_visit and _gateway_ws and _gateway_ws.is_ws_connected():
@@ -112,6 +116,7 @@ func hide_chat():
 	is_thinking = false
 	_is_streaming = false
 	_streaming_text = ""
+	chat_focused = false
 	# Ensure typing mode is exited
 	if text_input and text_input.has_focus():
 		text_input.release_focus()
@@ -142,26 +147,37 @@ func set_voice_status(status: String):
 			voice_indicator.text = "🔊 " + current_room + " is speaking..."
 			voice_indicator.modulate = Color(0.8, 0.7, 0.3, 0.9)
 
-func _on_text_gui_input(_event: InputEvent):
-	pass
+func _on_text_gui_input(event: InputEvent):
+	# Escape while typing → exit chat mode back to move mode
+	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
+		unfocus_chat()
+		get_viewport().set_input_as_handled()
 
 func _process(_delta):
-	# Keep cursor in text input whenever chat panel is visible
+	pass
+
+func focus_chat():
 	if not panel.visible or not text_input:
 		return
-	var welcome = get_node_or_null("/root/Main/WelcomeOverlay")
-	if welcome and welcome.is_showing:
-		return
-	var settings_menu = get_node_or_null("/root/Main/SettingsMenu")
-	if settings_menu and settings_menu.is_open:
-		return
-	if not text_input.has_focus():
-		text_input.grab_focus()
+	chat_focused = true
+	text_input.grab_focus()
+	text_input.placeholder_text = "Type a message... (Esc to move)"
+
+func unfocus_chat():
+	chat_focused = false
+	if text_input:
+		text_input.release_focus()
+		text_input.placeholder_text = "Press Enter to chat"
 
 func _unhandled_input(event: InputEvent):
 	if not panel.visible:
 		return
 	if event is InputEventKey and event.pressed and not event.echo:
+		# Enter while not in chat mode → focus chat
+		if not chat_focused and event.keycode == KEY_ENTER:
+			focus_chat()
+			get_viewport().set_input_as_handled()
+			return
 		if event.ctrl_pressed and event.keycode == KEY_V:
 			_try_paste_image()
 
@@ -184,7 +200,7 @@ func _on_text_submitted(text: String):
 	if msg.is_empty():
 		msg = "What's in this image?"
 	_submit_message(msg)
-	text_input.placeholder_text = "Type a message..."
+	text_input.placeholder_text = "Type a message... (Esc to move)"
 	text_input.grab_focus.call_deferred()
 
 func _on_transcription(text: String):
@@ -356,8 +372,8 @@ func _on_ws_final(agent_id: String, text: String):
 
 	set_voice_status("listening")
 
-	# Re-grab focus so user can keep chatting
-	if text_input and panel.visible:
+	# Re-grab focus so user can keep chatting (only if in chat mode)
+	if chat_focused and text_input and panel.visible:
 		text_input.grab_focus.call_deferred()
 
 func _remove_thinking_indicator():

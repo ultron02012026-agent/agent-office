@@ -36,9 +36,9 @@ func _build_ui():
 	vbox.add_child(spacer)
 	
 	var lines = [
-		"Arrow keys to move, Mouse to look",
+		"WASD to move, Mouse to look",
 		"Walk into an office to start chatting",
-		"Esc = Settings",
+		"Enter = Chat, Esc = Stop chatting / Settings",
 	]
 	for line in lines:
 		var lbl = Label.new()

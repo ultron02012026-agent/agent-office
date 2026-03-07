@@ -73,7 +73,10 @@ func _physics_process(delta):
 	if not is_on_floor():
 		velocity.y -= 20.0 * delta
 	
-	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
+	var input_dir = Vector2.ZERO
+	var chat_ui = get_node_or_null("/root/Main/ChatUI")
+	if not (chat_ui and chat_ui.chat_focused):
+		input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_backward")
 	
 	var direction = (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
 	if direction:
