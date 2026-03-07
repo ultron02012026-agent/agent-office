@@ -81,7 +81,10 @@ func _on_image_loaded(result: int, response_code: int, _headers: PackedStringArr
 	var label = http.get_meta("label")
 	http.queue_free()
 	
+	print("[tv_display] Response for '%s': code=%d, body_size=%d" % [label, response_code, body.size()])
 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
+		if body.size() > 0 and body.size() < 500:
+			print("[tv_display] Body: ", body.get_string_from_utf8())
 		push_warning("tv_display: download failed for '%s' (code %d)" % [label, response_code])
 		return
 	
@@ -89,8 +92,21 @@ func _on_image_loaded(result: int, response_code: int, _headers: PackedStringArr
 	if not node:
 		return
 	
+	# Detect format from response headers or body magic bytes
 	var img = Image.new()
-	var err = img.load_png_from_buffer(body)
+	var err = OK
+	# Check JPEG magic bytes (FF D8 FF)
+	if body.size() >= 3 and body[0] == 0xFF and body[1] == 0xD8 and body[2] == 0xFF:
+		err = img.load_jpg_from_buffer(body)
+	# Check PNG magic bytes (89 50 4E 47)
+	elif body.size() >= 4 and body[0] == 0x89 and body[1] == 0x50 and body[2] == 0x4E and body[3] == 0x47:
+		err = img.load_png_from_buffer(body)
+	# Check WebP magic bytes (52 49 46 46 ... 57 45 42 50)
+	elif body.size() >= 12 and body[0] == 0x52 and body[1] == 0x49 and body[8] == 0x57 and body[9] == 0x45:
+		err = img.load_webp_from_buffer(body)
+	else:
+		# Unknown format — try all
+		err = img.load_png_from_buffer(body)
 	if err != OK:
 		err = img.load_jpg_from_buffer(body)
 	if err != OK:
