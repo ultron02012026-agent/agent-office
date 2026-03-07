@@ -1,5 +1,5 @@
-## Chat panel UI — text + voice conversation with agents via Gateway WebSocket.
-## Chat history persists per room — leaving and returning restores previous conversation.
+## Chat panel UI - text + voice conversation with agents via Gateway WebSocket.
+## Chat history persists per room - leaving and returning restores previous conversation.
 ## Key methods: show_chat(room), hide_chat()
 ## Signals: connects to VoiceChat.transcription_received, GatewayWS signals
 ## Depends on: SettingsManager (autoload), VoiceChat, GatewayWS
@@ -34,12 +34,12 @@ var _pending_image: Image = null  # Clipboard image waiting to be sent
 func _ready():
 	panel.visible = false
 	http_request.request_completed.connect(_on_request_completed)
-	
+
 	# Connect text input
 	if text_input:
 		text_input.text_submitted.connect(_on_text_submitted)
 		text_input.gui_input.connect(_on_text_gui_input)
-	
+
 	# Connect voice chat signals
 	_connect_voice_chat.call_deferred()
 	# Connect gateway WS signals
@@ -76,7 +76,7 @@ func show_chat(room_name: String):
 	if SettingsManager.agent_configs.has(room_name):
 		display_name = SettingsManager.agent_configs[room_name].get("agent_name", room_name)
 	room_label.text = "📍 " + display_name + "'s Office"
-	
+
 	# Restore previous chat history for this room, or start fresh
 	var is_first_visit = false
 	if room_histories.has(room_name) and room_histories[room_name].size() > 0:
@@ -86,15 +86,15 @@ func show_chat(room_name: String):
 		is_first_visit = true
 		chat_history = []
 		chat_log.text = "[color=gray]You entered " + room_name + "'s office.[/color]\n"
-	
+
 	panel.visible = true
-	# Keep mouse captured — player can still look around
+	# Keep mouse captured - player can still look around
 	panel.modulate = Color(1, 1, 1, 0.7)  # Semi-transparent overlay
 	if voice_indicator:
 		voice_indicator.visible = false
 	if text_input:
 		text_input.grab_focus()
-	
+
 	# Inject office context and auto-greet on first visit via WebSocket
 	if is_first_visit and _gateway_ws and _gateway_ws.is_ws_connected():
 		_gateway_ws.inject_office_context(room_name)
@@ -105,7 +105,7 @@ func hide_chat():
 	if not current_room.is_empty() and chat_history.size() > 0:
 		room_histories[current_room] = chat_history.duplicate(true)
 		room_logs[current_room] = chat_log.text
-	
+
 	panel.visible = false
 	current_room = ""
 	chat_history = []
@@ -188,18 +188,18 @@ func _submit_message(text: String):
 	if is_thinking:
 		chat_log.text += "\n[color=gray][i](waiting for response...)[/i][/color]\n"
 		return
-	
+
 	var has_image = _pending_image != null
 	if has_image:
 		chat_log.text += "\n[color=cyan]You:[/color] 📎 " + text + "\n"
 	else:
 		chat_log.text += "\n[color=cyan]You:[/color] " + text + "\n"
 	chat_history.append({"role": "user", "content": text})
-	
+
 	is_thinking = true
 	set_voice_status("thinking")
 	chat_log.text += "[color=gray][i]...[/i][/color]\n"
-	
+
 	# Build attachments from pending image
 	var attachments: Array = []
 	if has_image:
@@ -214,7 +214,7 @@ func _submit_message(text: String):
 			}
 		})
 		_pending_image = null
-	
+
 	# Send via WebSocket if connected, otherwise fall back to HTTP
 	if _gateway_ws and _gateway_ws.is_ws_connected():
 		_gateway_ws.send_message(current_room, text, attachments)
@@ -254,7 +254,7 @@ func _on_ws_delta(agent_id: String, text: String):
 		return
 	if not panel.visible:
 		return
-	
+
 	if not _is_streaming:
 		_is_streaming = true
 		_streaming_text = ""
@@ -262,7 +262,7 @@ func _on_ws_delta(agent_id: String, text: String):
 		_remove_thinking_indicator()
 		# Start the agent's line
 		chat_log.text += "[color=yellow]" + current_room + ":[/color] "
-	
+
 	_streaming_text += text
 	# Update display with current streamed text (strip tags for display)
 	_update_streaming_display()
@@ -288,38 +288,39 @@ func _on_ws_final(agent_id: String, text: String):
 		return
 	if not panel.visible:
 		return
-	
+
 	var final_text = text if not text.is_empty() else _streaming_text
-	
+
 	if not _is_streaming:
-		# We got a final without deltas — remove thinking indicator first
+		# We got a final without deltas - remove thinking indicator first
 		_remove_thinking_indicator()
-	
+
 	is_thinking = false
 	_is_streaming = false
 	_streaming_text = ""
-	
+
 	if final_text.is_empty():
 		set_voice_status("listening")
 		return
-	
+
 	# For greetings, only add assistant reply
 	if _greeting_in_progress:
 		_greeting_in_progress = false
-	
+
 	chat_history.append({"role": "assistant", "content": final_text})
-	
+
 	# Handle office command tags
 	_handle_music_commands(final_text)
 	_handle_tv_commands(final_text)
 	_handle_light_commands(final_text)
-	
+	_handle_env_commands(final_text)
+
 	var display_reply = _strip_command_tags(final_text).strip_edges()
-	
+
 	# Replace the streaming line with the final clean version
 	# Remove any partial streaming content and rewrite
 	var lines = chat_log.text.split("\n")
-	# Find and remove the last agent line (streaming) 
+	# Find and remove the last agent line (streaming)
 	var cleaned_lines := []
 	var found_agent_line := false
 	for i in range(lines.size() - 1, -1, -1):
@@ -327,22 +328,22 @@ func _on_ws_final(agent_id: String, text: String):
 			found_agent_line = true
 			continue  # skip it, we'll re-add
 		cleaned_lines.push_front(lines[i])
-	
+
 	if found_agent_line:
 		chat_log.text = "\n".join(cleaned_lines) + "\n"
-	
+
 	chat_log.text += "[color=yellow]" + current_room + ":[/color] " + display_reply + "\n"
-	
+
 	# Play receive sound
 	var recv_sound = get_node_or_null("/root/Main/ChatReceiveSound")
 	if recv_sound and recv_sound.stream:
 		recv_sound.play()
-	
+
 	# Request TTS
 	var voice_chat = get_node_or_null("/root/Main/VoiceChat")
 	if voice_chat:
 		voice_chat.request_tts(display_reply)
-	
+
 	set_voice_status("listening")
 
 func _remove_thinking_indicator():
@@ -375,7 +376,7 @@ func _request_greeting(room_name: String):
 	is_thinking = true
 	set_voice_status("thinking")
 	chat_log.text += "[color=gray][i]...[/i][/color]\n"
-	
+
 	if _gateway_ws and _gateway_ws.is_ws_connected():
 		_gateway_ws.send_message(room_name, "The user just walked into your office. Give a brief, friendly greeting (1 sentence).")
 	else:
@@ -404,20 +405,20 @@ func _build_system_prompt() -> String:
 	system_prompt += "\nYou can control your office environment using tags (they're stripped before display):"
 	system_prompt += "\n\nMusic: [MUSIC_UP] [MUSIC_DOWN] [MUSIC_OFF] [MUSIC_ON]"
 	if current_room == "Ultron":
-		system_prompt += "\n\nMonitors (you have 3 desk monitors — left, center, right):"
-		system_prompt += "\n[SCREEN1:url] — display image on left monitor"
-		system_prompt += "\n[SCREEN2:url] — display image on center monitor (main)"
-		system_prompt += "\n[SCREEN3:url] — display image on right monitor"
-		system_prompt += "\n[TV_SHOW:url] — shortcut for center monitor"
-		system_prompt += "\n[SCREEN_CLEAR:1] [SCREEN_CLEAR:2] [SCREEN_CLEAR:3] — clear specific monitor"
-		system_prompt += "\n[TV_OFF] — clear all monitors"
+		system_prompt += "\n\nMonitors (you have 3 desk monitors - left, center, right):"
+		system_prompt += "\n[SCREEN1:url] - display image on left monitor"
+		system_prompt += "\n[SCREEN2:url] - display image on center monitor (main)"
+		system_prompt += "\n[SCREEN3:url] - display image on right monitor"
+		system_prompt += "\n[TV_SHOW:url] - shortcut for center monitor"
+		system_prompt += "\n[SCREEN_CLEAR:1] [SCREEN_CLEAR:2] [SCREEN_CLEAR:3] - clear specific monitor"
+		system_prompt += "\n[TV_OFF] - clear all monitors"
 	else:
 		system_prompt += "\n\nTV Screen (your office has a wall-mounted TV you can display images on):"
-		system_prompt += "\n[TV_SHOW:url] — display an image on your TV (use a direct image URL, png/jpg/webp)"
-		system_prompt += "\n[TV_OFF] — clear the TV screen"
+		system_prompt += "\n[TV_SHOW:url] - display an image on your TV (use a direct image URL, png/jpg/webp)"
+		system_prompt += "\n[TV_OFF] - clear the TV screen"
 	system_prompt += "\n\nRoom Lights:"
-	system_prompt += "\n[LIGHTS_COLOR:#hexcolor] — change your office light color (e.g. #FF0000 for red)"
-	system_prompt += "\n[LIGHTS_BRIGHT:0-100] — set light brightness (0=off, 100=max)"
+	system_prompt += "\n[LIGHTS_COLOR:#hexcolor] - change your office light color (e.g. #FF0000 for red)"
+	system_prompt += "\n[LIGHTS_BRIGHT:0-100] - set light brightness (0=off, 100=max)"
 	return system_prompt
 
 func _send_chat_request(messages: Array, max_tokens: int = 200):
@@ -444,33 +445,34 @@ func _send_to_openclaw(_user_msg: String):
 
 func _on_request_completed(result, response_code, _headers, body_bytes):
 	is_thinking = false
-	
+
 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
 		_greeting_in_progress = false
 		chat_log.text += "[color=red]Error: " + str(response_code) + "[/color]\n"
 		set_voice_status("listening")
 		return
-	
+
 	var json = JSON.parse_string(body_bytes.get_string_from_utf8())
 	if json and json.has("choices") and json["choices"].size() > 0:
 		var reply = json["choices"][0]["message"]["content"]
-		
+
 		if _greeting_in_progress:
 			_greeting_in_progress = false
 		chat_history.append({"role": "assistant", "content": reply})
-		
+
 		_remove_thinking_indicator()
-		
+
 		_handle_music_commands(reply)
 		_handle_tv_commands(reply)
 		_handle_light_commands(reply)
+		_handle_env_commands(reply)
 		var display_reply = _strip_command_tags(reply).strip_edges()
-		
+
 		chat_log.text += "[color=yellow]" + current_room + ":[/color] " + display_reply + "\n"
 		var recv_sound = get_node_or_null("/root/Main/ChatReceiveSound")
 		if recv_sound and recv_sound.stream:
 			recv_sound.play()
-		
+
 		var voice_chat = get_node_or_null("/root/Main/VoiceChat")
 		if voice_chat:
 			voice_chat.request_tts(display_reply)
@@ -524,6 +526,16 @@ func _handle_tv_commands(text: String):
 	if "[TV_OFF]" in text:
 		tv_display.clear_tv(current_room)
 
+func _handle_env_commands(text: String):
+	var regex = RegEx.new()
+	regex.compile("\\[ENV:([^\\]]+)\\]")
+	var m = regex.search(text)
+	if m:
+		var preset_name = m.get_string(1).strip_edges()
+		var env_mgr = get_node_or_null("/root/Main/EnvironmentManager")
+		if env_mgr:
+			env_mgr.switch_env(preset_name)
+
 func _handle_light_commands(text: String):
 	var room_prefix = ""
 	match current_room:
@@ -531,7 +543,7 @@ func _handle_light_commands(text: String):
 		"Dexer": room_prefix = "Room3"
 		"DJ Sam": room_prefix = "Room4"
 		_: return
-	
+
 	var color_regex = RegEx.new()
 	color_regex.compile("\\[LIGHTS_COLOR:#([0-9a-fA-F]{6})\\]")
 	var color_match = color_regex.search(text)
@@ -542,7 +554,7 @@ func _handle_light_commands(text: String):
 			var light = get_node_or_null("/root/Main/" + room_prefix + suffix)
 			if light and light is OmniLight3D:
 				light.light_color = color
-	
+
 	var bright_regex = RegEx.new()
 	bright_regex.compile("\\[LIGHTS_BRIGHT:(\\d+)\\]")
 	var bright_match = bright_regex.search(text)
@@ -568,5 +580,7 @@ func _strip_command_tags(text: String) -> String:
 	regex.compile("\\[SCREEN[123]:[^\\]]+\\]")
 	result = regex.sub(result, "", true)
 	regex.compile("\\[SCREEN_CLEAR:[123]\\]")
+	result = regex.sub(result, "", true)
+	regex.compile("\\[ENV:[^\\]]+\\]")
 	result = regex.sub(result, "", true)
 	return result.strip_edges()

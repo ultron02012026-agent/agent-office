@@ -4,7 +4,7 @@
 extends CanvasLayer
 
 var is_open: bool = false
-var commands_list := ["/goto spinfluencer", "/goto dexer", "/goto djsam", "/goto ultron", "/goto lobby", "/goto entrance", "/status", "/clear", "/sprint 25"]
+var commands_list := ["/goto spinfluencer", "/goto dexer", "/goto djsam", "/goto ultron", "/goto lobby", "/goto entrance", "/status", "/clear", "/sprint 25", "/env grasslands_sunset", "/env neon_city"]
 
 @onready var panel: PanelContainer
 @onready var input_field: LineEdit
@@ -137,6 +137,9 @@ func execute_command(cmd: String) -> String:
 		return _cmd_status()
 	elif cmd == "/clear":
 		return _cmd_clear()
+	elif cmd.begins_with("/env "):
+		var preset = cmd.substr(5).strip_edges()
+		return _cmd_env(preset)
 	elif cmd.begins_with("/sprint "):
 		var minutes_str = cmd.substr(8).strip_edges()
 		if minutes_str.is_valid_int():
@@ -180,6 +183,14 @@ func _cmd_clear() -> String:
 		chat_ui.clear_chat()
 		return "✅ Chat cleared"
 	return "❌ Not in a room"
+
+func _cmd_env(preset: String) -> String:
+	var env_mgr = get_node_or_null("/root/Main/EnvironmentManager")
+	if not env_mgr:
+		return "❌ EnvironmentManager not found"
+	if env_mgr.switch_env(preset):
+		return "✅ Environment: " + preset
+	return "❌ Unknown preset: " + preset + " (available: " + ", ".join(env_mgr.get_preset_names()) + ")"
 
 func _cmd_sprint(minutes: int) -> String:
 	var sprint_timer = get_node_or_null("/root/Main/SprintTimer")
