@@ -93,7 +93,7 @@ func show_chat(room_name: String):
 	if voice_indicator:
 		voice_indicator.visible = false
 	if text_input:
-		text_input.grab_focus()
+		text_input.grab_focus.call_deferred()
 
 	# Inject office context and auto-greet on first visit via WebSocket
 	if is_first_visit and _gateway_ws and _gateway_ws.is_ws_connected():
@@ -147,7 +147,15 @@ func _on_text_gui_input(_event: InputEvent):
 
 func _process(_delta):
 	# Keep cursor in text input whenever chat panel is visible
-	if panel.visible and text_input and not text_input.has_focus():
+	if not panel.visible or not text_input:
+		return
+	var welcome = get_node_or_null("/root/Main/WelcomeOverlay")
+	if welcome and welcome.is_showing:
+		return
+	var settings_menu = get_node_or_null("/root/Main/SettingsMenu")
+	if settings_menu and settings_menu.is_open:
+		return
+	if not text_input.has_focus():
 		text_input.grab_focus()
 
 func _unhandled_input(event: InputEvent):
