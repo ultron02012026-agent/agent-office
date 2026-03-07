@@ -148,6 +148,11 @@ func _on_text_gui_input(event: InputEvent):
 		if event.keycode in [KEY_W, KEY_A, KEY_S, KEY_D]:
 			text_input.accept_event()
 
+func _process(_delta):
+	# Keep cursor in text input whenever chat panel is visible
+	if panel.visible and text_input and not text_input.has_focus():
+		text_input.grab_focus()
+
 func _unhandled_input(event: InputEvent):
 	if not panel.visible:
 		return
@@ -345,6 +350,10 @@ func _on_ws_final(agent_id: String, text: String):
 		voice_chat.request_tts(display_reply)
 
 	set_voice_status("listening")
+
+	# Re-grab focus so user can keep chatting
+	if text_input and panel.visible:
+		text_input.grab_focus.call_deferred()
 
 func _remove_thinking_indicator():
 	var lines = chat_log.text.split("\n")
