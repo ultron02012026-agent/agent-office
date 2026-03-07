@@ -68,6 +68,7 @@ func _fetch_and_display(node_path: String, url: String, label: String):
 	var http = HTTPRequest.new()
 	http.set_meta("node_path", node_path)
 	http.set_meta("label", label)
+	http.max_redirects = 8
 	add_child(http)
 	http.request_completed.connect(_on_image_loaded.bind(http))
 	var err = http.request(url)
