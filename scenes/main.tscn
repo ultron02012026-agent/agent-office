@@ -234,25 +234,25 @@ roughness = 0.3
 
 ; --- Dexer Decor Materials ---
 [sub_resource type="StandardMaterial3D" id="dexer_neon_mat"]
-albedo_color = Color(0.0, 1.0, 0.8, 1)
+albedo_color = Color(0.145, 0.388, 0.922, 1)
 emission_enabled = true
-emission = Color(0.0, 1.0, 0.8, 1)
+emission = Color(0.145, 0.388, 0.922, 1)
 emission_energy_multiplier = 3.0
 
 [sub_resource type="StandardMaterial3D" id="dexer_neon_sub_mat"]
-albedo_color = Color(0.2, 0.6, 1.0, 1)
+albedo_color = Color(0.3, 0.5, 0.95, 1)
 emission_enabled = true
-emission = Color(0.2, 0.6, 1.0, 1)
+emission = Color(0.3, 0.5, 0.95, 1)
 emission_energy_multiplier = 2.5
 
 [sub_resource type="StandardMaterial3D" id="dexer_dashboard_mat"]
-albedo_color = Color(0.08, 0.12, 0.18, 1)
+albedo_color = Color(0.08, 0.1, 0.18, 1)
 emission_enabled = true
-emission = Color(0.05, 0.2, 0.3, 1)
+emission = Color(0.07, 0.15, 0.4, 1)
 emission_energy_multiplier = 0.6
 
 [sub_resource type="StandardMaterial3D" id="dexer_rug_mat"]
-albedo_color = Color(0.05, 0.15, 0.2, 1)
+albedo_color = Color(0.06, 0.12, 0.25, 1)
 
 [sub_resource type="StandardMaterial3D" id="dexer_couch_mat"]
 albedo_color = Color(0.12, 0.12, 0.15, 1)
@@ -273,7 +273,7 @@ albedo_color = Color(0.2, 0.22, 0.25, 1)
 metallic = 0.3
 
 [sub_resource type="StandardMaterial3D" id="dexer_mug_mat"]
-albedo_color = Color(0.1, 0.3, 0.35, 1)
+albedo_color = Color(0.1, 0.2, 0.5, 1)
 
 [sub_resource type="StandardMaterial3D" id="dexer_award_mat"]
 albedo_color = Color(0.85, 0.7, 0.2, 1)
@@ -1275,22 +1275,22 @@ shape = SubResource("room_shape")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.4, -14.9)
 text = "LABEL-DEX"
 font_size = 72
-modulate = Color(0, 1, 0.8, 1)
-outline_modulate = Color(0, 0.8, 0.6, 1)
+modulate = Color(0.145, 0.388, 0.922, 1)
+outline_modulate = Color(0.1, 0.25, 0.7, 1)
 outline_size = 4
 
 [node name="Room3_Decor_NeonSign2" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.0, -14.9)
 text = "850+ CURATED LABELS"
 font_size = 36
-modulate = Color(0.2, 0.6, 1, 1)
-outline_modulate = Color(0.1, 0.4, 0.8, 1)
+modulate = Color(0.3, 0.5, 0.95, 1)
+outline_modulate = Color(0.15, 0.35, 0.8, 1)
 outline_size = 3
 
 ; Neon glow light behind sign
 [node name="Room3_Decor_NeonGlow" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.3, -14.5)
-light_color = Color(0, 0.9, 0.7, 1)
+light_color = Color(0.145, 0.388, 0.922, 1)
 light_energy = 1.2
 omni_range = 4
 
@@ -1304,19 +1304,19 @@ material = SubResource("dexer_dashboard_mat")
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 14.85, 2.3, -10)
 text = "SUBMISSIONS DASHBOARD"
 font_size = 28
-modulate = Color(0, 1, 0.8, 1)
+modulate = Color(0.145, 0.388, 0.922, 1)
 
 [node name="Room3_Decor_DashLabel2" type="Label3D" parent="."]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 14.85, 2.0, -9.2)
 text = "▸ Pending: 47\n▸ Approved: 312\n▸ This Week: 23"
 font_size = 18
-modulate = Color(0.3, 0.8, 0.5, 1)
+modulate = Color(0.4, 0.6, 0.95, 1)
 
 [node name="Room3_Decor_DashLabel3" type="Label3D" parent="."]
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 14.85, 2.0, -10.8)
 text = "▸ Labels: 853\n▸ Genres: 42\n▸ Success: 73%"
 font_size = 18
-modulate = Color(0.2, 0.6, 1, 1)
+modulate = Color(0.2, 0.45, 0.9, 1)
 
 ; Rug on the floor
 [node name="Room3_Decor_Rug" type="CSGBox3D" parent="."]
@@ -1446,26 +1446,26 @@ modulate = Color(0.15, 0.1, 0.0, 1)
 transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 14.85, 1.2, -10)
 text = "「 LIVE FEED 」"
 font_size = 20
-modulate = Color(0, 1, 0.6, 1)
+modulate = Color(0.145, 0.388, 0.922, 1)
 
 ; Teal ambient light near couch
 [node name="Room3_Decor_AmbientLight1" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 1.5, -6)
-light_color = Color(0, 0.7, 0.8, 1)
+light_color = Color(0.145, 0.388, 0.922, 1)
 light_energy = 0.6
 omni_range = 4
 
 ; Blue accent light near shelves
 [node name="Room3_Decor_AmbientLight2" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5, 1.5, -9)
-light_color = Color(0.1, 0.3, 1, 1)
+light_color = Color(0.145, 0.388, 0.922, 1)
 light_energy = 0.5
 omni_range = 3
 
 ; Teal strip light along back wall
 [node name="Room3_Decor_AmbientLight3" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.3, -14.5)
-light_color = Color(0, 0.8, 0.6, 1)
+light_color = Color(0.145, 0.388, 0.922, 1)
 light_energy = 0.8
 omni_range = 6
 
