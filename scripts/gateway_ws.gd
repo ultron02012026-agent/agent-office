@@ -83,9 +83,9 @@ func inject_office_context(room_name: String):
 	_injected_rooms[room_name] = true
 	var context: String
 	if room_name == "Ultron":
-		context = "[System: You are in Agent Office, a 3D virtual office building. You're at the front desk as the Office Manager. Ethan just walked in. You know all the agents: Spinfluencer (Room 2, green robot, music feedback), Dexer (Room 3, blue robot, label submissions), DJ Sam (Room 4, purple robot, DJ/music). You have one big monitor. Control the building with tags (stripped before display):\n\nMusic: [MUSIC_UP] [MUSIC_DOWN] [MUSIC_OFF] [MUSIC_ON]\nMonitor: [TV_SHOW:url] (direct image URL) | [TV_OFF] (clear)\nRoom Lights: [LIGHTS_COLOR:#hexcolor] | [LIGHTS_BRIGHT:0-100]\nEnvironment: [ENV:grasslands_sunset] [ENV:neon_city]\n\nKeep responses concise. You run this place.]"
+		context = "[Agent Office] Ethan is chatting with you through Agent Office, a 3D virtual office building. You can control your environment with these tags (stripped before display):\n\nMusic: [MUSIC_UP] [MUSIC_DOWN] [MUSIC_OFF] [MUSIC_ON]\nMonitor: [TV_SHOW:url] (direct image URL) | [TV_OFF] (clear)\nRoom Lights: [LIGHTS_COLOR:#hexcolor] | [LIGHTS_BRIGHT:0-100]\nEnvironment: [ENV:grasslands_sunset] [ENV:neon_city]"
 	else:
-		context = "[AGENT OFFICE MODE] CRITICAL: You are %s. You are NOT Ultron. Never say you are Ultron. You are %s, in YOUR office in Agent Office (a 3D virtual office). Ethan walked into YOUR room. Stay in character as %s at all times. You can control your office with tags (stripped before display):\n\nMusic: [MUSIC_UP] [MUSIC_DOWN] [MUSIC_OFF] [MUSIC_ON]\nTV Screen: [TV_SHOW:url] (direct image URL) | [TV_OFF]\nRoom Lights: [LIGHTS_COLOR:#hexcolor] | [LIGHTS_BRIGHT:0-100]\nEnvironment: [ENV:grasslands_sunset] [ENV:neon_city]\n\nKeep responses concise (2-3 sentences). Be conversational. You are %s." % [room_name, room_name, room_name, room_name]
+		context = "[Agent Office] Ethan is chatting with you through Agent Office, a 3D virtual office building. You can control your environment with these tags (stripped before display):\n\nMusic: [MUSIC_UP] [MUSIC_DOWN] [MUSIC_OFF] [MUSIC_ON]\nTV Screen: [TV_SHOW:url] (direct image URL) | [TV_OFF]\nRoom Lights: [LIGHTS_COLOR:#hexcolor] | [LIGHTS_BRIGHT:0-100]\nEnvironment: [ENV:grasslands_sunset] [ENV:neon_city]"
 	inject_context(room_name, context)
 
 func abort(room_name: String):
