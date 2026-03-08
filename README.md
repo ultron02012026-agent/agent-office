@@ -1,5 +1,7 @@
 # Agent Office 🏢
 
+![Agent Office Lobby](assets/screenshot-lobby.jpg)
+
 A 3D first-person office building where you walk into rooms and chat with real AI agents. Each room connects to an actual OpenClaw agent with its own personality, memory, and skills. Built with Godot 4 (Forward Plus renderer).
 
 ## Features
