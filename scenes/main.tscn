@@ -2593,3 +2593,393 @@ material = SubResource("robot_base_ultron_fd")
 script = ExtResource("22")
 
 ; =============================================================================
+; ULTRON FRONT DESK DECORATIONS
+; =============================================================================
+
+; --- ULTRON NEON SIGN (big, behind desk, facing lobby) ---
+[node name="Ultron_FD_Decor_NeonSign" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.4, 3)
+text = "U L T R O N"
+font_size = 96
+modulate = Color(1, 0.85, 0.2, 1)
+outline_modulate = Color(1, 0.7, 0.1, 0.6)
+outline_size = 8
+
+[node name="Ultron_FD_Decor_NeonGlow" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.4, 3.2)
+light_color = Color(1, 0.85, 0.3, 1)
+light_energy = 1.5
+omni_range = 5
+
+[node name="Ultron_FD_Decor_NeonSubtitle" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.0, 3)
+text = "Office Manager"
+font_size = 36
+modulate = Color(0.9, 0.75, 0.3, 0.8)
+
+; --- WELCOME SIGN (near entrance at z=14) ---
+[node name="Ultron_FD_Decor_WelcomeSign" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2.2, 14.85)
+text = "Welcome to Agent Office"
+font_size = 56
+modulate = Color(0.9, 0.8, 0.4, 1)
+outline_modulate = Color(0.6, 0.5, 0.2, 0.5)
+outline_size = 6
+
+[node name="Ultron_FD_Decor_WelcomeGlow" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2.2, 14.5)
+light_color = Color(1, 0.9, 0.5, 1)
+light_energy = 0.8
+omni_range = 4
+
+; --- LOBBY RUG (large, centered in lobby) ---
+[node name="Ultron_FD_Decor_Rug" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.01, 10)
+size = Vector3(8, 0.02, 5)
+material = SubResource("ufd_rug_mat")
+
+[node name="Ultron_FD_Decor_RugBorder" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.005, 10)
+size = Vector3(8.6, 0.01, 5.6)
+material = SubResource("ufd_rug_border_mat")
+
+; --- LOBBY COUCH LEFT (facing right, along left wall area) ---
+[node name="Ultron_FD_Decor_CouchL_Base" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 0.2, 10)
+use_collision = true
+size = Vector3(1, 0.4, 2.5)
+material = SubResource("ufd_couch_mat")
+
+[node name="Ultron_FD_Decor_CouchL_Back" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.4, 0.55, 10)
+use_collision = true
+size = Vector3(0.15, 0.5, 2.5)
+material = SubResource("ufd_couch_mat")
+
+[node name="Ultron_FD_Decor_CouchL_Cushion1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 0.45, 9.4)
+size = Vector3(0.8, 0.12, 0.7)
+material = SubResource("ufd_couch_cushion_mat")
+
+[node name="Ultron_FD_Decor_CouchL_Cushion2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.9, 0.45, 10.6)
+size = Vector3(0.8, 0.12, 0.7)
+material = SubResource("ufd_couch_cushion_mat")
+
+; --- LOBBY COUCH RIGHT (facing left) ---
+[node name="Ultron_FD_Decor_CouchR_Base" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 0.2, 10)
+use_collision = true
+size = Vector3(1, 0.4, 2.5)
+material = SubResource("ufd_couch_mat")
+
+[node name="Ultron_FD_Decor_CouchR_Back" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.4, 0.55, 10)
+use_collision = true
+size = Vector3(0.15, 0.5, 2.5)
+material = SubResource("ufd_couch_mat")
+
+[node name="Ultron_FD_Decor_CouchR_Cushion1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.9, 0.45, 9.4)
+size = Vector3(0.8, 0.12, 0.7)
+material = SubResource("ufd_couch_cushion_mat")
+
+[node name="Ultron_FD_Decor_CouchR_Cushion2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.9, 0.45, 10.6)
+size = Vector3(0.8, 0.12, 0.7)
+material = SubResource("ufd_couch_cushion_mat")
+
+; --- COFFEE TABLE (between couches) ---
+[node name="Ultron_FD_Decor_CoffeeTable" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.25, 10)
+use_collision = true
+size = Vector3(2.5, 0.08, 1.2)
+material = SubResource("ufd_coffee_table_mat")
+
+[node name="Ultron_FD_Decor_CoffeeTableLeg1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9, 0.1, 9.5)
+size = Vector3(0.08, 0.2, 0.08)
+material = SubResource("ufd_gold_accent_mat")
+
+[node name="Ultron_FD_Decor_CoffeeTableLeg2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.1, 0.1, 9.5)
+size = Vector3(0.08, 0.2, 0.08)
+material = SubResource("ufd_gold_accent_mat")
+
+[node name="Ultron_FD_Decor_CoffeeTableLeg3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9, 0.1, 10.5)
+size = Vector3(0.08, 0.2, 0.08)
+material = SubResource("ufd_gold_accent_mat")
+
+[node name="Ultron_FD_Decor_CoffeeTableLeg4" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.1, 0.1, 10.5)
+size = Vector3(0.08, 0.2, 0.08)
+material = SubResource("ufd_gold_accent_mat")
+
+; --- POTTED PLANTS ---
+[node name="Ultron_FD_Decor_Plant1_Pot" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.25, 13)
+radius = 0.25
+height = 0.5
+material = SubResource("ufd_plant_pot_mat")
+
+[node name="Ultron_FD_Decor_Plant1_Foliage" type="CSGSphere3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.8, 13)
+radius = 0.4
+material = SubResource("ufd_foliage_mat")
+
+[node name="Ultron_FD_Decor_Plant2_Pot" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0.25, 13)
+radius = 0.25
+height = 0.5
+material = SubResource("ufd_plant_pot_mat")
+
+[node name="Ultron_FD_Decor_Plant2_Foliage" type="CSGSphere3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0.8, 13)
+radius = 0.4
+material = SubResource("ufd_foliage_mat")
+
+[node name="Ultron_FD_Decor_Plant3_Pot" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.25, 7)
+radius = 0.2
+height = 0.5
+material = SubResource("ufd_plant_pot_mat")
+
+[node name="Ultron_FD_Decor_Plant3_Foliage" type="CSGSphere3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.2, 0, 0, 0, 1, -2, 0.85, 7)
+radius = 0.35
+material = SubResource("ufd_foliage_mat")
+
+; --- DIRECTORY BOARD (on wall near hallway, listing agents) ---
+[node name="Ultron_FD_Decor_DirectoryBoard" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.85, 1.5, 5)
+size = Vector3(0.05, 1.8, 2)
+material = SubResource("ufd_directory_mat")
+
+[node name="Ultron_FD_Decor_DirectoryFrame" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.87, 2.45, 5)
+size = Vector3(0.03, 0.15, 2.1)
+material = SubResource("ufd_gold_accent_mat")
+
+[node name="Ultron_FD_Decor_DirectoryTitle" type="Label3D" parent="."]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 14.82, 2.2, 5)
+text = "AGENT DIRECTORY"
+font_size = 32
+modulate = Color(1, 0.85, 0.3, 1)
+
+[node name="Ultron_FD_Decor_DirectoryList" type="Label3D" parent="."]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 14.82, 1.5, 5)
+text = "━━━━━━━━━━━━━━━━━
+ Spinfluencer ........ Room 2
+ Dexer ............... Room 3
+ DJ Sam .............. Room 4
+ Coming Soon ......... Room 5
+━━━━━━━━━━━━━━━━━
+    Ultron — Front Desk"
+font_size = 20
+modulate = Color(0.85, 0.8, 0.6, 1)
+
+; --- SHELVING UNIT (behind desk) ---
+[node name="Ultron_FD_Decor_ShelfUnit" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.8, 2.5)
+use_collision = true
+size = Vector3(3, 0.06, 0.5)
+material = SubResource("ufd_shelf_mat")
+
+[node name="Ultron_FD_Decor_ShelfUnit2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.4, 2.5)
+use_collision = true
+size = Vector3(3, 0.06, 0.5)
+material = SubResource("ufd_shelf_mat")
+
+[node name="Ultron_FD_Decor_ShelfUnit3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2.0, 2.5)
+use_collision = true
+size = Vector3(3, 0.06, 0.5)
+material = SubResource("ufd_shelf_mat")
+
+[node name="Ultron_FD_Decor_ShelfBack" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.4, 2.25)
+size = Vector3(3, 2.5, 0.04)
+material = SubResource("ufd_shelf_back_mat")
+
+[node name="Ultron_FD_Decor_ShelfSideL" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 1.4, 2.5)
+size = Vector3(0.06, 2.5, 0.5)
+material = SubResource("ufd_shelf_mat")
+
+[node name="Ultron_FD_Decor_ShelfSideR" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 1.4, 2.5)
+size = Vector3(0.06, 2.5, 0.5)
+material = SubResource("ufd_shelf_mat")
+
+; Shelf decor items
+[node name="Ultron_FD_Decor_ShelfTrophy1" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0.92, 2.5)
+radius = 0.08
+height = 0.2
+material = SubResource("ufd_gold_accent_mat")
+
+[node name="Ultron_FD_Decor_ShelfTrophy1Top" type="CSGSphere3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.08, 2.5)
+radius = 0.06
+material = SubResource("ufd_gold_accent_mat")
+
+[node name="Ultron_FD_Decor_ShelfBook1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 0.93, 2.5)
+size = Vector3(0.3, 0.2, 0.15)
+material = SubResource("ufd_couch_mat")
+
+[node name="Ultron_FD_Decor_ShelfBook2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0.95, 2.5)
+size = Vector3(0.25, 0.24, 0.15)
+material = SubResource("ufd_rug_mat")
+
+[node name="Ultron_FD_Decor_ShelfBook3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1.52, 2.5)
+size = Vector3(0.35, 0.18, 0.15)
+material = SubResource("ufd_couch_mat")
+
+; --- WATER COOLER ---
+[node name="Ultron_FD_Decor_WaterCoolerBase" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 0.4, 8)
+use_collision = true
+size = Vector3(0.5, 0.8, 0.5)
+material = SubResource("ufd_water_cooler_mat")
+
+[node name="Ultron_FD_Decor_WaterCoolerBottle" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 1.1, 8)
+radius = 0.15
+height = 0.6
+material = SubResource("ufd_water_bottle_mat")
+
+; --- AWARD WALL (between desk and entrance) ---
+[node name="Ultron_FD_Decor_Award1_Frame" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1.8, 3)
+size = Vector3(0.8, 0.6, 0.04)
+material = SubResource("ufd_award_frame_mat")
+
+[node name="Ultron_FD_Decor_Award1_Back" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1.8, 3.02)
+size = Vector3(0.7, 0.5, 0.02)
+material = SubResource("ufd_award_backing_mat")
+
+[node name="Ultron_FD_Decor_Award1_Text" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1.85, 2.97)
+text = "★ Best AI Team
+   2026"
+font_size = 16
+modulate = Color(1, 0.9, 0.5, 1)
+
+[node name="Ultron_FD_Decor_Award2_Frame" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.2, 1.8, 3)
+size = Vector3(0.8, 0.6, 0.04)
+material = SubResource("ufd_award_frame_mat")
+
+[node name="Ultron_FD_Decor_Award2_Back" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.2, 1.8, 3.02)
+size = Vector3(0.7, 0.5, 0.02)
+material = SubResource("ufd_award_backing_mat")
+
+[node name="Ultron_FD_Decor_Award2_Text" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.2, 1.85, 2.97)
+text = "★ Excellence
+  in Service"
+font_size = 16
+modulate = Color(1, 0.9, 0.5, 1)
+
+[node name="Ultron_FD_Decor_Award3_Frame" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.6, 1.1, 3)
+size = Vector3(0.8, 0.6, 0.04)
+material = SubResource("ufd_award_frame_mat")
+
+[node name="Ultron_FD_Decor_Award3_Back" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.6, 1.1, 3.02)
+size = Vector3(0.7, 0.5, 0.02)
+material = SubResource("ufd_award_backing_mat")
+
+[node name="Ultron_FD_Decor_Award3_Text" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.6, 1.15, 2.97)
+text = "★ Most Agents
+  Managed"
+font_size = 16
+modulate = Color(1, 0.9, 0.5, 1)
+
+; --- CLOCK / STATUS DISPLAY (on wall near desk) ---
+[node name="Ultron_FD_Decor_Clock" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 5, 2.6, 2.3)
+radius = 0.3
+height = 0.05
+material = SubResource("ufd_clock_mat")
+
+[node name="Ultron_FD_Decor_ClockFace" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.6, 2.25)
+text = "⏰"
+font_size = 40
+modulate = Color(1, 0.9, 0.5, 1)
+
+[node name="Ultron_FD_Decor_StatusDisplay" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.6, 2.3)
+text = "ALL SYSTEMS ONLINE
+━━━━━━━━━━━━━━
+Agents Active: 4
+Uptime: 99.97%"
+font_size = 18
+modulate = Color(0.3, 1, 0.5, 1)
+
+; --- GOLD ACCENT STRIP (along front of desk) ---
+[node name="Ultron_FD_Decor_DeskAccentStrip" type="CSGBox3D" parent="."]
+transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 5, 0.82, 5)
+size = Vector3(2.3, 0.03, 0.06)
+material = SubResource("ufd_gold_accent_mat")
+
+; --- EXTRA WARM ACCENT LIGHTS ---
+[node name="Ultron_FD_Decor_WarmLight1" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1, 2.5, 10)
+light_color = Color(1, 0.88, 0.6, 1)
+light_energy = 0.6
+omni_range = 5
+
+[node name="Ultron_FD_Decor_WarmLight2" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11, 2.5, 10)
+light_color = Color(1, 0.88, 0.6, 1)
+light_energy = 0.6
+omni_range = 5
+
+[node name="Ultron_FD_Decor_WarmLight3" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.3, 10)
+light_color = Color(1, 0.8, 0.4, 1)
+light_energy = 0.4
+omni_range = 4
+
+[node name="Ultron_FD_Decor_ShelfLight" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2.2, 2.8)
+light_color = Color(1, 0.9, 0.6, 1)
+light_energy = 0.5
+omni_range = 3
+
+; --- GOLD DECORATIVE PILLARS (flanking desk area) ---
+[node name="Ultron_FD_Decor_GoldPillarL" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1.5, 3)
+radius = 0.08
+height = 3
+material = SubResource("ufd_gold_accent_mat")
+
+[node name="Ultron_FD_Decor_GoldPillarR" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 1.5, 3)
+radius = 0.08
+height = 3
+material = SubResource("ufd_gold_accent_mat")
+
+; --- MAGAZINE STACK ON COFFEE TABLE ---
+[node name="Ultron_FD_Decor_Magazines" type="CSGBox3D" parent="."]
+transform = Transform3D(0.966, 0, 0.259, 0, 1, 0, -0.259, 0, 0.966, 4.5, 0.35, 10)
+size = Vector3(0.3, 0.06, 0.22)
+material = SubResource("ufd_couch_cushion_mat")
+
+[node name="Ultron_FD_Decor_Magazines2" type="CSGBox3D" parent="."]
+transform = Transform3D(0.985, 0, 0.174, 0, 1, 0, -0.174, 0, 0.985, 4.55, 0.38, 10.05)
+size = Vector3(0.3, 0.04, 0.22)
+material = SubResource("ufd_rug_mat")
+
+; =============================================================================
