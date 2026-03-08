@@ -87,7 +87,7 @@ func show_chat(room_name: String):
 	var display_name = room_name
 	if SettingsManager.agent_configs.has(room_name):
 		display_name = SettingsManager.agent_configs[room_name].get("agent_name", room_name)
-	room_label.text = "📍 " + display_name + "'s Office"
+	room_label.text = display_name
 
 	# Restore previous chat history for this room, or start fresh
 	var is_first_visit = false
