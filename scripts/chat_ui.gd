@@ -435,13 +435,9 @@ func _build_system_prompt() -> String:
 	system_prompt += "\nYou can control your office environment using tags (they're stripped before display):"
 	system_prompt += "\n\nMusic: [MUSIC_UP] [MUSIC_DOWN] [MUSIC_OFF] [MUSIC_ON]"
 	if current_room == "Ultron":
-		system_prompt += "\n\nMonitors (you have 3 desk monitors - left, center, right):"
-		system_prompt += "\n[SCREEN1:url] - display image on left monitor"
-		system_prompt += "\n[SCREEN2:url] - display image on center monitor (main)"
-		system_prompt += "\n[SCREEN3:url] - display image on right monitor"
-		system_prompt += "\n[TV_SHOW:url] - shortcut for center monitor"
-		system_prompt += "\n[SCREEN_CLEAR:1] [SCREEN_CLEAR:2] [SCREEN_CLEAR:3] - clear specific monitor"
-		system_prompt += "\n[TV_OFF] - clear all monitors"
+		system_prompt += "\n\nMonitor (you have one big monitor):"
+		system_prompt += "\n[TV_SHOW:url] - display an image on your monitor (use a direct image URL, png/jpg/webp)"
+		system_prompt += "\n[TV_OFF] - clear your monitor"
 	else:
 		system_prompt += "\n\nTV Screen (your office has a wall-mounted TV you can display images on):"
 		system_prompt += "\n[TV_SHOW:url] - display an image on your TV (use a direct image URL, png/jpg/webp)"

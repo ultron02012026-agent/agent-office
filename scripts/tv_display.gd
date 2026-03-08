@@ -1,6 +1,6 @@
 ## tv_display.gd — Manages TV/monitor screens in agent offices
 ## Loads images from URLs and displays them on screen surfaces.
-## Agents use [TV_SHOW:url] tags. Ultron has 3 monitors: [SCREEN1:url] [SCREEN2:url] [SCREEN3:url]
+## All agents use [TV_SHOW:url] tags. Ultron has one big monitor.
 extends Node
 
 # Room name → TV node path mapping (other agents have wall TVs)
@@ -10,7 +10,9 @@ var room_tvs := {
 	"DJ Sam": ["Room4_TV_Main"],
 }
 
-# Ultron front desk — single ultrawide monitor
+# Ultron front desk — single big monitor
+var ultron_screen := "Ultron_FD_Screen2"
+# Legacy compat (all map to the same screen)
 var ultron_screens := {
 	1: "Ultron_FD_Screen2",
 	2: "Ultron_FD_Screen2",
@@ -31,9 +33,9 @@ func show_image_on_tv(room_name: String, url: String):
 	if room_tvs.has(room_name):
 		_fetch_and_display(room_tvs[room_name][0], url, room_name)
 		return
-	# For Ultron, default TV_SHOW goes to center monitor (screen 2)
+	# For Ultron, show on the single monitor
 	if room_name == "Ultron":
-		show_on_screen(2, url)
+		_fetch_and_display(ultron_screen, url, "Ultron_Screen")
 		return
 	push_warning("tv_display: no TV for room '%s'" % room_name)
 
@@ -47,9 +49,7 @@ func clear_tv(room_name: String):
 	if room_tvs.has(room_name):
 		_reset_screen(room_tvs[room_name][0])
 	elif room_name == "Ultron":
-		# Clear all 3 monitors
-		for screen_path in ultron_screens.values():
-			_reset_screen(screen_path)
+		_reset_screen(ultron_screen)
 
 func clear_screen(screen_num: int):
 	if ultron_screens.has(screen_num):
