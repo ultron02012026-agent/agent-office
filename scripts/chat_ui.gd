@@ -452,12 +452,12 @@ func _request_greeting(room_name: String):
 	chat_log.text += "[color=gray]Agent is typing.[/color]\n"
 
 	if _gateway_ws and _gateway_ws.is_ws_connected():
-		_gateway_ws.send_message(room_name, "The user just walked into your office. Give a brief, friendly greeting (1 sentence).")
+		_gateway_ws.send_message(room_name, "The user just walked into your office. You are " + room_name + " — greet them as " + room_name + " (1 sentence). Do NOT greet them as Ultron.")
 	else:
 		# Fallback to HTTP
 		var messages = [
 			{"role": "system", "content": _build_system_prompt()},
-			{"role": "user", "content": "The user just walked into your office. Give a brief, friendly greeting (1 sentence)."}
+			{"role": "user", "content": "The user just walked into your office. You are " + current_room + " — greet them as " + current_room + " (1 sentence). Do NOT greet them as Ultron."}
 		]
 		_send_chat_request(messages, 100)
 
