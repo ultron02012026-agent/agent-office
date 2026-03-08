@@ -114,10 +114,6 @@ func _on_image_loaded(result: int, response_code: int, _headers: PackedStringArr
 		if err != OK:
 			err = img.load_webp_from_buffer(body)
 	if err != OK:
-		err = img.load_jpg_from_buffer(body)
-	if err != OK:
-		err = img.load_webp_from_buffer(body)
-	if err != OK:
 		push_warning("tv_display: could not decode image for '%s'" % label)
 		return
 	

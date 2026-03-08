@@ -17,6 +17,8 @@ if [ -f "$PID_FILE" ]; then
     fi
 fi
 
+mkdir -p "$CONTENT_DIR"
+
 if [ "$1" = "--background" ] || [ "$1" = "-b" ]; then
     nohup python3 "$SCRIPT_DIR/server.py" > "$CONTENT_DIR/.server.log" 2>&1 &
     echo "[screen-server] Started in background (PID: $!)"
