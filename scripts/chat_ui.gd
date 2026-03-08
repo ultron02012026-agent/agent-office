@@ -34,6 +34,7 @@ var _gateway_ws: Node = null
 var _greeting_in_progress: bool = false
 var _pending_image: Image = null  # Clipboard image waiting to be sent
 var chat_focused: bool = false  # true = typing mode (WASD types), false = move mode (WASD walks)
+var _http_request_room: String = ""  # tracks which room the HTTP request was for
 
 func _ready():
 	panel.visible = false
@@ -120,6 +121,10 @@ func hide_chat():
 	if not current_room.is_empty() and chat_history.size() > 0:
 		room_histories[current_room] = chat_history.duplicate(true)
 		room_logs[current_room] = chat_log.text
+	
+	# Abort any pending response from this room's agent
+	if is_thinking and _gateway_ws and not current_room.is_empty():
+		_gateway_ws.abort(current_room)
 
 	panel.visible = false
 	current_room = ""
@@ -128,6 +133,7 @@ func hide_chat():
 	_is_streaming = false
 	_streaming_text = ""
 	chat_focused = false
+	_http_request_room = ""
 	# Ensure typing mode is exited
 	if text_input and text_input.has_focus():
 		text_input.release_focus()
@@ -492,6 +498,7 @@ func _build_system_prompt() -> String:
 	return system_prompt
 
 func _send_chat_request(messages: Array, max_tokens: int = 200):
+	_http_request_room = current_room  # track which room this request is for
 	var body = JSON.stringify({
 		"model": "anthropic/claude-sonnet-4-20250514",
 		"messages": messages,
@@ -515,6 +522,13 @@ func _send_to_openclaw(_user_msg: String):
 
 func _on_request_completed(result, response_code, _headers, body_bytes):
 	is_thinking = false
+	
+	# Drop response if we've switched rooms since the request was sent
+	if _http_request_room != current_room:
+		_greeting_in_progress = false
+		_http_request_room = ""
+		return
+	_http_request_room = ""
 
 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
 		_greeting_in_progress = false
