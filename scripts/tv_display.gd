@@ -72,7 +72,6 @@ func _fetch_and_display(node_path: String, url: String, label: String):
 	add_child(http)
 	http.request_completed.connect(_on_image_loaded.bind(http))
 	var headers = ["User-Agent: AgentOffice/1.0"]
-	print("[tv_display] Fetching: %s" % url)
 	var err = http.request(url, headers)
 	if err != OK:
 		push_warning("tv_display: request failed for '%s'" % url)
@@ -83,10 +82,7 @@ func _on_image_loaded(result: int, response_code: int, _headers: PackedStringArr
 	var label = http.get_meta("label")
 	http.queue_free()
 	
-	print("[tv_display] Response for '%s': code=%d, body_size=%d" % [label, response_code, body.size()])
 	if result != HTTPRequest.RESULT_SUCCESS or response_code != 200:
-		if body.size() > 0 and body.size() < 500:
-			print("[tv_display] Body: ", body.get_string_from_utf8())
 		push_warning("tv_display: download failed for '%s' (code %d)" % [label, response_code])
 		return
 	

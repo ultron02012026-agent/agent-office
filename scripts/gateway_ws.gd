@@ -67,7 +67,13 @@ func _send_request(method: String, params: Dictionary) -> int:
 func send_message(room_name: String, message: String, attachments: Array = []):
 	var agent_id = agent_map.get(room_name, "main")
 	var session_key = "agent:" + agent_id + ":main"
-	var params = {"sessionKey": session_key, "message": message, "deliver": false}
+	# Prepend office context on first message to this room (instead of inject)
+	var final_message = message
+	if not _injected_rooms.has(room_name):
+		_injected_rooms[room_name] = true
+		var context = _build_office_context(room_name, agent_id)
+		final_message = context + "\n\n" + message
+	var params = {"sessionKey": session_key, "message": final_message, "deliver": false}
 	if attachments.size() > 0:
 		params["attachments"] = attachments
 	_send_request("chat.send", params)
@@ -78,17 +84,15 @@ func inject_context(room_name: String, context: String):
 	_send_request("chat.inject", {"sessionKey": session_key, "message": context, "role": "system"})
 
 func inject_office_context(room_name: String):
-	if _injected_rooms.has(room_name):
-		return
-	_injected_rooms[room_name] = true
-	var context: String
-	var agent_id = agent_map.get(room_name, "main")
+	# No-op: office context is now prepended to the first send_message call
+	pass
+
+func _build_office_context(room_name: String, agent_id: String) -> String:
 	var screen_info = "To display content on your screen: save an image to ~/.openclaw/screen-content/" + agent_id + "/ then use [TV_SHOW:http://localhost:18790/" + agent_id + "/filename.png]. For web images, use a direct image URL (must end in .jpg/.png/.webp). Example: [TV_SHOW:https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800]"
 	if room_name == "Ultron":
-		context = "[Agent Office] Ethan is chatting with you through Agent Office, a 3D virtual office building. You can control your environment with these tags (stripped before display):\n\nMonitor: [TV_SHOW:url] | [TV_OFF] (clear)\nMusic: [MUSIC_PLAY:file] [MUSIC_QUEUE:file] [MUSIC_SKIP] [MUSIC_STOP] [MUSIC_PAUSE] [MUSIC_RESUME] [MUSIC_UP] [MUSIC_DOWN] [MUSIC_SHUFFLE] [MUSIC_REPEAT] [MUSIC_OFF] [MUSIC_ON]\nRoom Lights: [LIGHTS_COLOR:#hexcolor] | [LIGHTS_BRIGHT:0-100]\nEnvironment: [ENV:grasslands_sunset] [ENV:neon_city]\n\n" + screen_info
+		return "[Agent Office] Ethan is chatting with you through Agent Office, a 3D virtual office building. You can control your environment with these tags (stripped before display):\n\nMonitor: [TV_SHOW:url] | [TV_OFF] (clear)\nMusic: [MUSIC_PLAY:file] [MUSIC_QUEUE:file] [MUSIC_SKIP] [MUSIC_STOP] [MUSIC_PAUSE] [MUSIC_RESUME] [MUSIC_UP] [MUSIC_DOWN] [MUSIC_SHUFFLE] [MUSIC_REPEAT] [MUSIC_OFF] [MUSIC_ON]\nRoom Lights: [LIGHTS_COLOR:#hexcolor] | [LIGHTS_BRIGHT:0-100]\nEnvironment: [ENV:grasslands_sunset] [ENV:neon_city]\n\n" + screen_info
 	else:
-		context = "[Agent Office] Ethan is chatting with you through Agent Office, a 3D virtual office building. You can control your environment with these tags (stripped before display):\n\nTV Screen: [TV_SHOW:url] | [TV_OFF]\nMusic: [MUSIC_PLAY:file] [MUSIC_QUEUE:file] [MUSIC_SKIP] [MUSIC_STOP] [MUSIC_PAUSE] [MUSIC_RESUME] [MUSIC_UP] [MUSIC_DOWN] [MUSIC_SHUFFLE] [MUSIC_REPEAT] [MUSIC_OFF] [MUSIC_ON]\nRoom Lights: [LIGHTS_COLOR:#hexcolor] | [LIGHTS_BRIGHT:0-100]\nEnvironment: [ENV:grasslands_sunset] [ENV:neon_city]\n\n" + screen_info
-	inject_context(room_name, context)
+		return "[Agent Office] Ethan is chatting with you through Agent Office, a 3D virtual office building. You can control your environment with these tags (stripped before display):\n\nTV Screen: [TV_SHOW:url] | [TV_OFF]\nMusic: [MUSIC_PLAY:file] [MUSIC_QUEUE:file] [MUSIC_SKIP] [MUSIC_STOP] [MUSIC_PAUSE] [MUSIC_RESUME] [MUSIC_UP] [MUSIC_DOWN] [MUSIC_SHUFFLE] [MUSIC_REPEAT] [MUSIC_OFF] [MUSIC_ON]\nRoom Lights: [LIGHTS_COLOR:#hexcolor] | [LIGHTS_BRIGHT:0-100]\nEnvironment: [ENV:grasslands_sunset] [ENV:neon_city]\n\n" + screen_info
 
 func abort(room_name: String):
 	var agent_id = agent_map.get(room_name, "main")
