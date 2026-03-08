@@ -71,7 +71,9 @@ func _fetch_and_display(node_path: String, url: String, label: String):
 	http.max_redirects = 8
 	add_child(http)
 	http.request_completed.connect(_on_image_loaded.bind(http))
-	var err = http.request(url)
+	var headers = ["User-Agent: AgentOffice/1.0"]
+	print("[tv_display] Fetching: %s" % url)
+	var err = http.request(url, headers)
 	if err != OK:
 		push_warning("tv_display: request failed for '%s'" % url)
 		http.queue_free()
@@ -107,6 +109,10 @@ func _on_image_loaded(result: int, response_code: int, _headers: PackedStringArr
 	else:
 		# Unknown format — try all
 		err = img.load_png_from_buffer(body)
+		if err != OK:
+			err = img.load_jpg_from_buffer(body)
+		if err != OK:
+			err = img.load_webp_from_buffer(body)
 	if err != OK:
 		err = img.load_jpg_from_buffer(body)
 	if err != OK:
