@@ -23,6 +23,7 @@
 [ext_resource type="Script" path="res://scripts/debug_overlay.gd" id="21"]
 [ext_resource type="Script" path="res://scripts/tv_display.gd" id="22"]
 [ext_resource type="Script" path="res://scripts/gateway_ws.gd" id="gateway_ws"]
+[ext_resource type="Script" path="res://scripts/music_player.gd" id="music_player"]
 [ext_resource type="Script" path="res://scripts/environment_manager.gd" id="env_manager"]
 [ext_resource type="Texture2D" uid="uid://skybox_hdr" path="res://assets/environment/grasslands_sunset_2k.hdr" id="skybox_hdr"]
 [ext_resource type="AudioStream" path="res://assets/audio/footstep_hard.wav" id="audio_footstep_hard"]
@@ -2020,6 +2021,9 @@ stream = ExtResource("audio_chat_send")
 
 [node name="ChatReceiveSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("audio_chat_receive")
+
+[node name="MusicPlayer" type="Node" parent="."]
+script = ExtResource("music_player")
 
 [node name="SprintAlarmSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("audio_sprint_alarm")

@@ -483,7 +483,7 @@ func _build_system_prompt() -> String:
 		if cfg.has("system_prompt") and not cfg["system_prompt"].is_empty():
 			system_prompt = cfg["system_prompt"]
 	system_prompt += "\nYou can control your office environment using tags (they're stripped before display):"
-	system_prompt += "\n\nMusic: [MUSIC_UP] [MUSIC_DOWN] [MUSIC_OFF] [MUSIC_ON]"
+	system_prompt += "\n\nMusic: [MUSIC_PLAY:file] [MUSIC_QUEUE:file] [MUSIC_SKIP] [MUSIC_STOP] [MUSIC_PAUSE] [MUSIC_RESUME] [MUSIC_UP] [MUSIC_DOWN] [MUSIC_SHUFFLE] [MUSIC_REPEAT] [MUSIC_OFF] [MUSIC_ON]"
 	if current_room == "Ultron":
 		system_prompt += "\n\nMonitor (you have one big monitor):"
 		system_prompt += "\n[TV_SHOW:url] - display an image on your monitor (use a direct image URL, png/jpg/webp)"
@@ -568,19 +568,67 @@ func _on_request_completed(result, response_code, _headers, body_bytes):
 
 func _handle_music_commands(text: String):
 	var ambiance = get_node_or_null("/root/Main/Ambiance")
-	if not ambiance or not ambiance.has_node("BackgroundMusic"):
+	var bg_music: AudioStreamPlayer = null
+	if ambiance and ambiance.has_node("BackgroundMusic"):
+		bg_music = ambiance.get_node("BackgroundMusic")
+
+	# Existing background music volume controls
+	if bg_music:
+		if "[MUSIC_UP]" in text:
+			bg_music.volume_db = min(bg_music.volume_db + 3.0, 0.0)
+		if "[MUSIC_DOWN]" in text:
+			bg_music.volume_db = max(bg_music.volume_db - 3.0, -40.0)
+		if "[MUSIC_OFF]" in text:
+			bg_music.stream_paused = true
+		if "[MUSIC_ON]" in text:
+			bg_music.stream_paused = false
+			if not bg_music.playing:
+				bg_music.play()
+
+	# Jukebox music player controls
+	var music_player = get_node_or_null("/root/Main/MusicPlayer")
+	if not music_player:
 		return
-	var music = ambiance.get_node("BackgroundMusic")
-	if "[MUSIC_UP]" in text:
-		music.volume_db = min(music.volume_db + 3.0, 0.0)
-	if "[MUSIC_DOWN]" in text:
-		music.volume_db = max(music.volume_db - 3.0, -40.0)
-	if "[MUSIC_OFF]" in text:
-		music.stream_paused = true
-	if "[MUSIC_ON]" in text:
-		music.stream_paused = false
-		if not music.playing:
-			music.play()
+
+	# [MUSIC_PLAY:filename.ogg]
+	var play_match = _extract_tag_value(text, "MUSIC_PLAY")
+	if play_match != "":
+		if bg_music:
+			bg_music.stream_paused = true
+		music_player.play_track(play_match)
+
+	# [MUSIC_QUEUE:filename.ogg]
+	var queue_match = _extract_tag_value(text, "MUSIC_QUEUE")
+	if queue_match != "":
+		music_player.queue_track(queue_match)
+
+	if "[MUSIC_SKIP]" in text:
+		music_player.skip()
+	if "[MUSIC_STOP]" in text:
+		music_player.stop()
+		if bg_music:
+			bg_music.stream_paused = false
+			if not bg_music.playing:
+				bg_music.play()
+	if "[MUSIC_PAUSE]" in text:
+		music_player.pause()
+	if "[MUSIC_RESUME]" in text:
+		music_player.resume()
+	if "[MUSIC_SHUFFLE]" in text:
+		music_player.is_shuffled = !music_player.is_shuffled
+	if "[MUSIC_REPEAT]" in text:
+		music_player.repeat_mode = (music_player.repeat_mode + 1) % 3
+
+func _extract_tag_value(text: String, tag_name: String) -> String:
+	var pattern = "[" + tag_name + ":"
+	var start = text.find(pattern)
+	if start == -1:
+		return ""
+	start += pattern.length()
+	var end = text.find("]", start)
+	if end == -1:
+		return ""
+	return text.substr(start, end - start)
 
 func _handle_tv_commands(text: String):
 	print("[ChatUI] _handle_tv_commands called, text length=%d" % text.length())
@@ -656,9 +704,13 @@ func _handle_light_commands(text: String):
 
 func _strip_command_tags(text: String) -> String:
 	var result = text
-	for tag in ["[MUSIC_UP]", "[MUSIC_DOWN]", "[MUSIC_OFF]", "[MUSIC_ON]", "[TV_OFF]"]:
+	for tag in ["[MUSIC_UP]", "[MUSIC_DOWN]", "[MUSIC_OFF]", "[MUSIC_ON]",
+			"[MUSIC_SKIP]", "[MUSIC_STOP]", "[MUSIC_PAUSE]", "[MUSIC_RESUME]",
+			"[MUSIC_SHUFFLE]", "[MUSIC_REPEAT]", "[TV_OFF]"]:
 		result = result.replace(tag, "")
 	var regex = RegEx.new()
+	regex.compile("\\[MUSIC_(?:PLAY|QUEUE):[^\\]]+\\]")
+	result = regex.sub(result, "", true)
 	regex.compile("\\[TV_SHOW:[^\\]]+\\]")
 	result = regex.sub(result, "", true)
 	regex.compile("\\[LIGHTS_COLOR:[^\\]]+\\]")
