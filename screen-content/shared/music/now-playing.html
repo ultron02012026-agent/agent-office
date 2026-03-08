@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Now Playing</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #1a1a2e;
+    color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .container {
+    text-align: center;
+    max-width: 420px;
+    padding: 24px;
+  }
+  .art-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 24px;
+  }
+  .art {
+    width: 280px;
+    height: 280px;
+    border-radius: 16px;
+    object-fit: cover;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    display: block;
+  }
+  .art-placeholder {
+    width: 280px;
+    height: 280px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #16213e 0%, #0f3460 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 80px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+  .title {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+  .artist {
+    font-size: 16px;
+    color: #8888aa;
+    margin-bottom: 20px;
+  }
+  .equalizer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 4px;
+    height: 32px;
+  }
+  .eq-bar {
+    width: 5px;
+    border-radius: 3px;
+    background: linear-gradient(180deg, #e94560, #0f3460);
+    animation: eq-bounce 0.8s ease-in-out infinite alternate;
+  }
+  .eq-bar:nth-child(1) { height: 8px; animation-delay: 0s; }
+  .eq-bar:nth-child(2) { height: 16px; animation-delay: 0.1s; }
+  .eq-bar:nth-child(3) { height: 24px; animation-delay: 0.2s; }
+  .eq-bar:nth-child(4) { height: 12px; animation-delay: 0.3s; }
+  .eq-bar:nth-child(5) { height: 20px; animation-delay: 0.15s; }
+  .eq-bar:nth-child(6) { height: 28px; animation-delay: 0.25s; }
+  .eq-bar:nth-child(7) { height: 10px; animation-delay: 0.05s; }
+  @keyframes eq-bounce {
+    0% { transform: scaleY(0.3); }
+    100% { transform: scaleY(1); }
+  }
+  .idle .equalizer { display: none; }
+  .idle .title { color: #555; }
+  .glow {
+    position: absolute;
+    inset: -4px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #e94560, #0f3460, #e94560);
+    background-size: 200% 200%;
+    animation: glow-shift 3s ease-in-out infinite;
+    z-index: -1;
+    opacity: 0.6;
+  }
+  @keyframes glow-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  .idle .glow { display: none; }
+</style>
+</head>
+<body>
+<div class="container" id="root">
+  <div class="art-wrapper">
+    <div class="glow"></div>
+    <div class="art-placeholder" id="placeholder">🎵</div>
+    <img class="art" id="art" src="" alt="" style="display:none">
+  </div>
+  <div class="title" id="title">Nothing Playing</div>
+  <div class="artist" id="artist"></div>
+  <div class="equalizer">
+    <div class="eq-bar"></div>
+    <div class="eq-bar"></div>
+    <div class="eq-bar"></div>
+    <div class="eq-bar"></div>
+    <div class="eq-bar"></div>
+    <div class="eq-bar"></div>
+    <div class="eq-bar"></div>
+  </div>
+</div>
+<script>
+(function() {
+  const root = document.getElementById('root');
+  const artEl = document.getElementById('art');
+  const placeholderEl = document.getElementById('placeholder');
+  const titleEl = document.getElementById('title');
+  const artistEl = document.getElementById('artist');
+  let lastTrackId = '';
+
+  async function update() {
+    try {
+      const r = await fetch('/shared/music/now-playing.json?_=' + Date.now());
+      if (!r.ok) throw new Error('not found');
+      const d = await r.json();
+      if (d.title && d.title.trim() !== '') {
+        root.classList.remove('idle');
+        titleEl.textContent = d.title;
+        artistEl.textContent = d.artist || '';
+        if (d.thumbnail) {
+          artEl.src = d.thumbnail;
+          artEl.style.display = 'block';
+          placeholderEl.style.display = 'none';
+        } else {
+          artEl.style.display = 'none';
+          placeholderEl.style.display = 'flex';
+        }
+        lastTrackId = d.track_id || '';
+      } else {
+        setIdle();
+      }
+    } catch(e) {
+      setIdle();
+    }
+  }
+
+  function setIdle() {
+    root.classList.add('idle');
+    titleEl.textContent = 'Nothing Playing';
+    artistEl.textContent = '';
+    artEl.style.display = 'none';
+    placeholderEl.style.display = 'flex';
+    lastTrackId = '';
+  }
+
+  artEl.addEventListener('error', function() {
+    artEl.style.display = 'none';
+    placeholderEl.style.display = 'flex';
+  });
+
+  setInterval(update, 3000);
+  update();
+})();
+</script>
+</body>
+</html>
