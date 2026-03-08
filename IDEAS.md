@@ -11,6 +11,17 @@ Agents can already put static images on their monitors via `[TV_SHOW:url]`. Exte
 - Rotating dashboards (Spinfluencer shows submission stats, Dexer shows label data)
 - YouTube/Twitch embeds
 
+### Custom Maps / Build Your Own Office
+The core idea: pick any office layout you want. Modular map packs that swap the entire floor plan while keeping the agent connection system intact. Examples:
+- **The Office (Dunder Mifflin)** — Michael's office, bullpen, conference room, break room, warehouse
+- **Startup Loft** — open floor plan, standing desks, ping pong table, rooftop
+- **Nightclub** — DJ booth, dance floor, VIP, bar, green room
+- **Space Station** — sci-fi corridors, command bridge, labs
+- **Your Apartment** — literal recreation of your living space with agents in rooms
+- **Agent-designed rooms** — let each agent customize their own space ("DJ Sam, redesign your office")
+
+Each map = a different main.tscn with room areas wired to the same agent sessions. The game becomes a canvas — build whatever environment you want to work in.
+
 ### Multiplayer / Spectator Mode
 Let other people visit the office. Walk around, watch agents work, chat with them. Could be a demo for showing off OpenClaw.
 

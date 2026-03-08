@@ -16,6 +16,9 @@ var room_logs: Dictionary = {}  # room_name -> String (BBCode chat log text)
 # Streaming state
 var _streaming_text: String = ""
 var _is_streaming: bool = false
+var _thinking_timer: float = 0.0
+var _thinking_dots: int = 1
+var _url_regex: RegEx = null
 
 # Voice status indicator
 var voice_status: String = "listening"  # listening, recording, processing
@@ -35,6 +38,14 @@ var chat_focused: bool = false  # true = typing mode (WASD types), false = move 
 func _ready():
 	panel.visible = false
 	http_request.request_completed.connect(_on_request_completed)
+
+	# URL regex for clickable links
+	_url_regex = RegEx.new()
+	_url_regex.compile("(https?://[^\\s\\[\\]<>\"]+)")
+
+	# Connect meta_clicked for clickable links
+	if chat_log:
+		chat_log.meta_clicked.connect(_on_meta_clicked)
 
 	# Connect text input
 	if text_input:
