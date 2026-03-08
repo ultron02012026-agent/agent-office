@@ -951,21 +951,6 @@ shape = SubResource("spin_room_shape")
 
 ; --- SPINFLUENCER DECORATIONS ---
 
-; === Neon Sign - "DROP THE BEAT" on north wall ===
-[node name="Room2_Decor_NeonSign" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.2, -14.84)
-text = "♪ DROP THE BEAT ♪"
-font_size = 56
-modulate = Color(0, 0.78, 0.345, 1)
-outline_modulate = Color(0, 0.9, 0.4, 0.6)
-outline_size = 8
-
-[node name="Room2_Decor_NeonGlow" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.2, -14.5)
-light_color = Color(0, 0.78, 0.345, 1)
-light_energy = 0.8
-omni_range = 4
-
 ; === Couch/Sofa against west wall ===
 [node name="Room2_Decor_CouchBase" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.3, 0.2, -8)
@@ -1093,42 +1078,6 @@ radius = 0.1
 height = 0.02
 material = SubResource("r2_speaker_cone_mat")
 
-; === Award Plaques on walls ===
-[node name="Room2_Decor_Award1" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.85, 2.0, -12)
-size = Vector3(0.05, 0.5, 0.4)
-material = SubResource("r2_plaque_mat")
-
-[node name="Room2_Decor_Award1Label" type="Label3D" parent="."]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -14.83, 2.0, -12)
-text = "★ PLATINUM
-PRODUCER
-2025 ★"
-font_size = 18
-modulate = Color(0.85, 0.7, 0.2, 1)
-
-[node name="Room2_Decor_Award2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.85, 2.0, -13)
-size = Vector3(0.05, 0.5, 0.4)
-material = SubResource("r2_plaque_mat")
-
-[node name="Room2_Decor_Award2Label" type="Label3D" parent="."]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -14.83, 2.0, -13)
-text = "🎵 BEST
-AI MUSIC
-PLATFORM"
-font_size = 18
-modulate = Color(0, 0.78, 0.345, 1)
-
-[node name="Room2_Decor_Poster1" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 2.0, -14.84)
-text = "SPINFLUENCED
-━━━━━━━━━
-Where Producers
-Get Real Feedback"
-font_size = 22
-modulate = Color(0, 0.78, 0.345, 1)
-
 ; === Extra Green Ambient Lights ===
 [node name="Room2_Decor_PinkSpot1" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 2.5, -13)
@@ -1162,18 +1111,11 @@ radius = 0.35
 height = 0.6
 material = SubResource("r2_foliage_mat")
 
-; === Gold Record on wall ===
 [node name="Room2_Decor_GoldRecord" type="CSGCylinder3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -11, 2.3, -14.84)
 radius = 0.25
 height = 0.02
 material = SubResource("r2_gold_mat")
-
-[node name="Room2_Decor_GoldRecordLabel" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 1.9, -14.84)
-text = "GOLD RECORD"
-font_size = 16
-modulate = Color(0.85, 0.7, 0.2, 1)
 
 ; =============================================================================
 ; ROOM 3: DEXER (x=5 to 15, z=-15 to -5, center 10,-10) — GREEN THEME
@@ -1271,54 +1213,6 @@ shape = SubResource("room_shape")
 ; --- DEXER OFFICE DECORATIONS ---
 
 ; Neon sign on back wall: "LABEL-DEX // 850+ LABELS"
-[node name="Room3_Decor_NeonSign1" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.4, -14.9)
-text = "LABEL-DEX"
-font_size = 72
-modulate = Color(0.145, 0.388, 0.922, 1)
-outline_modulate = Color(0.1, 0.25, 0.7, 1)
-outline_size = 4
-
-[node name="Room3_Decor_NeonSign2" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.0, -14.9)
-text = "850+ CURATED LABELS"
-font_size = 36
-modulate = Color(0.3, 0.5, 0.95, 1)
-outline_modulate = Color(0.15, 0.35, 0.8, 1)
-outline_size = 3
-
-; Neon glow light behind sign
-[node name="Room3_Decor_NeonGlow" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 2.3, -14.5)
-light_color = Color(0.145, 0.388, 0.922, 1)
-light_energy = 1.2
-omni_range = 4
-
-; Large data dashboard on east wall
-[node name="Room3_Decor_Dashboard" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.9, 1.8, -10)
-size = Vector3(0.05, 1.6, 3.5)
-material = SubResource("dexer_dashboard_mat")
-
-[node name="Room3_Decor_DashLabel1" type="Label3D" parent="."]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 14.85, 2.3, -10)
-text = "SUBMISSIONS DASHBOARD"
-font_size = 28
-modulate = Color(0.145, 0.388, 0.922, 1)
-
-[node name="Room3_Decor_DashLabel2" type="Label3D" parent="."]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 14.85, 2.0, -9.2)
-text = "▸ Pending: 47\n▸ Approved: 312\n▸ This Week: 23"
-font_size = 18
-modulate = Color(0.4, 0.6, 0.95, 1)
-
-[node name="Room3_Decor_DashLabel3" type="Label3D" parent="."]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 14.85, 2.0, -10.8)
-text = "▸ Labels: 853\n▸ Genres: 42\n▸ Success: 73%"
-font_size = 18
-modulate = Color(0.2, 0.45, 0.9, 1)
-
-; Rug on the floor
 [node name="Room3_Decor_Rug" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0.01, -10)
 size = Vector3(6, 0.02, 4)
@@ -1405,13 +1299,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8, 0.45, -7.5)
 size = Vector3(0.5, 0.3, 0.4)
 material = SubResource("dexer_demo_box_mat")
 
-[node name="Room3_Decor_BoxLabel" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8, 0.55, -7.28)
-text = "DEMOS"
-font_size = 16
-modulate = Color(0.8, 0.8, 0.8, 1)
-
-; Coffee mug on desk
 [node name="Room3_Decor_Mug" type="CSGCylinder3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.2, 0.75, -11.8)
 radius = 0.06
@@ -1419,36 +1306,6 @@ height = 0.12
 material = SubResource("dexer_mug_mat")
 
 ; Award plaque on back wall
-[node name="Room3_Decor_AwardPlaque" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 2.2, -14.9)
-size = Vector3(1.0, 0.6, 0.04)
-material = SubResource("dexer_award_mat")
-
-[node name="Room3_Decor_AwardText" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13, 2.3, -14.85)
-text = "★ TOP CURATOR ★\n2026"
-font_size = 22
-modulate = Color(0.15, 0.1, 0.0, 1)
-
-[node name="Room3_Decor_AwardPlaque2" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 2.2, -14.9)
-size = Vector3(1.0, 0.6, 0.04)
-material = SubResource("dexer_award_mat")
-
-[node name="Room3_Decor_AwardText2" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 2.3, -14.85)
-text = "★ 10K TRACKS ★\nPROCESSED"
-font_size = 22
-modulate = Color(0.15, 0.1, 0.0, 1)
-
-; Stats board on east wall (below dashboard)
-[node name="Room3_Decor_StatsLabel" type="Label3D" parent="."]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 14.85, 1.2, -10)
-text = "「 LIVE FEED 」"
-font_size = 20
-modulate = Color(0.145, 0.388, 0.922, 1)
-
-; Teal ambient light near couch
 [node name="Room3_Decor_AmbientLight1" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 1.5, -6)
 light_color = Color(0.145, 0.388, 0.922, 1)
@@ -1598,31 +1455,6 @@ room_name = "DJ Sam"
 [node name="Room4_AreaShape" type="CollisionShape3D" parent="Room4_Area"]
 shape = SubResource("room_shape")
 
-; --- DJ Sam Decor: Neon Sign ---
-[node name="Room4_Decor_NeonSign" type="Label3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -14.8, 2.2, 0)
-text = "⚡ DROP THE BASS ⚡"
-font_size = 72
-modulate = Color(0.7, 0.1, 1, 1)
-outline_modulate = Color(1, 0.2, 0.6, 1)
-outline_size = 8
-
-[node name="Room4_Decor_NeonSign2" type="Label3D" parent="."]
-transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -14.8, 1.6, 0)
-text = "DJ SAM"
-font_size = 96
-modulate = Color(1, 0.2, 0.6, 1)
-outline_modulate = Color(0.7, 0.1, 1, 1)
-outline_size = 10
-
-; --- DJ Sam Decor: Neon Sign Glow Light ---
-[node name="Room4_Decor_NeonGlow" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 2, 0)
-light_color = Color(0.7, 0.1, 1, 1)
-light_energy = 2.0
-omni_range = 3.0
-
-; --- DJ Sam Decor: LED Strip - Back Wall Top ---
 [node name="Room4_Decor_LED_BackTop" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.95, -4.9)
 size = Vector3(9.8, 0.05, 0.05)
@@ -1733,25 +1565,21 @@ light_color = Color(0, 0.8, 1, 1)
 light_energy = 1.5
 omni_range = 2.0
 
-; --- DJ Sam Decor: VIP Couch (seat) ---
 [node name="Room4_Decor_CouchSeat" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0.25, 3.5)
 size = Vector3(2.5, 0.4, 0.8)
 material = SubResource("djsam_couch_mat")
 
-; --- DJ Sam Decor: VIP Couch (back) ---
 [node name="Room4_Decor_CouchBack" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0.55, 4.2)
 size = Vector3(2.5, 0.7, 0.2)
 material = SubResource("djsam_couch_mat")
 
-; --- DJ Sam Decor: VIP Couch Arm Left ---
 [node name="Room4_Decor_CouchArmL" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.15, 0.4, 3.8)
 size = Vector3(0.2, 0.5, 1.0)
 material = SubResource("djsam_couch_mat")
 
-; --- DJ Sam Decor: VIP Couch Arm Right ---
 [node name="Room4_Decor_CouchArmR" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.85, 0.4, 3.8)
 size = Vector3(0.2, 0.5, 1.0)
@@ -1779,31 +1607,6 @@ light_energy = 1.8
 omni_range = 3.5
 
 ; --- DJ Sam Decor: Set List Poster ---
-[node name="Room4_Decor_Poster1" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 2.0, -4.9)
-text = "SET LIST
-━━━━━━━━
-1. Purple Rain (Remix)
-2. Deep House Anthem
-3. Midnight Bass Drop
-4. Neon Dreams
-5. Club Euphoria"
-font_size = 24
-modulate = Color(0, 0.9, 1, 1)
-
-; --- DJ Sam Decor: House Rules Poster ---
-[node name="Room4_Decor_Poster2" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13, 2.0, -4.9)
-text = "HOUSE RULES
-━━━━━━━━━━
-✦ VIBE CHECK: ALWAYS
-✦ BPM: 120-130
-✦ REQUESTS: MAYBE
-✦ BASS: MAXIMUM"
-font_size = 20
-modulate = Color(1, 0.2, 0.6, 1)
-
-; --- DJ Sam Decor: Fog Machine ---
 [node name="Room4_Decor_FogMachine" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 0.15, 0)
 size = Vector3(0.5, 0.3, 0.3)
@@ -1826,15 +1629,6 @@ material = SubResource("djsam_laser_mat")
 transform = Transform3D(0.866, 0.5, 0, -0.5, 0.866, 0, 0, 0, 1, -8, 2.5, 2)
 size = Vector3(0.02, 3.0, 0.02)
 material = SubResource("djsam_laser_mat")
-
-; --- DJ Sam Decor: VIP Label ---
-[node name="Room4_Decor_VIPSign" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 1.5, 4.85)
-text = "★ V I P ★"
-font_size = 64
-modulate = Color(1, 0.85, 0, 1)
-outline_modulate = Color(0.7, 0.1, 1, 1)
-outline_size = 6
 
 ; =============================================================================
 ; ROOM 5: COMING SOON (x=-15 to -5, z=5 to 15, center -10,10) — GRAY/DIM
@@ -2597,42 +2391,6 @@ script = ExtResource("22")
 ; =============================================================================
 
 ; --- ULTRON NEON SIGN (big, behind desk, facing lobby) ---
-[node name="Ultron_FD_Decor_NeonSign" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.4, 3)
-text = "U L T R O N"
-font_size = 96
-modulate = Color(1, 0.85, 0.2, 1)
-outline_modulate = Color(1, 0.7, 0.1, 0.6)
-outline_size = 8
-
-[node name="Ultron_FD_Decor_NeonGlow" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.4, 3.2)
-light_color = Color(1, 0.85, 0.3, 1)
-light_energy = 1.5
-omni_range = 5
-
-[node name="Ultron_FD_Decor_NeonSubtitle" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.0, 3)
-text = "Office Manager"
-font_size = 36
-modulate = Color(0.9, 0.75, 0.3, 0.8)
-
-; --- WELCOME SIGN (near entrance at z=14) ---
-[node name="Ultron_FD_Decor_WelcomeSign" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2.2, 14.85)
-text = "Welcome to Agent Office"
-font_size = 56
-modulate = Color(0.9, 0.8, 0.4, 1)
-outline_modulate = Color(0.6, 0.5, 0.2, 0.5)
-outline_size = 6
-
-[node name="Ultron_FD_Decor_WelcomeGlow" type="OmniLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 2.2, 14.5)
-light_color = Color(1, 0.9, 0.5, 1)
-light_energy = 0.8
-omni_range = 4
-
-; --- LOBBY RUG (large, centered in lobby) ---
 [node name="Ultron_FD_Decor_Rug" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.01, 10)
 size = Vector3(8, 0.02, 5)
@@ -2751,35 +2509,6 @@ radius = 0.35
 material = SubResource("ufd_foliage_mat")
 
 ; --- DIRECTORY BOARD (on wall near hallway, listing agents) ---
-[node name="Ultron_FD_Decor_DirectoryBoard" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.85, 1.5, 5)
-size = Vector3(0.05, 1.8, 2)
-material = SubResource("ufd_directory_mat")
-
-[node name="Ultron_FD_Decor_DirectoryFrame" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 14.87, 2.45, 5)
-size = Vector3(0.03, 0.15, 2.1)
-material = SubResource("ufd_gold_accent_mat")
-
-[node name="Ultron_FD_Decor_DirectoryTitle" type="Label3D" parent="."]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 14.82, 2.2, 5)
-text = "AGENT DIRECTORY"
-font_size = 32
-modulate = Color(1, 0.85, 0.3, 1)
-
-[node name="Ultron_FD_Decor_DirectoryList" type="Label3D" parent="."]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 14.82, 1.5, 5)
-text = "━━━━━━━━━━━━━━━━━
- Spinfluencer ........ Room 2
- Dexer ............... Room 3
- DJ Sam .............. Room 4
- Coming Soon ......... Room 5
-━━━━━━━━━━━━━━━━━
-    Ultron — Front Desk"
-font_size = 20
-modulate = Color(0.85, 0.8, 0.6, 1)
-
-; --- SHELVING UNIT (behind desk) ---
 [node name="Ultron_FD_Decor_ShelfUnit" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.8, 2.5)
 use_collision = true
@@ -2854,80 +2583,6 @@ height = 0.6
 material = SubResource("ufd_water_bottle_mat")
 
 ; --- AWARD WALL (between desk and entrance) ---
-[node name="Ultron_FD_Decor_Award1_Frame" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1.8, 3)
-size = Vector3(0.8, 0.6, 0.04)
-material = SubResource("ufd_award_frame_mat")
-
-[node name="Ultron_FD_Decor_Award1_Back" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1.8, 3.02)
-size = Vector3(0.7, 0.5, 0.02)
-material = SubResource("ufd_award_backing_mat")
-
-[node name="Ultron_FD_Decor_Award1_Text" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 1.85, 2.97)
-text = "★ Best AI Team
-   2026"
-font_size = 16
-modulate = Color(1, 0.9, 0.5, 1)
-
-[node name="Ultron_FD_Decor_Award2_Frame" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.2, 1.8, 3)
-size = Vector3(0.8, 0.6, 0.04)
-material = SubResource("ufd_award_frame_mat")
-
-[node name="Ultron_FD_Decor_Award2_Back" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.2, 1.8, 3.02)
-size = Vector3(0.7, 0.5, 0.02)
-material = SubResource("ufd_award_backing_mat")
-
-[node name="Ultron_FD_Decor_Award2_Text" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.2, 1.85, 2.97)
-text = "★ Excellence
-  in Service"
-font_size = 16
-modulate = Color(1, 0.9, 0.5, 1)
-
-[node name="Ultron_FD_Decor_Award3_Frame" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.6, 1.1, 3)
-size = Vector3(0.8, 0.6, 0.04)
-material = SubResource("ufd_award_frame_mat")
-
-[node name="Ultron_FD_Decor_Award3_Back" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.6, 1.1, 3.02)
-size = Vector3(0.7, 0.5, 0.02)
-material = SubResource("ufd_award_backing_mat")
-
-[node name="Ultron_FD_Decor_Award3_Text" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.6, 1.15, 2.97)
-text = "★ Most Agents
-  Managed"
-font_size = 16
-modulate = Color(1, 0.9, 0.5, 1)
-
-; --- CLOCK / STATUS DISPLAY (on wall near desk) ---
-[node name="Ultron_FD_Decor_Clock" type="CSGCylinder3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, 5, 2.6, 2.3)
-radius = 0.3
-height = 0.05
-material = SubResource("ufd_clock_mat")
-
-[node name="Ultron_FD_Decor_ClockFace" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2.6, 2.25)
-text = "⏰"
-font_size = 40
-modulate = Color(1, 0.9, 0.5, 1)
-
-[node name="Ultron_FD_Decor_StatusDisplay" type="Label3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1.6, 2.3)
-text = "ALL SYSTEMS ONLINE
-━━━━━━━━━━━━━━
-Agents Active: 4
-Uptime: 99.97%"
-font_size = 18
-modulate = Color(0.3, 1, 0.5, 1)
-
-; --- GOLD ACCENT STRIP (along front of desk) ---
 [node name="Ultron_FD_Decor_DeskAccentStrip" type="CSGBox3D" parent="."]
 transform = Transform3D(0.707, 0, 0.707, 0, 1, 0, -0.707, 0, 0.707, 5, 0.82, 5)
 size = Vector3(2.3, 0.03, 0.06)
