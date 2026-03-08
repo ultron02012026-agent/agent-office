@@ -1,4 +1,4 @@
-[gd_scene load_steps=85 format=3 uid="uid://main001"]
+[gd_scene load_steps=115 format=3 uid="uid://main001"]
 
 [ext_resource type="PackedScene" uid="uid://player001" path="res://scenes/player.tscn" id="1"]
 [ext_resource type="Script" path="res://scripts/room_area.gd" id="2"]
@@ -172,6 +172,203 @@ ambient_light_color = Color(0.7, 0.75, 0.85, 1)
 ambient_light_energy = 0.8
 reflected_light_source = 1
 
+; --- Spinfluencer Room 2 Decor Materials ---
+[sub_resource type="StandardMaterial3D" id="r2_neon_mat"]
+albedo_color = Color(1, 0.2, 0.6, 1)
+emission_enabled = true
+emission = Color(1, 0.2, 0.6, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="StandardMaterial3D" id="r2_couch_mat"]
+albedo_color = Color(0.15, 0.15, 0.15, 1)
+
+[sub_resource type="StandardMaterial3D" id="r2_couch_cushion_mat"]
+albedo_color = Color(0.2, 0.2, 0.22, 1)
+
+[sub_resource type="StandardMaterial3D" id="r2_pot_mat"]
+albedo_color = Color(0.6, 0.35, 0.2, 1)
+
+[sub_resource type="StandardMaterial3D" id="r2_foliage_mat"]
+albedo_color = Color(0.15, 0.55, 0.2, 1)
+
+[sub_resource type="StandardMaterial3D" id="r2_rug_mat"]
+albedo_color = Color(0.6, 0.1, 0.4, 1)
+emission_enabled = true
+emission = Color(0.3, 0.05, 0.2, 1)
+emission_energy_multiplier = 0.2
+
+[sub_resource type="StandardMaterial3D" id="r2_shelf_mat"]
+albedo_color = Color(0.3, 0.2, 0.12, 1)
+
+[sub_resource type="StandardMaterial3D" id="r2_coffee_table_mat"]
+albedo_color = Color(0.35, 0.25, 0.15, 1)
+
+[sub_resource type="StandardMaterial3D" id="r2_gold_mat"]
+albedo_color = Color(0.85, 0.7, 0.2, 1)
+metallic = 0.9
+roughness = 0.2
+emission_enabled = true
+emission = Color(0.4, 0.3, 0.05, 1)
+emission_energy_multiplier = 0.3
+
+[sub_resource type="StandardMaterial3D" id="r2_speaker_mat"]
+albedo_color = Color(0.08, 0.08, 0.08, 1)
+
+[sub_resource type="StandardMaterial3D" id="r2_speaker_cone_mat"]
+albedo_color = Color(0.15, 0.15, 0.15, 1)
+metallic = 0.3
+
+[sub_resource type="StandardMaterial3D" id="r2_neon_blue_mat"]
+albedo_color = Color(0.2, 0.6, 1, 1)
+emission_enabled = true
+emission = Color(0.2, 0.6, 1, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="StandardMaterial3D" id="r2_vinyl_stack_mat"]
+albedo_color = Color(0.05, 0.05, 0.05, 1)
+
+[sub_resource type="StandardMaterial3D" id="r2_plaque_mat"]
+albedo_color = Color(0.2, 0.2, 0.22, 1)
+metallic = 0.5
+roughness = 0.3
+
+; --- Dexer Decor Materials ---
+[sub_resource type="StandardMaterial3D" id="dexer_neon_mat"]
+albedo_color = Color(0.0, 1.0, 0.8, 1)
+emission_enabled = true
+emission = Color(0.0, 1.0, 0.8, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="StandardMaterial3D" id="dexer_neon_sub_mat"]
+albedo_color = Color(0.2, 0.6, 1.0, 1)
+emission_enabled = true
+emission = Color(0.2, 0.6, 1.0, 1)
+emission_energy_multiplier = 2.5
+
+[sub_resource type="StandardMaterial3D" id="dexer_dashboard_mat"]
+albedo_color = Color(0.08, 0.12, 0.18, 1)
+emission_enabled = true
+emission = Color(0.05, 0.2, 0.3, 1)
+emission_energy_multiplier = 0.6
+
+[sub_resource type="StandardMaterial3D" id="dexer_rug_mat"]
+albedo_color = Color(0.05, 0.15, 0.2, 1)
+
+[sub_resource type="StandardMaterial3D" id="dexer_couch_mat"]
+albedo_color = Color(0.12, 0.12, 0.15, 1)
+
+[sub_resource type="StandardMaterial3D" id="dexer_plant_pot_mat"]
+albedo_color = Color(0.45, 0.25, 0.12, 1)
+
+[sub_resource type="StandardMaterial3D" id="dexer_plant_leaf_mat"]
+albedo_color = Color(0.1, 0.5, 0.15, 1)
+
+[sub_resource type="StandardMaterial3D" id="dexer_cd_mat"]
+albedo_color = Color(0.7, 0.75, 0.8, 1)
+metallic = 0.8
+roughness = 0.2
+
+[sub_resource type="StandardMaterial3D" id="dexer_shelf_mat"]
+albedo_color = Color(0.2, 0.22, 0.25, 1)
+metallic = 0.3
+
+[sub_resource type="StandardMaterial3D" id="dexer_mug_mat"]
+albedo_color = Color(0.1, 0.3, 0.35, 1)
+
+[sub_resource type="StandardMaterial3D" id="dexer_award_mat"]
+albedo_color = Color(0.85, 0.7, 0.2, 1)
+metallic = 0.9
+roughness = 0.15
+emission_enabled = true
+emission = Color(0.6, 0.5, 0.1, 1)
+emission_energy_multiplier = 0.3
+
+[sub_resource type="StandardMaterial3D" id="dexer_demo_box_mat"]
+albedo_color = Color(0.15, 0.25, 0.35, 1)
+
+; --- Ultron Front Desk Decor Materials ---
+[sub_resource type="StandardMaterial3D" id="ufd_neon_gold_mat"]
+albedo_color = Color(1, 0.85, 0.2, 1)
+emission_enabled = true
+emission = Color(1, 0.85, 0.2, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="StandardMaterial3D" id="ufd_welcome_mat"]
+albedo_color = Color(0.9, 0.85, 0.7, 1)
+emission_enabled = true
+emission = Color(0.9, 0.8, 0.5, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="StandardMaterial3D" id="ufd_couch_mat"]
+albedo_color = Color(0.18, 0.15, 0.12, 1)
+
+[sub_resource type="StandardMaterial3D" id="ufd_couch_cushion_mat"]
+albedo_color = Color(0.25, 0.2, 0.15, 1)
+
+[sub_resource type="StandardMaterial3D" id="ufd_coffee_table_mat"]
+albedo_color = Color(0.4, 0.3, 0.18, 1)
+metallic = 0.2
+roughness = 0.4
+
+[sub_resource type="StandardMaterial3D" id="ufd_rug_mat"]
+albedo_color = Color(0.45, 0.32, 0.12, 1)
+emission_enabled = true
+emission = Color(0.25, 0.18, 0.05, 1)
+emission_energy_multiplier = 0.15
+
+[sub_resource type="StandardMaterial3D" id="ufd_plant_pot_mat"]
+albedo_color = Color(0.55, 0.35, 0.18, 1)
+
+[sub_resource type="StandardMaterial3D" id="ufd_foliage_mat"]
+albedo_color = Color(0.12, 0.5, 0.18, 1)
+
+[sub_resource type="StandardMaterial3D" id="ufd_shelf_mat"]
+albedo_color = Color(0.35, 0.25, 0.12, 1)
+metallic = 0.1
+
+[sub_resource type="StandardMaterial3D" id="ufd_shelf_back_mat"]
+albedo_color = Color(0.15, 0.12, 0.08, 1)
+
+[sub_resource type="StandardMaterial3D" id="ufd_gold_accent_mat"]
+albedo_color = Color(0.85, 0.7, 0.2, 1)
+metallic = 0.9
+roughness = 0.15
+emission_enabled = true
+emission = Color(0.5, 0.4, 0.1, 1)
+emission_energy_multiplier = 0.4
+
+[sub_resource type="StandardMaterial3D" id="ufd_directory_mat"]
+albedo_color = Color(0.12, 0.12, 0.15, 1)
+emission_enabled = true
+emission = Color(0.05, 0.05, 0.08, 1)
+emission_energy_multiplier = 0.3
+
+[sub_resource type="StandardMaterial3D" id="ufd_water_cooler_mat"]
+albedo_color = Color(0.7, 0.75, 0.8, 1)
+
+[sub_resource type="StandardMaterial3D" id="ufd_water_bottle_mat"]
+transparency = 1
+albedo_color = Color(0.6, 0.8, 1.0, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="ufd_award_frame_mat"]
+albedo_color = Color(0.75, 0.6, 0.15, 1)
+metallic = 0.8
+roughness = 0.2
+
+[sub_resource type="StandardMaterial3D" id="ufd_award_backing_mat"]
+albedo_color = Color(0.15, 0.1, 0.05, 1)
+
+[sub_resource type="StandardMaterial3D" id="ufd_clock_mat"]
+albedo_color = Color(0.2, 0.2, 0.22, 1)
+metallic = 0.3
+
+[sub_resource type="StandardMaterial3D" id="ufd_rug_border_mat"]
+albedo_color = Color(0.7, 0.55, 0.15, 1)
+metallic = 0.3
+emission_enabled = true
+emission = Color(0.35, 0.28, 0.05, 1)
+emission_energy_multiplier = 0.2
+
 ; ===== SHAPES =====
 [sub_resource type="BoxShape3D" id="room_shape"]
 size = Vector3(9, 4, 9)
@@ -288,6 +485,81 @@ albedo_color = Color(1.0, 0.85, 0.3, 1)
 emission_enabled = true
 emission = Color(1.0, 0.85, 0.3, 1)
 emission_energy_multiplier = 2.0
+
+; --- DJ Sam Decor Materials ---
+[sub_resource type="StandardMaterial3D" id="djsam_neon_purple"]
+albedo_color = Color(0.7, 0.1, 1, 1)
+emission_enabled = true
+emission = Color(0.7, 0.1, 1, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="StandardMaterial3D" id="djsam_neon_pink"]
+albedo_color = Color(1, 0.2, 0.6, 1)
+emission_enabled = true
+emission = Color(1, 0.2, 0.6, 1)
+emission_energy_multiplier = 3.5
+
+[sub_resource type="StandardMaterial3D" id="djsam_led_cyan"]
+albedo_color = Color(0, 0.9, 1, 1)
+emission_enabled = true
+emission = Color(0, 0.9, 1, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="StandardMaterial3D" id="djsam_led_magenta"]
+albedo_color = Color(1, 0, 0.8, 1)
+emission_enabled = true
+emission = Color(1, 0, 0.8, 1)
+emission_energy_multiplier = 3.0
+
+[sub_resource type="StandardMaterial3D" id="djsam_disco_mat"]
+albedo_color = Color(0.9, 0.9, 0.95, 1)
+metallic = 1.0
+roughness = 0.05
+emission_enabled = true
+emission = Color(0.8, 0.8, 0.9, 1)
+emission_energy_multiplier = 1.5
+
+[sub_resource type="StandardMaterial3D" id="djsam_rug_mat"]
+albedo_color = Color(0.2, 0.05, 0.3, 1)
+
+[sub_resource type="StandardMaterial3D" id="djsam_crate_mat"]
+albedo_color = Color(0.35, 0.2, 0.1, 1)
+
+[sub_resource type="StandardMaterial3D" id="djsam_bar_mat"]
+albedo_color = Color(0.15, 0.15, 0.2, 1)
+metallic = 0.6
+roughness = 0.3
+
+[sub_resource type="StandardMaterial3D" id="djsam_bar_top_mat"]
+albedo_color = Color(0.25, 0.1, 0.35, 1)
+metallic = 0.8
+roughness = 0.15
+emission_enabled = true
+emission = Color(0.3, 0.1, 0.4, 1)
+emission_energy_multiplier = 0.5
+
+[sub_resource type="StandardMaterial3D" id="djsam_couch_mat"]
+albedo_color = Color(0.15, 0.05, 0.2, 1)
+
+[sub_resource type="StandardMaterial3D" id="djsam_subwoofer_mat"]
+albedo_color = Color(0.08, 0.08, 0.1, 1)
+
+[sub_resource type="StandardMaterial3D" id="djsam_fog_mat"]
+albedo_color = Color(0.6, 0.4, 0.8, 0.3)
+transparency = 1
+
+[sub_resource type="StandardMaterial3D" id="djsam_bottle_mat"]
+albedo_color = Color(0.1, 0.4, 0.2, 0.8)
+transparency = 1
+metallic = 0.5
+roughness = 0.1
+
+[sub_resource type="StandardMaterial3D" id="djsam_laser_mat"]
+albedo_color = Color(0, 1, 0.2, 0.7)
+emission_enabled = true
+emission = Color(0, 1, 0.2, 1)
+emission_energy_multiplier = 5.0
+transparency = 1
 
 [node name="Main" type="Node3D"]
 
@@ -676,6 +948,232 @@ room_name = "Spinfluencer"
 
 [node name="Room2_AreaShape" type="CollisionShape3D" parent="Room2_Area"]
 shape = SubResource("spin_room_shape")
+
+; --- SPINFLUENCER DECORATIONS ---
+
+; === Neon Sign - "DROP THE BEAT" on north wall ===
+[node name="Room2_Decor_NeonSign" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.2, -14.84)
+text = "♪ DROP THE BEAT ♪"
+font_size = 56
+modulate = Color(1, 0.2, 0.6, 1)
+outline_modulate = Color(1, 0.4, 0.7, 0.6)
+outline_size = 8
+
+[node name="Room2_Decor_NeonGlow" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.2, -14.5)
+light_color = Color(1, 0.2, 0.6, 1)
+light_energy = 0.8
+omni_range = 4
+
+; === Couch/Sofa against west wall ===
+[node name="Room2_Decor_CouchBase" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.3, 0.2, -8)
+use_collision = true
+size = Vector3(1.2, 0.4, 3)
+material = SubResource("r2_couch_mat")
+
+[node name="Room2_Decor_CouchBack" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.7, 0.55, -8)
+use_collision = true
+size = Vector3(0.4, 0.7, 3)
+material = SubResource("r2_couch_mat")
+
+[node name="Room2_Decor_CouchCushion1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.2, 0.42, -8.8)
+size = Vector3(0.9, 0.12, 0.8)
+material = SubResource("r2_couch_cushion_mat")
+
+[node name="Room2_Decor_CouchCushion2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.2, 0.42, -7.2)
+size = Vector3(0.9, 0.12, 0.8)
+material = SubResource("r2_couch_cushion_mat")
+
+; === Potted Plant near desk ===
+[node name="Room2_Decor_PlantPot" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.2, -14.3)
+use_collision = true
+radius = 0.25
+height = 0.4
+material = SubResource("r2_pot_mat")
+
+[node name="Room2_Decor_PlantFoliage" type="CSGSphere3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.7, -14.3)
+radius = 0.4
+material = SubResource("r2_foliage_mat")
+
+; === Rug on floor (center of room) ===
+[node name="Room2_Decor_Rug" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0.01, -10)
+size = Vector3(6, 0.02, 4)
+material = SubResource("r2_rug_mat")
+
+; === Coffee Table on the rug ===
+[node name="Room2_Decor_CoffeeTable" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 0.25, -8)
+use_collision = true
+size = Vector3(1.5, 0.08, 0.8)
+material = SubResource("r2_coffee_table_mat")
+
+[node name="Room2_Decor_CoffeeTableLeg1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.6, 0.1, -8.3)
+size = Vector3(0.06, 0.2, 0.06)
+material = SubResource("r2_coffee_table_mat")
+
+[node name="Room2_Decor_CoffeeTableLeg2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.4, 0.1, -8.3)
+size = Vector3(0.06, 0.2, 0.06)
+material = SubResource("r2_coffee_table_mat")
+
+[node name="Room2_Decor_CoffeeTableLeg3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.6, 0.1, -7.7)
+size = Vector3(0.06, 0.2, 0.06)
+material = SubResource("r2_coffee_table_mat")
+
+[node name="Room2_Decor_CoffeeTableLeg4" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.4, 0.1, -7.7)
+size = Vector3(0.06, 0.2, 0.06)
+material = SubResource("r2_coffee_table_mat")
+
+; === Record Shelf against east wall ===
+[node name="Room2_Decor_RecordShelf" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.5, -12)
+use_collision = true
+size = Vector3(0.4, 1.0, 3)
+material = SubResource("r2_shelf_mat")
+
+[node name="Room2_Decor_ShelfDivider1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.5, -12)
+size = Vector3(0.42, 0.03, 3)
+material = SubResource("r2_shelf_mat")
+
+[node name="Room2_Decor_ShelfDivider2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.8, -12)
+size = Vector3(0.42, 0.03, 3)
+material = SubResource("r2_shelf_mat")
+
+; === Vinyl stacks on shelf ===
+[node name="Room2_Decor_VinylStack1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.3, -12.8)
+size = Vector3(0.3, 0.25, 0.35)
+material = SubResource("r2_vinyl_stack_mat")
+
+[node name="Room2_Decor_VinylStack2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.3, -11.5)
+size = Vector3(0.3, 0.18, 0.35)
+material = SubResource("r2_vinyl_stack_mat")
+
+[node name="Room2_Decor_VinylStack3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5, 0.6, -12.2)
+size = Vector3(0.3, 0.2, 0.35)
+material = SubResource("r2_vinyl_stack_mat")
+
+; === Studio Monitor Speakers ===
+[node name="Room2_Decor_SpeakerL" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.2, 0.82, -12.3)
+use_collision = true
+size = Vector3(0.3, 0.45, 0.3)
+material = SubResource("r2_speaker_mat")
+
+[node name="Room2_Decor_SpeakerLCone" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -6.2, 0.85, -12.14)
+radius = 0.1
+height = 0.02
+material = SubResource("r2_speaker_cone_mat")
+
+[node name="Room2_Decor_SpeakerR" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8, 0.82, -12.3)
+use_collision = true
+size = Vector3(0.3, 0.45, 0.3)
+material = SubResource("r2_speaker_mat")
+
+[node name="Room2_Decor_SpeakerRCone" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -3.8, 0.85, -12.14)
+radius = 0.1
+height = 0.02
+material = SubResource("r2_speaker_cone_mat")
+
+; === Award Plaques on walls ===
+[node name="Room2_Decor_Award1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.85, 2.0, -12)
+size = Vector3(0.05, 0.5, 0.4)
+material = SubResource("r2_plaque_mat")
+
+[node name="Room2_Decor_Award1Label" type="Label3D" parent="."]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -14.83, 2.0, -12)
+text = "★ PLATINUM
+PRODUCER
+2025 ★"
+font_size = 18
+modulate = Color(0.85, 0.7, 0.2, 1)
+
+[node name="Room2_Decor_Award2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.85, 2.0, -13)
+size = Vector3(0.05, 0.5, 0.4)
+material = SubResource("r2_plaque_mat")
+
+[node name="Room2_Decor_Award2Label" type="Label3D" parent="."]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -14.83, 2.0, -13)
+text = "🎵 BEST
+AI MUSIC
+PLATFORM"
+font_size = 18
+modulate = Color(1, 0.4, 0.7, 1)
+
+[node name="Room2_Decor_Poster1" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 2.0, -14.84)
+text = "SPINFLUENCED
+━━━━━━━━━
+Where Producers
+Get Real Feedback"
+font_size = 22
+modulate = Color(1, 0.5, 0.8, 1)
+
+; === Extra Pink Ambient Lights ===
+[node name="Room2_Decor_PinkSpot1" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 2.5, -13)
+light_color = Color(1, 0.15, 0.55, 1)
+light_energy = 0.6
+omni_range = 5
+
+[node name="Room2_Decor_PinkSpot2" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.5, -8)
+light_color = Color(0.8, 0.1, 0.5, 1)
+light_energy = 0.4
+omni_range = 4
+
+[node name="Room2_Decor_BlueAccent" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 2.0, -10)
+light_color = Color(0.2, 0.4, 1, 1)
+light_energy = 0.3
+omni_range = 4
+
+; === Second Potted Plant by couch ===
+[node name="Room2_Decor_PlantPot2" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5, 0.25, -6)
+use_collision = true
+radius = 0.2
+height = 0.5
+material = SubResource("r2_pot_mat")
+
+[node name="Room2_Decor_PlantFoliage2" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.5, 0.8, -6)
+radius = 0.35
+height = 0.6
+material = SubResource("r2_foliage_mat")
+
+; === Gold Record on wall ===
+[node name="Room2_Decor_GoldRecord" type="CSGCylinder3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0, -1, 0, 1, 0, -11, 2.3, -14.84)
+radius = 0.25
+height = 0.02
+material = SubResource("r2_gold_mat")
+
+[node name="Room2_Decor_GoldRecordLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11, 1.9, -14.84)
+text = "GOLD RECORD"
+font_size = 16
+modulate = Color(0.85, 0.7, 0.2, 1)
 
 ; =============================================================================
 ; ROOM 3: DEXER (x=5 to 15, z=-15 to -5, center 10,-10) — GREEN THEME
