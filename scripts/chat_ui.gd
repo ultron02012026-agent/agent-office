@@ -164,8 +164,32 @@ func _on_text_gui_input(event: InputEvent):
 		unfocus_chat()
 		get_viewport().set_input_as_handled()
 
-func _process(_delta):
-	pass
+func _process(delta):
+	if is_thinking and not _is_streaming:
+		_thinking_timer += delta
+		if _thinking_timer >= 0.4:
+			_thinking_timer = 0.0
+			_thinking_dots = (_thinking_dots % 3) + 1
+			_update_thinking_indicator()
+
+func _on_meta_clicked(meta):
+	OS.shell_open(str(meta))
+
+func _wrap_urls(text: String) -> String:
+	if _url_regex == null:
+		return text
+	return _url_regex.sub(text, "[url=$1]$1[/url]", true)
+
+func _update_thinking_indicator():
+	var dots = ".".repeat(_thinking_dots)
+	var lines = chat_log.text.split("\n")
+	var new_lines := []
+	for line in lines:
+		if "Agent is typing" in line:
+			continue
+		new_lines.append(line)
+	chat_log.text = "\n".join(new_lines)
+	chat_log.text += "[color=gray]Agent is typing" + dots + "[/color]\n"
 
 func focus_chat():
 	if not panel.visible or not text_input:
@@ -233,9 +257,16 @@ func _submit_message(text: String):
 		chat_log.text += "\n[color=cyan]You:[/color] " + text + "\n"
 	chat_history.append({"role": "user", "content": text})
 
+	# Play send sound
+	var send_sound = get_node_or_null("/root/Main/ChatSendSound")
+	if send_sound and send_sound.stream:
+		send_sound.play()
+
 	is_thinking = true
+	_thinking_timer = 0.0
+	_thinking_dots = 1
 	set_voice_status("thinking")
-	chat_log.text += "[color=gray][i]...[/i][/color]\n"
+	chat_log.text += "[color=gray]Agent is typing.[/color]\n"
 
 	# Build attachments from pending image
 	var attachments: Array = []
@@ -320,7 +351,7 @@ func _on_ws_final(agent_id: String, text: String):
 				room_histories[target_room].append({"role": "assistant", "content": final_text})
 				var display = _strip_command_tags(final_text).strip_edges()
 				var log_text = room_logs.get(target_room, "")
-				log_text += "[color=yellow]" + target_room + ":[/color] " + display + "\n"
+				log_text += "[color=yellow]" + target_room + ":[/color] " + _wrap_urls(display) + "\n"
 				room_logs[target_room] = log_text
 		return
 	if not panel.visible:
@@ -369,7 +400,7 @@ func _on_ws_final(agent_id: String, text: String):
 	if found_agent_line:
 		chat_log.text = "\n".join(cleaned_lines) + "\n"
 
-	chat_log.text += "[color=yellow]" + current_room + ":[/color] " + display_reply + "\n"
+	chat_log.text += "[color=yellow]" + current_room + ":[/color] " + _wrap_urls(display_reply) + "\n"
 
 	# Play receive sound
 	var recv_sound = get_node_or_null("/root/Main/ChatReceiveSound")
@@ -391,7 +422,7 @@ func _remove_thinking_indicator():
 	var lines = chat_log.text.split("\n")
 	var cleaned_lines := []
 	for line in lines:
-		if not ("[i]...[/i]" in line):
+		if not ("Agent is typing" in line) and not ("[i]...[/i]" in line):
 			cleaned_lines.append(line)
 	chat_log.text = "\n".join(cleaned_lines)
 
@@ -415,8 +446,10 @@ func _update_streaming_display():
 func _request_greeting(room_name: String):
 	_greeting_in_progress = true
 	is_thinking = true
+	_thinking_timer = 0.0
+	_thinking_dots = 1
 	set_voice_status("thinking")
-	chat_log.text += "[color=gray][i]...[/i][/color]\n"
+	chat_log.text += "[color=gray]Agent is typing.[/color]\n"
 
 	if _gateway_ws and _gateway_ws.is_ws_connected():
 		_gateway_ws.send_message(room_name, "The user just walked into your office. Give a brief, friendly greeting (1 sentence).")
@@ -505,7 +538,7 @@ func _on_request_completed(result, response_code, _headers, body_bytes):
 		_handle_env_commands(reply)
 		var display_reply = _strip_command_tags(reply).strip_edges()
 
-		chat_log.text += "[color=yellow]" + current_room + ":[/color] " + display_reply + "\n"
+		chat_log.text += "[color=yellow]" + current_room + ":[/color] " + _wrap_urls(display_reply) + "\n"
 		var recv_sound = get_node_or_null("/root/Main/ChatReceiveSound")
 		if recv_sound and recv_sound.stream:
 			recv_sound.play()
