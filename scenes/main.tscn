@@ -174,9 +174,9 @@ reflected_light_source = 1
 
 ; --- Spinfluencer Room 2 Decor Materials ---
 [sub_resource type="StandardMaterial3D" id="r2_neon_mat"]
-albedo_color = Color(1, 0.2, 0.6, 1)
+albedo_color = Color(0, 0.78, 0.345, 1)
 emission_enabled = true
-emission = Color(1, 0.2, 0.6, 1)
+emission = Color(0, 0.78, 0.345, 1)
 emission_energy_multiplier = 3.0
 
 [sub_resource type="StandardMaterial3D" id="r2_couch_mat"]
@@ -192,9 +192,9 @@ albedo_color = Color(0.6, 0.35, 0.2, 1)
 albedo_color = Color(0.15, 0.55, 0.2, 1)
 
 [sub_resource type="StandardMaterial3D" id="r2_rug_mat"]
-albedo_color = Color(0.6, 0.1, 0.4, 1)
+albedo_color = Color(0, 0.5, 0.22, 1)
 emission_enabled = true
-emission = Color(0.3, 0.05, 0.2, 1)
+emission = Color(0, 0.3, 0.13, 1)
 emission_energy_multiplier = 0.2
 
 [sub_resource type="StandardMaterial3D" id="r2_shelf_mat"]
@@ -956,13 +956,13 @@ shape = SubResource("spin_room_shape")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.2, -14.84)
 text = "♪ DROP THE BEAT ♪"
 font_size = 56
-modulate = Color(1, 0.2, 0.6, 1)
-outline_modulate = Color(1, 0.4, 0.7, 0.6)
+modulate = Color(0, 0.78, 0.345, 1)
+outline_modulate = Color(0, 0.9, 0.4, 0.6)
 outline_size = 8
 
 [node name="Room2_Decor_NeonGlow" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 2.2, -14.5)
-light_color = Color(1, 0.2, 0.6, 1)
+light_color = Color(0, 0.78, 0.345, 1)
 light_energy = 0.8
 omni_range = 4
 
@@ -1118,7 +1118,7 @@ text = "🎵 BEST
 AI MUSIC
 PLATFORM"
 font_size = 18
-modulate = Color(1, 0.4, 0.7, 1)
+modulate = Color(0, 0.78, 0.345, 1)
 
 [node name="Room2_Decor_Poster1" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 2.0, -14.84)
@@ -1127,18 +1127,18 @@ text = "SPINFLUENCED
 Where Producers
 Get Real Feedback"
 font_size = 22
-modulate = Color(1, 0.5, 0.8, 1)
+modulate = Color(0, 0.78, 0.345, 1)
 
-; === Extra Pink Ambient Lights ===
+; === Extra Green Ambient Lights ===
 [node name="Room2_Decor_PinkSpot1" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 2.5, -13)
-light_color = Color(1, 0.15, 0.55, 1)
+light_color = Color(0, 0.78, 0.345, 1)
 light_energy = 0.6
 omni_range = 5
 
 [node name="Room2_Decor_PinkSpot2" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0.5, -8)
-light_color = Color(0.8, 0.1, 0.5, 1)
+light_color = Color(0, 0.6, 0.27, 1)
 light_energy = 0.4
 omni_range = 4
 
