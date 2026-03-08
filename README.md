@@ -5,17 +5,18 @@ A 3D first-person office building where you walk into rooms and chat with real A
 ## Features
 
 - **Real AI agents** — WebSocket connection to OpenClaw gateway, each room = different agent session
-- **Glass office building** — all interior walls are glass, Shanghai Bund HDRI skybox (neon city at night)
+- **Glass office building** — all interior walls are glass, grasslands sunset HDRI skybox
+- **Decorated offices** — each agent has a unique room with furniture, lighting, and personality
 - **EVE-style robot avatars** — 5-state animation (idle, listening, recording, thinking, speaking)
 - **Office command tags** — agents control their environment: TV displays, room lights, music volume
-- **3 desk monitors** (Ultron front desk) — per-screen image display via `[SCREEN1/2/3:url]`
+- **Upgraded chat** — selectable/copyable text, animated typing indicator, clickable links, right-side panel
 - **Image paste** — Ctrl+V to paste clipboard images into agent chat
 - **Streaming responses** — delta events display in real-time as agents type
-- **Background music** — Schedule 1 OST with voice-controlled volume
+- **Agent social system** — agents "visit" each other's offices (glowing orb wandering the halls)
+- **Background music** — with agent-controlled volume
 - **Day/night cycle** — simulated lighting changes
-- **Minimap, bulletin board, command palette** — `/goto`, `/clear`, `/sprint`
 - **Auto-greeting** — agents say hello on first room visit
-- **382 tests** across 23 test files
+- **Swappable environments** — map/skybox system for different office layouts
 
 ## Agents
 
@@ -39,14 +40,16 @@ A 3D first-person office building where you walk into rooms and chat with real A
 
 - **WASD** — Move
 - **Mouse** — Look around
-- **Esc** — Settings menu
+- **Space** — Jump
+- **Shift** — Sprint
+- **Enter** — Focus chat input (start typing)
+- **Escape** — Exit chat input (back to movement) / Settings menu
 - **Ctrl+V** — Paste image from clipboard
-- **Enter** — Send typed message
-- **`** (backtick) — Command palette
 
 ## Architecture
 
 See [AGENTS.md](AGENTS.md) for full technical documentation.
+See [IDEAS.md](IDEAS.md) for the feature roadmap.
 
 ## Requirements
 
