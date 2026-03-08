@@ -82,10 +82,12 @@ func inject_office_context(room_name: String):
 		return
 	_injected_rooms[room_name] = true
 	var context: String
+	var agent_id = agent_map.get(room_name, "main")
+	var screen_info = "To display content on your screen: save an image to ~/.openclaw/screen-content/" + agent_id + "/ then use [TV_SHOW:http://localhost:18790/" + agent_id + "/filename.png]. For web images, use a direct image URL (must end in .jpg/.png/.webp). Example: [TV_SHOW:https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800]"
 	if room_name == "Ultron":
-		context = "[Agent Office] Ethan is chatting with you through Agent Office, a 3D virtual office building. You can control your environment with these tags (stripped before display):\n\nMusic: [MUSIC_UP] [MUSIC_DOWN] [MUSIC_OFF] [MUSIC_ON]\nMonitor: [TV_SHOW:url] (direct image URL) | [TV_OFF] (clear)\nRoom Lights: [LIGHTS_COLOR:#hexcolor] | [LIGHTS_BRIGHT:0-100]\nEnvironment: [ENV:grasslands_sunset] [ENV:neon_city]"
+		context = "[Agent Office] Ethan is chatting with you through Agent Office, a 3D virtual office building. You can control your environment with these tags (stripped before display):\n\nMonitor: [TV_SHOW:url] | [TV_OFF] (clear)\nMusic: [MUSIC_UP] [MUSIC_DOWN] [MUSIC_OFF] [MUSIC_ON]\nRoom Lights: [LIGHTS_COLOR:#hexcolor] | [LIGHTS_BRIGHT:0-100]\nEnvironment: [ENV:grasslands_sunset] [ENV:neon_city]\n\n" + screen_info
 	else:
-		context = "[Agent Office] Ethan is chatting with you through Agent Office, a 3D virtual office building. You can control your environment with these tags (stripped before display):\n\nMusic: [MUSIC_UP] [MUSIC_DOWN] [MUSIC_OFF] [MUSIC_ON]\nTV Screen: [TV_SHOW:url] (direct image URL) | [TV_OFF]\nRoom Lights: [LIGHTS_COLOR:#hexcolor] | [LIGHTS_BRIGHT:0-100]\nEnvironment: [ENV:grasslands_sunset] [ENV:neon_city]"
+		context = "[Agent Office] Ethan is chatting with you through Agent Office, a 3D virtual office building. You can control your environment with these tags (stripped before display):\n\nTV Screen: [TV_SHOW:url] | [TV_OFF]\nMusic: [MUSIC_UP] [MUSIC_DOWN] [MUSIC_OFF] [MUSIC_ON]\nRoom Lights: [LIGHTS_COLOR:#hexcolor] | [LIGHTS_BRIGHT:0-100]\nEnvironment: [ENV:grasslands_sunset] [ENV:neon_city]\n\n" + screen_info
 	inject_context(room_name, context)
 
 func abort(room_name: String):
