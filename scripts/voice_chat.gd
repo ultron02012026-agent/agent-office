@@ -26,7 +26,7 @@ var is_speaking: bool = false
 # VAD (Voice Activity Detection)
 var vad_enabled: bool = false
 var vad_threshold: float = 0.01  # amplitude threshold to detect speech
-var silence_timeout: float = 1.2  # seconds of silence before we consider speech done
+var silence_timeout: float = 0.9  # seconds of silence before we consider speech done
 var silence_timer: float = 0.0
 var is_speech_active: bool = false
 var min_speech_duration: float = 0.3  # minimum seconds of speech to process (ignore short noise)
@@ -34,6 +34,14 @@ var max_speech_duration: float = 30.0  # auto-send after this many seconds
 var speech_start_time: float = 0.0
 var mic_player: AudioStreamPlayer
 var stt_in_flight: bool = false  # guard against overlapping STT requests
+var tts_model: String = "gpt-4o-mini-tts"  # updated from tts-1 for better quality
+var stt_model: String = "gpt-4o-transcribe"  # updated from whisper-1 for better accuracy
+
+func _refresh_models():
+	# Pull model overrides from settings if available
+	if SettingsManager.has_method("get"):
+		tts_model = SettingsManager.tts_model if SettingsManager.get("tts_model") else tts_model
+		stt_model = SettingsManager.stt_model if SettingsManager.get("stt_model") else stt_model
 
 func _ready():
 	stt_http = HTTPRequest.new()
@@ -46,6 +54,7 @@ func _ready():
 	add_child(tts_http)
 	tts_http.request_completed.connect(_on_tts_completed)
 	
+	_refresh_models()
 	_setup_mic_bus()
 
 func _setup_mic_bus():
@@ -259,7 +268,7 @@ func _send_to_stt(wav_path: String):
 	body.append_array(part_header.to_utf8_buffer())
 	body.append_array(file_data)
 	
-	var model_part = "\r\n--%s\r\nContent-Disposition: form-data; name=\"model\"\r\n\r\nwhisper-1" % boundary
+	var model_part = "\r\n--%s\r\nContent-Disposition: form-data; name=\"model\"\r\n\r\n%s" % [boundary, stt_model]
 	body.append_array(model_part.to_utf8_buffer())
 	
 	var closing = "\r\n--%s--\r\n" % boundary
@@ -302,7 +311,7 @@ func request_tts(text: String):
 	var body = JSON.stringify({
 		"input": text,
 		"voice": SettingsManager.tts_voice,
-		"model": "tts-1",
+		"model": tts_model,
 		"response_format": "mp3"
 	})
 	

@@ -11,6 +11,8 @@ var master_volume: float = 1.0
 var voice_volume: float = 1.0
 var mic_enabled: bool = true
 var tts_voice: String = "alloy"
+var tts_model: String = "gpt-4o-mini-tts"
+var stt_model: String = "gpt-4o-transcribe"
 
 # Connection
 var gateway_url: String = "http://100.125.54.7:18789"
@@ -47,6 +49,8 @@ func load_settings():
 	voice_volume = config.get_value("audio", "voice_volume", 1.0)
 	mic_enabled = config.get_value("audio", "mic_enabled", true)
 	tts_voice = config.get_value("audio", "tts_voice", "alloy")
+	tts_model = config.get_value("audio", "tts_model", "gpt-4o-mini-tts")
+	stt_model = config.get_value("audio", "stt_model", "gpt-4o-transcribe")
 	
 	gateway_url = config.get_value("connection", "gateway_url", "http://100.125.54.7:18789")
 	gateway_token = config.get_value("connection", "gateway_token", "")
@@ -70,6 +74,8 @@ func save_settings():
 	config.set_value("audio", "voice_volume", voice_volume)
 	config.set_value("audio", "mic_enabled", mic_enabled)
 	config.set_value("audio", "tts_voice", tts_voice)
+	config.set_value("audio", "tts_model", tts_model)
+	config.set_value("audio", "stt_model", stt_model)
 	
 	config.set_value("connection", "gateway_url", gateway_url)
 	config.set_value("connection", "gateway_token", gateway_token)
